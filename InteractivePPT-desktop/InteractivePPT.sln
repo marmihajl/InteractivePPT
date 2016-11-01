@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteractivePPT-client", "InteractivePPT\InteractivePPT-client.csproj", "{1709A56D-B4D0-4DF3-929D-8838673BB645}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteractivePPT-client", "InteractivePPT-client\InteractivePPT-client.csproj", "{1709A56D-B4D0-4DF3-929D-8838673BB645}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteractivePPT-server", "InteractivePPT-server\InteractivePPT-server.csproj", "{3B27B74D-AAFF-4CC5-9196-DFAD7892EA90}"
 EndProject
