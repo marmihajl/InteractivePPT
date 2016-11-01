@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InteractivePPT;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +15,18 @@ namespace InteractivePPT_client
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            Login login = new Login(this);
+            login.Show();
+            this.Enabled = false;
         }
     }
 }
