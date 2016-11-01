@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace InteractivePPT.Properties
+namespace InteractivePPT_client.Properties
 {
 
 

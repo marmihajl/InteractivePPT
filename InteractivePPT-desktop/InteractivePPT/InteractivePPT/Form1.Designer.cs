@@ -1,4 +1,4 @@
-﻿namespace InteractivePPT
+﻿namespace InteractivePPT_client
 {
     partial class Form1
     {
