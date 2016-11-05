@@ -21,7 +21,7 @@ namespace InteractivePPT
 
         private void Home_Load(object sender, EventArgs e)
         {
-            lblUser.Text = user.name;
+            label1.Text = user.name;
         }
     }
 }
