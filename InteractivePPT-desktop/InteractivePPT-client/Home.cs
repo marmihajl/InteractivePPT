@@ -23,5 +23,10 @@ namespace InteractivePPT
         {
             label1.Text = user.name;
         }
+
+        private void Home_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

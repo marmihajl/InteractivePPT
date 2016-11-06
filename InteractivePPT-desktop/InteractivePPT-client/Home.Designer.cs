@@ -64,6 +64,7 @@
             this.Controls.Add(this.lblUser);
             this.Name = "Home";
             this.Text = "Home";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Home_FormClosed);
             this.Load += new System.EventHandler(this.Home_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

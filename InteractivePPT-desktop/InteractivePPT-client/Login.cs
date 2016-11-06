@@ -26,6 +26,8 @@ namespace InteractivePPT
             if (webBrowser1.Url.ToString() == "https://www.facebook.com/")
             {
                 timer1.Stop();
+                webBrowser1.Visible = false;
+                loadingPicture.Visible = true;
                 webBrowser1.Navigate("https://www.facebook.com/settings");
                 timer3.Start();
             }

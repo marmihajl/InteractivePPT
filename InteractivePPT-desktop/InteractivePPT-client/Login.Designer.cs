@@ -33,6 +33,8 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer3 = new System.Windows.Forms.Timer(this.components);
+            this.loadingPicture = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.loadingPicture)).BeginInit();
             this.SuspendLayout();
             // 
             // webBrowser1
@@ -61,15 +63,28 @@
             this.timer3.Interval = 5000;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
+            // loadingPicture
+            // 
+            this.loadingPicture.Image = global::InteractivePPT.Properties.Resources.loading2;
+            this.loadingPicture.Location = new System.Drawing.Point(211, 63);
+            this.loadingPicture.Name = "loadingPicture";
+            this.loadingPicture.Size = new System.Drawing.Size(317, 293);
+            this.loadingPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.loadingPicture.TabIndex = 1;
+            this.loadingPicture.TabStop = false;
+            this.loadingPicture.Visible = false;
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(691, 408);
+            this.Controls.Add(this.loadingPicture);
             this.Controls.Add(this.webBrowser1);
             this.Name = "Login";
             this.Text = "Login";
             this.Deactivate += new System.EventHandler(this.Login_Deactivate);
+            ((System.ComponentModel.ISupportInitialize)(this.loadingPicture)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -80,5 +95,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Timer timer3;
+        private System.Windows.Forms.PictureBox loadingPicture;
     }
 }

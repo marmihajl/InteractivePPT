@@ -3,4 +3,5 @@
     <string name="title">INTERACTIVE PRESENTATION</string>
     <string name="description">Welcome</string>
     <string name="app_id">370728603269382</string>
+    <string name="logout">Log out</string>
 </resources>

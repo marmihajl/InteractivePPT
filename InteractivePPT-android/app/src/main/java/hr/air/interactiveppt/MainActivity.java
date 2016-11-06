@@ -16,8 +16,10 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        text = (TextView)findViewById(R.id.info);
+        text = (TextView)findViewById(R.id.errorText);
         loginButton = (LoginButton)findViewById(R.id.login_button);
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -66,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
                 request.setParameters(parameters);
                 request.executeAsync();
 
+                if (AccessToken.getCurrentAccessToken() == null) {
+                    return; // already logged out
+                }
+
+
+
             }
 
             @Override
@@ -84,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        setWelcome();
 
     }
 
@@ -95,24 +102,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void setWelcome(){
+    public void openHome(){
 
-        TextView t = (TextView)findViewById(R.id.textView2);
-        if(user != null)
-            t.setText("Welcome "+user.fullName);
-        else
-            t.setText("Welcome");
+
+        Intent intent = new Intent(MainActivity.this,Home.class);
+        intent.putExtra("id",user.getId());
+        intent.putExtra("fullName",user.getFullName());
+        startActivity(intent);
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
+        finish();
     }
 
     private void setUserInfo(JSONObject object) {
-        user = new User();
+
         try {
-            user.id = object.getString("id");
-            user.fullName = object.getString("name");
+            String id = object.getString("id");
+            String fullName = object.getString("name");
+            user = new User(fullName, id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        setWelcome();
+        openHome();
     }
 }
