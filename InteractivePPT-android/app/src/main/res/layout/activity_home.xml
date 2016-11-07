@@ -27,8 +27,99 @@
         android:layout_marginEnd="53dp"
         android:id="@+id/userName"
         android:textColor="@android:color/white"
-        android:layout_alignBaseline="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
+        android:layout_alignBaseline="@id/logoutButton"
+        android:layout_alignBottom="@id/logoutButton"
         android:layout_alignParentEnd="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/layout_border">
+        <RelativeLayout
+            android:id="@+id/button_my_surveys"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/layout_border_button"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp" >
+            <ImageView
+                android:layout_marginLeft="15dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/moje_ankete"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"  />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_surveys_button_caption"
+                android:textSize="10pt"
+                android:textAllCaps="true"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textColor="@color/colorButtonCaption"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"    />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_create_survey"
+            android:background="@drawable/layout_border_button"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/button_my_surveys">
+            <ImageView
+                android:layout_marginLeft="15dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/nova_anketa"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"  />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_survey_button_caption"
+                android:textSize="10pt"
+                android:textAllCaps="true"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textColor="@color/colorButtonCaption"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"    />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/button_load_survey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/layout_border_button"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/button_create_survey">
+            <ImageView
+                android:layout_marginLeft="15dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ucitaj_anketu"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"  />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/load_survey_button_caption"
+                android:textSize="10pt"
+                android:textAllCaps="true"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textColor="@color/colorButtonCaption"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"    />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
