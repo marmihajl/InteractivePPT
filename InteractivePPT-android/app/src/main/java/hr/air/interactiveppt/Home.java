@@ -25,6 +25,9 @@ public class Home extends AppCompatActivity {
     @BindView(R.id.button_create_survey)
     RelativeLayout createSurveyButton;
 
+    @BindView(R.id.button_load_survey)
+    RelativeLayout loadSurveyButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,12 @@ public class Home extends AppCompatActivity {
     @OnClick(R.id.button_create_survey)
     public void createSurveyClick(View view){
         Intent intent = new Intent(this, CreateSurvey.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.button_load_survey)
+    public void loadSurveyClick(View view){
+        Intent intent= new Intent(this, GetCode.class);
         startActivity(intent);
     }
 

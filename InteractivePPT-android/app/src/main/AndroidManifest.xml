@@ -28,8 +28,10 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".Home"
-            android:label="@string/app_name"></activity>
-        <activity android:name=".CreateSurvey"></activity>
+            android:label="@string/app_name" />
+        <activity android:name=".CreateSurvey" />
+        <activity android:name=".GetCode" />
+        <activity android:name=".InputCode"></activity>
     </application>
 
 </manifest>

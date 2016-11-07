@@ -12,4 +12,11 @@
     <string name="my_surveys_button_caption">Moje\nankete</string>
     <string name="create_survey_button_caption">Nova\nanketa</string>
     <string name="load_survey_button_caption">Učitaj\nanketu</string>
+    <string name="survey_code">Kod ankete</string>
+    <string name="qr_read">Skeniraj Qr kod</string>
+    <string name="input_code">Upiši šifru ankete</string>
+    <string name="title_input_code">Unos šifre</string>
+    <string name="title_activity_survey_code">Šifra ankete</string>
+    <string name="title2_input_code">Upiši šifru</string>
+    <string name="send_code_button">Pošalji</string>
 </resources>
