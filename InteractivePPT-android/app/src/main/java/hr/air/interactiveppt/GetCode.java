@@ -15,6 +15,9 @@ public class GetCode extends AppCompatActivity {
     @BindView(R.id.upisiSifru)
     Button sifraButton;
 
+    @BindView(R.id.qrRead)
+    Button qrButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,12 @@ public class GetCode extends AppCompatActivity {
     @OnClick(R.id.upisiSifru)
     public void sifraButtonClick(View view){
         Intent intent= new Intent(this, InputCode.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.qrRead)
+    public void qrButtonClick(View view){
+        Intent intent= new Intent(this, QrScanner.class);
         startActivity(intent);
     }
 }
