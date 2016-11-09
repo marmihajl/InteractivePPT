@@ -1,7 +1,6 @@
 package hr.air.interactiveppt;
 
 import android.content.Intent;
-import android.content.pm.PackageInstaller;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -66,7 +65,7 @@ public class Home extends AppCompatActivity {
 
     @OnClick(R.id.button_load_survey)
     public void loadSurveyClick(View view){
-        Intent intent= new Intent(this, GetCode.class);
+        Intent intent = new Intent(this, GetCode.class);
         startActivity(intent);
     }
 
