@@ -40,14 +40,40 @@
             android:inputType="textMultiLine"
             android:hint="@string/description_placeholder"/>
     </FrameLayout>
+    <FrameLayout
+        android:id="@+id/surveyAttachedFile"
+        android:layout_below="@id/surveyDescription"
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+        <TextView
+            android:text="@string/surveyAttachment"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:text="@string/add_presentation_caption"
+            android:id="@+id/button_attach_presentation" />
+        <TextView
+            android:id="@+id/attached_file_name"
+            android:layout_marginTop="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewEnd"
+            android:text="@string/no_any_file_attached_msg"   />
+    </FrameLayout>
 
     <LinearLayout
         android:orientation="vertical"
+        android:id="@+id/surveyQuestionList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/surveyDescription"
+        android:layout_marginBottom="40dp"
+        android:layout_below="@+id/surveyAttachedFile"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="37dp">
+        android:layout_marginTop="10dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -85,5 +111,29 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
+    <android.support.percent.PercentRelativeLayout
+        android:layout_below="@id/surveyQuestionList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-40dp">
+        <Button
+            android:id="@+id/button_save_changes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:layout_widthPercent="45%"
+            app:layout_marginLeftPercent="2.5%"
+            android:text="Kreiraj"  />
+        <Button
+            android:id="@+id/button_discard_changes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:layout_widthPercent="45%"
+            app:layout_marginLeftPercent="52.5%"
+            android:text="Odbaci"   />
+    </android.support.percent.PercentRelativeLayout>
 
 </RelativeLayout>

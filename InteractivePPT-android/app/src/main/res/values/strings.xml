@@ -34,4 +34,11 @@
         <item>Multiple chose</item>
         <item>Text edit</item>
     </string-array>
+    <string name="chooser_title">Odaberite prezentaciju koju želite priložiti (opcionalno)</string>
+    <string name="surveyAttachment">Prezentacija</string>
+    <string name="no_any_file_attached_msg">Trenutno još ništa nije dodano</string>
+    <string name="file_successfully_added_msg">Uspješno priložena sljedeća datoteka: </string>
+    <string name="not_valid_file_type_msg">Odabrana datoteka nije PowerPoint prezentacija: </string>
+    <string name="add_presentation_caption">Dodaj</string>
+    <string name="change_presentation_caption">Promijeni</string>
 </resources>
