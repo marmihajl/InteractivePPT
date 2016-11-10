@@ -19,4 +19,19 @@
     <string name="title_activity_survey_code">Šifra ankete</string>
     <string name="title2_input_code">Upiši šifru</string>
     <string name="send_code_button">Pošalji</string>
+    <string name="btnAddQuestion">Dodaj pitanje</string>
+    <string name="question">Pitanja</string>
+    <string name="questionType">Vrsta pitanja:</string>
+    <string name="answers">Odgovori:</string>
+    <string name="questionText">Pitanje</string>
+    <string name="saveQuestion">Spremi</string>
+    <string name="cancelQuestion">Odustani</string>
+    <string name="btnEdit">Uredi</string>
+    <string name="btnDelete">Obriši</string>
+    <string name="showData">Osvježi pitanja</string>
+    <string-array name="spinnerItems">
+        <item>Single chose</item>
+        <item>Multiple chose</item>
+        <item>Text edit</item>
+    </string-array>
 </resources>
