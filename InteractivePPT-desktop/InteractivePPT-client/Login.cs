@@ -23,15 +23,23 @@ namespace InteractivePPT
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (webBrowser1.Url.ToString() == "https://www.facebook.com/")
+            try
             {
-                timer1.Stop();
-                webBrowser1.Visible = false;
-                loadingPicture.Visible = true;
-                webBrowser1.Navigate("https://www.facebook.com/settings");
-                timer3.Start();
+                if (webBrowser1.Url.ToString() == "https://www.facebook.com/")
+                {
+                    timer1.Stop();
+                    webBrowser1.Visible = false;
+                    loadingPicture.Visible = true;
+                    webBrowser1.Navigate("https://www.facebook.com/settings");
+                    timer3.Start();
+                }
             }
-            
+            catch
+            {
+                MessageBox.Show("Communication with Facebook could not be established. Check your Internet connection.");
+            }
+
+
         }
 
         private void timer2_Tick(object sender, EventArgs e)
