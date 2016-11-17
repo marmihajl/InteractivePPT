@@ -31,10 +31,10 @@ public class QuestionViewHolder extends ParentViewHolder{
         mQuestion.setText(question.getQuestionText());
         switch (question.getQuestionType()){
             case 1:
-                mQuestionType.setText("Single chose");
+                mQuestionType.setText("Single choice");
                 break;
             case 2:
-                mQuestionType.setText("Multiple chose");
+                mQuestionType.setText("Multiple choice");
                 break;
             case 3:
                 mQuestionType.setText("Text edit");

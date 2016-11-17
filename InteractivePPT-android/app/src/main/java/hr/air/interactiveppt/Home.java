@@ -39,7 +39,7 @@ public class Home extends AppCompatActivity {
         String id = intent.getStringExtra("id");
         String fullName = intent.getStringExtra("fullName");
 
-        User user = new User(fullName,id);
+        user = new User(fullName,id);
 
         TextView textView = (TextView)findViewById(R.id.userName);
         textView.setText(user.getFullName());
@@ -60,12 +60,14 @@ public class Home extends AppCompatActivity {
     @OnClick(R.id.button_create_survey)
     public void createSurveyClick(View view){
         Intent intent = new Intent(this, CreateSurvey.class);
+        intent.putExtra("id",user.getId());
         startActivity(intent);
     }
 
     @OnClick(R.id.button_load_survey)
     public void loadSurveyClick(View view){
         Intent intent = new Intent(this, GetCode.class);
+        intent.putExtra("id",user.getId());
         startActivity(intent);
     }
 

@@ -3,6 +3,8 @@ package hr.air.interactiveppt;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,18 +13,38 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hr.air.interactiveppt.responses.Survey;
+import hr.air.interactiveppt.responses.SurveyCreatedResponse;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -31,7 +53,7 @@ public class CreateSurvey extends AppCompatActivity {
     private static final int REQUEST_CODE = 6384; // onActivityResult request code
 
     @Nullable
-    private static Uri uri = null;
+    private static Uri uriOfSelectedFile = null;
 
     ArrayList<Question> questions = new ArrayList<Question>();
     ArrayList<Answer> answers = new ArrayList<Answer>();
@@ -40,6 +62,7 @@ public class CreateSurvey extends AppCompatActivity {
     RecyclerView mRecycler;
     boolean show = false;
     Button b;
+    String surveyAuthorId;
 
     @BindView(R.id.button_attach_presentation)
     Button attachPresentation;
@@ -58,7 +81,12 @@ public class CreateSurvey extends AppCompatActivity {
 
     @OnClick(R.id.button_save_changes)
     protected void sendRequestForSaving(View view){
-        // TO DO
+
+        String surveyName = ((EditText)findViewById(R.id.title_input)).getText().toString();
+        String surveyDescription = ((EditText)findViewById(R.id.description_input)).getText().toString();
+        new RetrieveFeedTask().execute(surveyName, surveyDescription, surveyAuthorId);
+
+        findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.button_discard_changes)
@@ -88,10 +116,10 @@ public class CreateSurvey extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
                         // Get the URI of the selected file
-                        uri = data.getData();
+                        uriOfSelectedFile = data.getData();
                         try {
                             // Get the file path from the URI
-                            final String path = FileUtils.getPath(this, uri);
+                            final String path = FileUtils.getPath(this, uriOfSelectedFile);
                             if (path.endsWith(".ppt") || path.endsWith(".pptx")) {
                                 ((TextView)findViewById(R.id.attached_file_name)).setText(path.substring(path.lastIndexOf('/') + 1));
                                 Toast.makeText(CreateSurvey.this,
@@ -107,11 +135,11 @@ public class CreateSurvey extends AppCompatActivity {
                                         Toast.LENGTH_LONG
                                 ).show();
                                 ((Button)findViewById(R.id.button_attach_presentation)).setText(R.string.add_presentation_caption);
-                                uri = null;
+                                uriOfSelectedFile = null;
                             }
                         } catch (Exception e) {
                             Log.e("CreateSurvey", "File select error", e);
-                            uri = null;
+                            uriOfSelectedFile = null;
                         }
                     }
                 }
@@ -126,9 +154,11 @@ public class CreateSurvey extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_survey);
         ButterKnife.bind(this);
+        surveyAuthorId = getIntent().getStringExtra("id");
+        findViewById(R.id.loading_panel).setVisibility(View.GONE);
 
         mRecycler = (RecyclerView) findViewById(R.id.main_recycler);
-        Button addQuestion = (Button)findViewById(R.id.btnAddQuestion);
+        Button addQuestion = (Button)findViewById(R.id.btn_add_question);
         addQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,4 +192,109 @@ public class CreateSurvey extends AppCompatActivity {
             }
         }
     }
+
+
+    class RetrieveFeedTask extends AsyncTask {
+
+        private Exception exception;
+
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+
+            MultipartBody.Part body = null;
+
+            if (uriOfSelectedFile != null) {
+                File fileHandler = FileUtils.getFile(getBaseContext(), uriOfSelectedFile);  //this instead of getBaseContext was before
+                RequestBody requestFile =
+                        RequestBody.create(MediaType.parse("multipart/form-data"), fileHandler);
+                body = MultipartBody.Part.createFormData("ppt", fileHandler.getName(), requestFile);
+            }
+
+            SurveyWithQuestions surveyWithQuestions = new SurveyWithQuestions(
+                    objects[0].toString(),
+                    objects[1].toString(),
+                    questions,
+                    objects[2].toString()
+            );
+
+            String serializedSurvey = (new Gson()).toJson(surveyWithQuestions);
+
+            RequestBody description =
+                    RequestBody.create(
+                            MediaType.parse("multipart/form-data"), serializedSurvey);
+
+            WebService client = ServiceGenerator.createService(WebService.class);
+
+            Call<SurveyCreatedResponse> call = client.createSurvey(
+                    body,
+                    description
+            );
+
+            if(call != null){
+                call.enqueue(new Callback<SurveyCreatedResponse>() {
+
+                    @Override
+                    public void onResponse(Call<SurveyCreatedResponse> call, Response<SurveyCreatedResponse> response) {
+                        if (response.isSuccessful()) {
+                            Handler mainHandler = new Handler(getBaseContext().getMainLooper());
+
+                            Runnable myRunnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                                    Toast.makeText(CreateSurvey.this,
+                                            "Anketa je uspješno kreirana!",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+
+                                }
+                            };
+                            mainHandler.post(myRunnable);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<SurveyCreatedResponse> call, Throwable t) {
+
+                    }
+                });
+            }
+            return null;
+
+        }
+    }
+}
+
+class ServiceGenerator {
+
+    public static final String API_BASE_URL = "http://46.101.68.86/";
+
+    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+    private static Retrofit.Builder builder =
+            new Retrofit.Builder()
+                    .baseUrl(API_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create());
+
+    public static <S> S createService(Class<S> serviceClass) {
+        Retrofit retrofit = builder.client(httpClient.build()).build();
+        return retrofit.create(serviceClass);
+    }
+}
+
+interface WebService {
+    @Multipart
+    @POST("interactivePPT-server.php")
+    Call<SurveyCreatedResponse> createSurvey(
+            @Part MultipartBody.Part file,
+            @Part("json") RequestBody json
+    );
+
+    @POST("interactivePPT-server.php")
+    Call<Survey> getDetails(
+            @Path("access_code") String accessCode
+    );
 }

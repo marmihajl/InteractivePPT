@@ -149,9 +149,9 @@ CREATE TABLE `Question_type` (
 --
 
 INSERT INTO `Question_type` (`idQuestion_type`, `name`) VALUES
-(1, 'text'),
+(1, 'selection'),
 (2, 'checkbox'),
-(3, 'selection');
+(3, 'text');
 
 -- --------------------------------------------------------
 

@@ -1,11 +1,16 @@
 package hr.air.interactiveppt;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by marin on 9.11.2016..
  */
 
 public class Answer {
+
+    @SerializedName("text")
     public String answerText;
+
     public int questionId;
 
     public Answer() {

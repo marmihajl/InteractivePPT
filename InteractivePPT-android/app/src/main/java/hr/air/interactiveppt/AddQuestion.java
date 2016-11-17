@@ -74,10 +74,10 @@ public class AddQuestion extends Dialog {
             public void onClick(View v) {
                 int type = 0;
                 switch (((Spinner) findViewById(R.id.spinner)).getSelectedItem().toString()){
-                    case "Single chose":
+                    case "Single choice":
                         type = 1;
                         break;
-                    case "Multiple chose":
+                    case "Multiple choice":
                         type = 2;
                         break;
                     case "Text edit":

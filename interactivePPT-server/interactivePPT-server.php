@@ -3,7 +3,7 @@
 $dbHandler = new mysqli('localhost', 'root', 'toor', 'interactive_ppt');
 $dbHandler->set_charset("utf8");
 if (isset($_POST['json'])) {
-    $_POST = array_merge($_POST, json_decode($_POST['json']));
+    $_POST = array_merge($_POST, json_decode($_POST['json'], true));
     $userfile = null;
     $filename;
     if (!empty($_FILES)) {
@@ -32,22 +32,22 @@ switch ($_POST['request_type']) {
         $fileUri = 'null';
         if ($userfile!==null) {
             if (is_uploaded_file($userfile)) {
-                move_uploaded_file($userfile, "img/$filename");
-                $fileUri = "'img/$filename'";
+                move_uploaded_file($userfile, "ppt/$filename");
+                $fileUri = "'ppt/$filename'";
             }            
         }
 
-        $author = $dbHandler->query("SELECT idUser FROM User WHERE facebook_id='$facebookId' LIMIT 1;")->fetch_assoc()['idUser'];
+        $author = $dbHandler->query("SELECT idUser FROM Users WHERE facebook_id='$facebookId' LIMIT 1;")->fetch_assoc()['idUser'];
         $command = "INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode', $fileUri, $author);";
         $dbHandler->query($command);
 
-        $idSurvey = $$dbHandler->insert_id;
+        $idSurvey = $dbHandler->insert_id;
 
         if (count($questions)) {
             foreach ($questions as $q) {
-                $dbHandler->query("INSERT INTO Questions VALUES ('$q[text]', 0, 0, $q[type], $idSurvey);");
+                $dbHandler->query("INSERT INTO Questions VALUES (default, '$q[text]', 0, 0, $q[type], $idSurvey);");
 
-                $idQuestion = $$dbHandler->insert_id;
+                $idQuestion = $dbHandler->insert_id;
                 foreach ($q['answers'] as $o) {
                     $optionRecordSet = $dbHandler->query("SELECT idOptions FROM Options WHERE choice_name='$o[text]' LIMIT 1;");
                     $idAnswer = -1;
@@ -59,12 +59,12 @@ switch ($_POST['request_type']) {
                         $dbHandler->query("INSERT INTO Options VALUES (default, '$o[text]');");
                         $idAnswer = $dbHandler->insert_id;
                     }
-                    $dbHandler->query("INSERT INTO Question_options VALUES ($idQuestion, $idAnswer);");
+                    $dbHandler->query("INSERT INTO Question_options VALUES ($idAnswer, $idQuestion);");
                 }
             }
         }
 
-        echo '{success:true}';
+        echo '{"success":true}';
         break;
     case 'edit_survey':
         $id = $_POST['id'];
@@ -91,7 +91,7 @@ switch ($_POST['request_type']) {
             }
             $recordSet->free();
         }
-        echo '{' . json_encode($outputArray) . '}';
+        echo '{"data":' . json_encode($outputArray) . '}';
         
         break;
     case 'get_details':

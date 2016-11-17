@@ -1,14 +1,23 @@
 package hr.air.interactiveppt;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
  * Created by marin on 9.11.2016..
  */
 public class Question {
+    @SerializedName("id")
     public int questionId;
+
+    @SerializedName("text")
     public String questionText;
+
+    @SerializedName("type")
     public int questionType;
+
+    @SerializedName("answers")
     public ArrayList<Answer> answers = new ArrayList<>();
 
     public Question() {
