@@ -5,10 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hr.foi.air.qrreader.QrReader;
 
 public class GetCode extends AppCompatActivity {
 
@@ -33,8 +35,27 @@ public class GetCode extends AppCompatActivity {
 
     @OnClick(R.id.qrRead)
     public void qrButtonClick(View view){
-        Intent intent= new Intent(this, QrScanner.class);
-        startActivity(intent);
+        Intent intent= new Intent(this, QrReader.class);
+        startActivityForResult(intent,2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode != RESULT_CANCELED){
+            if(requestCode==2){
+                String message=data.getStringExtra("survey_code");
+                TextView mTview= (TextView)findViewById(R.id.testView);
+                mTview.setText(message);
+                mTview.invalidate();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 }
 

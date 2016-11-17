@@ -37,4 +37,13 @@
         android:id="@+id/upisiSifru"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/upisiSifru"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="57dp"
+        android:id="@+id/testView"
+        android:text="Tekst" />
 </RelativeLayout>

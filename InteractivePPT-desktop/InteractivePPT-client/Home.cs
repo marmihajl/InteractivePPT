@@ -13,12 +13,16 @@ using Newtonsoft.Json;
 using com.google.zxing;
 using com.google.zxing.qrcode;
 using System.Threading;
+using Microsoft.Office.Core;
+using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using System.Diagnostics;
 
 namespace InteractivePPT
 {
     public partial class Home : Form
     {
         private User user;
+        Microsoft.Office.Interop.PowerPoint.Application pptApp = new Microsoft.Office.Interop.PowerPoint.Application();
 
         public Home(User u)
         {
@@ -113,6 +117,42 @@ namespace InteractivePPT
             {
                 Cursor = Cursors.Default;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.ShowDialog();
+            if(ofd.FileName != null)
+            {
+                var path = ofd.FileName;
+                string powerPointFilePath = path;
+                
+
+                //pptApp = new Microsoft.Office.Interop.PowerPoint.Application();
+                pptApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
+                pptApp.Activate();
+
+                Microsoft.Office.Interop.PowerPoint.Presentations ps = pptApp.Presentations;
+                Microsoft.Office.Interop.PowerPoint.Presentation p = ps.Open(powerPointFilePath,
+                            Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue);
+                
+                
+
+            }
+            
+
+            
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            PowerPoint.SlideRange ppSR = pptApp.ActiveWindow.Selection.SlideRange;
+            PowerPoint.Shape ppSharp = ppSR.Shapes.AddLabel(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 0, 0, 200, 25);
+            
+            ppSharp.TextEffect.Text = "Hello";
+            
         }
     }
 }
