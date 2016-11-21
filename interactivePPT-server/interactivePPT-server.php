@@ -49,7 +49,7 @@ switch ($_POST['request_type']) {
 
                 $idQuestion = $dbHandler->insert_id;
                 foreach ($q['answers'] as $o) {
-                    $optionRecordSet = $dbHandler->query("SELECT idOptions FROM Options WHERE choice_name='$o[text]' LIMIT 1;");
+                    $optionRecordSet = $dbHandler->query("SELECT o.idOptions FROM Options o, Question_options qo WHERE qo.idQuestions=$idQuestion AND o.choice_name='$o[text]' LIMIT 1;");
                     $idAnswer = -1;
                     if ($optionRecordSet->num_rows) {
                         $idAnswer = $optionRecordSet->fetch_assoc()['idOptions'];
@@ -109,17 +109,31 @@ switch ($_POST['request_type']) {
 
         break;
     case 'get_questions':
-        $id = $_POST['id'];
-        $command = "";    //              NEED TO BE ADDED
+        $survey = $_POST['access_code'];
+        $command = "SELECT q.idQuestions, q.name FROM Questions q, Survey s WHERE s.access_code='$survey' AND s.idSurvey=q.Survey_idSurvey;";
         $recordSet = $dbHandler->query($command);
-        $recordSet->free();
+        $outputArray = array();
+        if ($recordSet) {
+            for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
+                array_push($outputArray, $recordSet->fetch_assoc());
+            }
+            $recordSet->free();
+        }
+        echo '{"questions":' . json_encode($outputArray) . '}';
 
         break;
     case 'get_results':
-        $id = $_POST['id'];
-        $command = "";    //              NEED TO BE ADDED
+        $question = $_POST['id'];
+        $command = "SELECT o.choice_name, count(o.idOptions) AS count FROM Answers a LEFT JOIN Options o ON a.Options_idOptions=o.idOptions LEFT JOIN Question_options qo ON qo.idOptions=o.idOptions LEFT JOIN Questions q ON q.idQuestions=qo.idQuestions WHERE q.idQuestions=$question GROUP BY o.idOptions;";
         $recordSet = $dbHandler->query($command);
-        $recordSet->free();
+        $outputArray = array();
+        if ($recordSet) {
+            for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
+                array_push($outputArray, $recordSet->fetch_assoc());
+            }
+            $recordSet->free();
+        }
+        echo '{"results":' . json_encode($outputArray, JSON_NUMERIC_CHECK) . '}';
 
         break;
     case 'submit_answers':
@@ -128,6 +142,26 @@ switch ($_POST['request_type']) {
         $result = $dbHandler->query($command);
 
         break;
+    case 'delete_file':
+
+	$data=$_POST['file'];
+
+        $dir = "ppt";
+
+        $dirHandle = opendir($dir);
+
+        while ($file = readdir($dirHandle)) {
+
+            if($file==$data) {
+                unlink($dir.'/'.$file);
+            }
+        }
+
+        closedir($dirHandle);
+
+
+	break;
+
 }
 $dbHandler->close();
 

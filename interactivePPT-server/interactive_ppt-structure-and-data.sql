@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 15, 2016 at 10:05 PM
+-- Generation Time: Nov 21, 2016 at 11:57 PM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -28,21 +28,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `Answers` (
   `idAnswers` int(11) NOT NULL,
-  `answer_text` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `answer_num` int(11) DEFAULT NULL,
-  `answer_bool` tinyint(1) DEFAULT NULL,
   `Users_idUser` int(11) NOT NULL,
-  `Questions_idQuestions` int(11) NOT NULL
+  `Options_idOptions` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Answers`
 --
 
-INSERT INTO `Answers` (`idAnswers`, `answer_text`, `answer_num`, `answer_bool`, `Users_idUser`, `Questions_idQuestions`) VALUES
-(1, 'Da', NULL, NULL, 1, 1),
-(2, 'Da', NULL, NULL, 2, 1),
-(3, 'Ne', NULL, NULL, 3, 1);
+INSERT INTO `Answers` (`idAnswers`, `Users_idUser`, `Options_idOptions`) VALUES
+(1, 1, 1),
+(2, 2, 1),
+(3, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -88,7 +85,41 @@ CREATE TABLE `Options` (
 INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 (1, 'Opcija 1'),
 (2, 'Opcija 2'),
-(3, 'Opcija 3');
+(3, 'Opcija 3'),
+(4, 'vrganj'),
+(5, 'zelena pupavka'),
+(6, 'vrganji s jajci'),
+(7, 'zagorska juha'),
+(8, 'sumska pecurka'),
+(9, 'lisicka'),
+(10, '16 - 17'),
+(11, '17 - 19'),
+(12, '20 - 21'),
+(13, '22 - 23'),
+(14, 'vise od 23'),
+(15, 'M'),
+(16, 'Z'),
+(17, 'student'),
+(18, 'zaposlen'),
+(19, 'nezaposlen'),
+(20, 'umirovljen'),
+(21, 'Da'),
+(22, 'Ne'),
+(23, 'RPG'),
+(24, 'MMORPG'),
+(25, 'RTS'),
+(26, 'simulacija'),
+(27, 'MOBA'),
+(28, 'FPS'),
+(29, '< 2 sata'),
+(30, '2 - 4'),
+(31, '4 - 6'),
+(32, '6 - 10'),
+(33, '10 - vise'),
+(34, 'mozda'),
+(35, '1'),
+(36, '2'),
+(37, '3');
 
 -- --------------------------------------------------------
 
@@ -111,7 +142,18 @@ CREATE TABLE `Questions` (
 
 INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `multiple_answers`, `Question_type_idQuestion_type`, `Survey_idSurvey`) VALUES
 (1, 'Pitanje 1', 0, 0, 1, 1),
-(2, 'Pitanje 2', 0, 0, 2, 1);
+(2, 'Pitanje 2', 0, 0, 2, 1),
+(3, 'prepoznajete li gljivu sa slike', 0, 0, 1, 2),
+(4, 'vase omiljeno jelo od gljiva', 0, 0, 1, 2),
+(5, 'od gljiva sakupljam sljedece', 0, 0, 2, 2),
+(6, 'Koliko imate godina:', 0, 0, 1, 3),
+(7, 'Oznacite spol:', 0, 0, 1, 3),
+(8, 'Status zaposlenja:', 0, 0, 1, 3),
+(9, 'Igrate li racunalne igre:', 0, 0, 1, 3),
+(10, 'Koji tip igara najcesce igrate:', 0, 0, 2, 3),
+(11, 'Koliko vremena tjedno provodite igrajuci:', 0, 0, 1, 3),
+(12, 'Zasto igrate racunalne igre', 0, 0, 3, 3),
+(13, 'Smatrate li da ste ovisni o racunalnim igrama:', 0, 0, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -131,7 +173,40 @@ CREATE TABLE `Question_options` (
 INSERT INTO `Question_options` (`idOptions`, `idQuestions`) VALUES
 (1, 1),
 (2, 1),
-(3, 1);
+(3, 1),
+(4, 3),
+(5, 3),
+(6, 4),
+(7, 4),
+(4, 5),
+(8, 5),
+(9, 5),
+(10, 6),
+(11, 6),
+(12, 6),
+(13, 6),
+(14, 6),
+(15, 7),
+(16, 7),
+(17, 8),
+(18, 8),
+(19, 8),
+(20, 8),
+(21, 9),
+(22, 9),
+(23, 10),
+(24, 10),
+(25, 10),
+(26, 10),
+(27, 10),
+(28, 10),
+(29, 11),
+(30, 11),
+(31, 11),
+(32, 11),
+(33, 11),
+(21, 13),
+(22, 13);
 
 -- --------------------------------------------------------
 
@@ -194,7 +269,9 @@ CREATE TABLE `Survey` (
 --
 
 INSERT INTO `Survey` (`idSurvey`, `name`, `description`, `access_code`, `link_to_presentation`, `author`) VALUES
-(1, 'Probna anketa', '', 'kod_za_pristup', NULL, 1);
+(1, 'Probna anketa', '', 'kod_za_pristup', NULL, 1),
+(2, 'HerbariumApp', 'Anketa o poznavanju biljnih vrsta', 'TwmbaYl<^0BkcBL', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima.pptx', 1),
+(3, 'Upitnik o ovisnosti o racunalnim igrama', 'Molimo Vas da odgovorite na ovu anketu u kojoj se ispituje ovisnost ljudi o racunalnim igrama:', 'tCx|(l[[eM6Kut*', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1);
 
 -- --------------------------------------------------------
 
@@ -237,7 +314,7 @@ CREATE TABLE `Users` (
 --
 
 INSERT INTO `Users` (`idUser`, `name`, `surname`, `facebook_id`, `address`, `Role_idRole`) VALUES
-(1, 'Petar', 'Šestak', 'kontakt', 'http://www.facebook.com/zeko868', 1),
+(1, 'Petar', 'Šestak', '1431307750213523', 'http://www.facebook.com/zeko868', 1),
 (2, 'Marin', 'Mihajlović', 'kontakt', 'adresa2', 2),
 (3, 'Mario', 'Šelek', 'kontakt', 'adresa1', 3);
 
@@ -251,7 +328,7 @@ INSERT INTO `Users` (`idUser`, `name`, `surname`, `facebook_id`, `address`, `Rol
 ALTER TABLE `Answers`
   ADD PRIMARY KEY (`idAnswers`),
   ADD KEY `fk_Answers_Users1_idx` (`Users_idUser`),
-  ADD KEY `fk_Answers_Questions1_idx` (`Questions_idQuestions`);
+  ADD KEY `fk_Answers_Questions1_idx` (`Options_idOptions`);
 
 --
 -- Indexes for table `Log`
@@ -327,12 +404,12 @@ ALTER TABLE `Answers`
 -- AUTO_INCREMENT for table `Options`
 --
 ALTER TABLE `Options`
-  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `Questions`
 --
 ALTER TABLE `Questions`
-  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `Question_type`
 --
@@ -347,7 +424,7 @@ ALTER TABLE `Role`
 -- AUTO_INCREMENT for table `Survey`
 --
 ALTER TABLE `Survey`
-  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `Users`
 --
@@ -361,7 +438,7 @@ ALTER TABLE `Users`
 -- Constraints for table `Answers`
 --
 ALTER TABLE `Answers`
-  ADD CONSTRAINT `fk_Answers_Questions1` FOREIGN KEY (`Questions_idQuestions`) REFERENCES `Questions` (`idQuestions`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Answers_Options1` FOREIGN KEY (`Options_idOptions`) REFERENCES `Options` (`idOptions`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_Answers_Users1` FOREIGN KEY (`Users_idUser`) REFERENCES `Users` (`idUser`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
