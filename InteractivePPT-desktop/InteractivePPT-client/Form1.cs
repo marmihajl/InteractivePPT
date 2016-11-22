@@ -28,5 +28,14 @@ namespace InteractivePPT_client
             login.Show();
             this.Enabled = false;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            User user = new User();
+            user.name = "Marin Mihajlovic";
+            Home h = new Home(user);
+            h.WindowState = FormWindowState.Maximized;
+            h.Show();
+        }
     }
 }

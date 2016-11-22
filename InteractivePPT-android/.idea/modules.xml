@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/heightbasedproportionallysizeableimageview/heightbasedproportionallysizeableimageview.iml" filepath="$PROJECT_DIR$/heightbasedproportionallysizeableimageview/heightbasedproportionallysizeableimageview.iml" />
       <module fileurl="file://$PROJECT_DIR$/qrreader/qrreader.iml" filepath="$PROJECT_DIR$/qrreader/qrreader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/qrreader/qrreader.iml" filepath="$PROJECT_DIR$/qrreader/qrreader.iml" />
     </modules>
   </component>
 </project>

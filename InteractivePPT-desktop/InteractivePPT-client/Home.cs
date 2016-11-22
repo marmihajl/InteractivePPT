@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Windows.Forms;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
 using com.google.zxing;
 using com.google.zxing.qrcode;
-using System.Threading;
-using Microsoft.Office.Core;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
-using System.Diagnostics;
+using Microsoft.Synchronization;
+using Microsoft.Synchronization.Files;
 
 namespace InteractivePPT
 {
     public partial class Home : Form
     {
         private User user;
-        Microsoft.Office.Interop.PowerPoint.Application pptApp = new Microsoft.Office.Interop.PowerPoint.Application();
+        PowerPoint.Application pptApp = new PowerPoint.Application();
+        static string path;
+        PowerPoint.Presentation p = null;
 
         public Home(User u)
         {
@@ -124,35 +119,22 @@ namespace InteractivePPT
 
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.ShowDialog();
-            if(ofd.FileName != null)
+            if (ofd.FileName != null)
             {
-                var path = ofd.FileName;
-                string powerPointFilePath = path;
-                
+                path = ofd.FileName;
+                FileClass.uploadFile(path);
 
-                //pptApp = new Microsoft.Office.Interop.PowerPoint.Application();
-                pptApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
-                pptApp.Activate();
-
-                Microsoft.Office.Interop.PowerPoint.Presentations ps = pptApp.Presentations;
-                Microsoft.Office.Interop.PowerPoint.Presentation p = ps.Open(powerPointFilePath,
-                            Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue);
+                Presentation p = new Presentation(path);
+                p.Show();
+                this.Enabled = false;
                 
-                
-
             }
-            
-
-            
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            PowerPoint.SlideRange ppSR = pptApp.ActiveWindow.Selection.SlideRange;
-            PowerPoint.Shape ppSharp = ppSR.Shapes.AddLabel(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 0, 0, 200, 25);
-            
-            ppSharp.TextEffect.Text = "Hello";
-            
-        }
+        
+
+        
+        
+
     }
 }
