@@ -18,6 +18,7 @@ namespace InteractivePPT
         PowerPoint.Application pptApp = new PowerPoint.Application();
         static string path;
         PowerPoint.Presentation p = null;
+        SurveyList mySurveyList = null;
 
         public Home(User u)
         {
@@ -28,7 +29,7 @@ namespace InteractivePPT
         private void Home_Load(object sender, EventArgs e)
         {
             string serializedUserSurveys = null;
-            SurveyList mySurveyList = null;
+            
 
             label1.Text = user.name;
 
@@ -124,9 +125,8 @@ namespace InteractivePPT
                 path = ofd.FileName;
                 FileClass.uploadFile(path);
 
-                Presentation p = new Presentation(path);
+                Presentation p = new Presentation(path, mySurveyList);
                 p.Show();
-                this.Enabled = false;
                 
             }
         }

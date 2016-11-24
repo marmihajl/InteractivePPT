@@ -5,7 +5,7 @@ using System.Text;
 
 namespace InteractivePPT
 {
-    class Survey
+    public class Survey
     {
         public string name { get; set; }
         public string access_code { get; set; }

@@ -5,8 +5,8 @@ using System.Text;
 
 namespace InteractivePPT
 {
-    public class SurveyList
+    public class AnswerList
     {
-        public List<Survey> data { get; set; }
+        public List<Answer> results { get; set; }
     }
 }
