@@ -7,8 +7,6 @@ using Newtonsoft.Json;
 using com.google.zxing;
 using com.google.zxing.qrcode;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
-using Microsoft.Synchronization;
-using Microsoft.Synchronization.Files;
 
 namespace InteractivePPT
 {
@@ -40,7 +38,7 @@ namespace InteractivePPT
                     client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                     {
                        { "request_type", "get_surveys" },
-                       { "address", user.userName }
+                       { "app_uid", user.uid }
                     });
                     serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
                 }

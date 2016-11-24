@@ -37,7 +37,7 @@ switch ($_POST['request_type']) {
             }            
         }
 
-        $author = $dbHandler->query("SELECT idUser FROM Users WHERE facebook_id='$facebookId' LIMIT 1;")->fetch_assoc()['idUser'];
+        $author = $dbHandler->query("SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1;")->fetch_assoc()['idUser'];
         $command = "INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode', $fileUri, $author);";
         $dbHandler->query($command);
 
@@ -81,8 +81,8 @@ switch ($_POST['request_type']) {
 
         break;
     case 'get_surveys':
-        $email = $_POST['address'];
-        $command = "SELECT s.name,s.access_code,s.link_to_presentation FROM Survey s, Users u WHERE u.address='$email' AND u.idUser=s.author;";
+        $appUid = $_POST['app_uid'];
+        $command = "SELECT s.name,s.access_code,s.link_to_presentation FROM Survey s, Users u WHERE u.app_uid='$appUid' AND u.idUser=s.author;";
         $recordSet = $dbHandler->query($command);
         $outputArray = array();
         if ($recordSet) {
@@ -140,6 +140,13 @@ switch ($_POST['request_type']) {
         $id = $_POST['id'];
         $command = "";    //              NEED TO BE ADDED
         $result = $dbHandler->query($command);
+
+        break;
+    case 'get_user_info':
+        $appUid = $_POST['app_uid'];
+        $command = "SELECT name FROM Users WHERE app_uid='$appUid';";
+        $nameOfUser = $dbHandler->query($command)->fetch_array()['name'];
+        echo $nameOfUser; 
 
         break;
     case 'delete_file':

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 21, 2016 at 11:57 PM
+-- Generation Time: Nov 24, 2016 at 01:00 AM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -39,7 +39,9 @@ CREATE TABLE `Answers` (
 INSERT INTO `Answers` (`idAnswers`, `Users_idUser`, `Options_idOptions`) VALUES
 (1, 1, 1),
 (2, 2, 1),
-(3, 3, 1);
+(3, 3, 1),
+(4, 2, 1),
+(5, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -153,7 +155,9 @@ INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `multiple_ans
 (10, 'Koji tip igara najcesce igrate:', 0, 0, 2, 3),
 (11, 'Koliko vremena tjedno provodite igrajuci:', 0, 0, 1, 3),
 (12, 'Zasto igrate racunalne igre', 0, 0, 3, 3),
-(13, 'Smatrate li da ste ovisni o racunalnim igrama:', 0, 0, 1, 3);
+(13, 'Smatrate li da ste ovisni o racunalnim igrama:', 0, 0, 1, 3),
+(14, 'Prvo pitanje', 0, 0, 1, 4),
+(15, 'Drugo pitanje', 0, 0, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -206,7 +210,13 @@ INSERT INTO `Question_options` (`idOptions`, `idQuestions`) VALUES
 (32, 11),
 (33, 11),
 (21, 13),
-(22, 13);
+(22, 13),
+(1, 14),
+(2, 14),
+(3, 14),
+(1, 15),
+(2, 15),
+(3, 15);
 
 -- --------------------------------------------------------
 
@@ -271,7 +281,8 @@ CREATE TABLE `Survey` (
 INSERT INTO `Survey` (`idSurvey`, `name`, `description`, `access_code`, `link_to_presentation`, `author`) VALUES
 (1, 'Probna anketa', '', 'kod_za_pristup', NULL, 1),
 (2, 'HerbariumApp', 'Anketa o poznavanju biljnih vrsta', 'TwmbaYl<^0BkcBL', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima.pptx', 1),
-(3, 'Upitnik o ovisnosti o racunalnim igrama', 'Molimo Vas da odgovorite na ovu anketu u kojoj se ispituje ovisnost ljudi o racunalnim igrama:', 'tCx|(l[[eM6Kut*', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1);
+(3, 'Upitnik o ovisnosti o racunalnim igrama', 'Molimo Vas da odgovorite na ovu anketu u kojoj se ispituje ovisnost ljudi o racunalnim igrama:', 'tCx|(l[[eM6Kut*', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1),
+(4, 'Moja prva anketa', 'Ovo je moja prva anketa potrebna za testiranje', '123456', NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -292,7 +303,8 @@ CREATE TABLE `Survey_Selection` (
 INSERT INTO `Survey_Selection` (`Survey_idSurvey`, `Users_idUser`, `selected`) VALUES
 (1, 1, '2016-11-10 03:50:34'),
 (1, 2, '2016-11-10 03:50:34'),
-(1, 3, '2016-11-10 03:50:34');
+(1, 3, '2016-11-10 03:50:34'),
+(4, 2, '2016-11-22 13:00:00');
 
 -- --------------------------------------------------------
 
@@ -302,10 +314,8 @@ INSERT INTO `Survey_Selection` (`Survey_idSurvey`, `Users_idUser`, `selected`) V
 
 CREATE TABLE `Users` (
   `idUser` int(11) NOT NULL,
-  `name` varchar(45) CHARACTER SET utf8 DEFAULT NULL,
-  `surname` varchar(45) CHARACTER SET utf8 DEFAULT NULL,
-  `facebook_id` varchar(45) CHARACTER SET utf8 DEFAULT NULL,
-  `address` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `name` varchar(90) CHARACTER SET utf8 NOT NULL,
+  `app_uid` varchar(45) CHARACTER SET utf8 NOT NULL,
   `Role_idRole` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -313,10 +323,10 @@ CREATE TABLE `Users` (
 -- Dumping data for table `Users`
 --
 
-INSERT INTO `Users` (`idUser`, `name`, `surname`, `facebook_id`, `address`, `Role_idRole`) VALUES
-(1, 'Petar', 'Šestak', '1431307750213523', 'http://www.facebook.com/zeko868', 1),
-(2, 'Marin', 'Mihajlović', 'kontakt', 'adresa2', 2),
-(3, 'Mario', 'Šelek', 'kontakt', 'adresa1', 3);
+INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`) VALUES
+(1, 'Petar Šestak', '1431307750213523', 1),
+(2, 'Marin Mihajlović', '10210532062074946', 2),
+(3, 'Mario Šelek', 'kontakt', 3);
 
 --
 -- Indexes for dumped tables
@@ -399,7 +409,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Answers`
 --
 ALTER TABLE `Answers`
-  MODIFY `idAnswers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idAnswers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `Options`
 --
@@ -409,7 +419,7 @@ ALTER TABLE `Options`
 -- AUTO_INCREMENT for table `Questions`
 --
 ALTER TABLE `Questions`
-  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `Question_type`
 --
@@ -424,7 +434,7 @@ ALTER TABLE `Role`
 -- AUTO_INCREMENT for table `Survey`
 --
 ALTER TABLE `Survey`
-  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `Users`
 --
