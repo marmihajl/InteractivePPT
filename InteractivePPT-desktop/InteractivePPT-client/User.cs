@@ -8,9 +8,8 @@ namespace InteractivePPT
     public class User
     {
 
+        public string uid;
         public string name;
-        public string userName;
-        public string contact;
 
     }
 }
