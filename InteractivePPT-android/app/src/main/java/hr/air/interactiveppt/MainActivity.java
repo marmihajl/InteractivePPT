@@ -4,8 +4,6 @@ package hr.air.interactiveppt;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,14 +15,17 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
-import com.facebook.Profile;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import hr.air.interactiveppt.responses.ProcessingResultResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -127,10 +128,36 @@ public class MainActivity extends AppCompatActivity {
             String id = object.getString("id");
             String fullName = object.getString("name");
             user = new User(fullName, id);
+            registerUserIntoWebservice(user);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
-        openHome();
+    private void registerUserIntoWebservice(User u) {
+        WebService client = ServiceGenerator.createService(WebService.class);
+        Call<ProcessingResultResponse> call = client.registerUser(
+                "register_user",
+                u.id,
+                u.fullName
+        );
+
+        if(call != null){
+            call.enqueue(new Callback<ProcessingResultResponse>() {
+
+                @Override
+                public void onResponse(Call<ProcessingResultResponse> call, Response<ProcessingResultResponse> response) {
+                    if (response.isSuccessful() && response.body().success) {
+                        openHome();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProcessingResultResponse> call, Throwable t) {
+
+                }
+            });
+        }
+
     }
 }

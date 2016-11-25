@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,31 +21,28 @@ import com.google.gson.Gson;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hr.air.interactiveppt.responses.ProcessingResultResponse;
 import hr.air.interactiveppt.responses.Survey;
-import hr.air.interactiveppt.responses.SurveyCreatedResponse;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
-
-import static android.app.Activity.RESULT_OK;
 
 public class CreateSurvey extends AppCompatActivity {
 
@@ -202,13 +198,13 @@ public class CreateSurvey extends AppCompatActivity {
         @Override
         protected Object doInBackground(Object[] objects) {
 
-            MultipartBody.Part body = null;
+            MultipartBody.Part pptAsMessagePart = null;
 
             if (uriOfSelectedFile != null) {
                 File fileHandler = FileUtils.getFile(getBaseContext(), uriOfSelectedFile);  //this instead of getBaseContext was before
                 RequestBody requestFile =
                         RequestBody.create(MediaType.parse("multipart/form-data"), fileHandler);
-                body = MultipartBody.Part.createFormData("ppt", fileHandler.getName(), requestFile);
+                pptAsMessagePart = MultipartBody.Part.createFormData("ppt", fileHandler.getName(), requestFile);
             }
 
             SurveyWithQuestions surveyWithQuestions = new SurveyWithQuestions(
@@ -220,23 +216,23 @@ public class CreateSurvey extends AppCompatActivity {
 
             String serializedSurvey = (new Gson()).toJson(surveyWithQuestions);
 
-            RequestBody description =
+            RequestBody surveyDetailsAsMessagePart =
                     RequestBody.create(
                             MediaType.parse("multipart/form-data"), serializedSurvey);
 
             WebService client = ServiceGenerator.createService(WebService.class);
 
-            Call<SurveyCreatedResponse> call = client.createSurvey(
-                    body,
-                    description
+            Call<ProcessingResultResponse> call = client.createSurvey(
+                    pptAsMessagePart,
+                    surveyDetailsAsMessagePart
             );
 
             if(call != null){
-                call.enqueue(new Callback<SurveyCreatedResponse>() {
+                call.enqueue(new Callback<ProcessingResultResponse>() {
 
                     @Override
-                    public void onResponse(Call<SurveyCreatedResponse> call, Response<SurveyCreatedResponse> response) {
-                        if (response.isSuccessful()) {
+                    public void onResponse(Call<ProcessingResultResponse> call, Response<ProcessingResultResponse> response) {
+                        if (response.isSuccessful() && response.body().success) {
                             Handler mainHandler = new Handler(getBaseContext().getMainLooper());
 
                             Runnable myRunnable = new Runnable() {
@@ -257,7 +253,7 @@ public class CreateSurvey extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<SurveyCreatedResponse> call, Throwable t) {
+                    public void onFailure(Call<ProcessingResultResponse> call, Throwable t) {
 
                     }
                 });
@@ -288,13 +284,23 @@ class ServiceGenerator {
 interface WebService {
     @Multipart
     @POST("interactivePPT-server.php")
-    Call<SurveyCreatedResponse> createSurvey(
+    Call<ProcessingResultResponse> createSurvey(
             @Part MultipartBody.Part file,
             @Part("json") RequestBody json
     );
 
+    @FormUrlEncoded
     @POST("interactivePPT-server.php")
     Call<Survey> getDetails(
-            @Path("access_code") String accessCode
+            @Field("access_code") String accessCode,
+            @Field("request_type") String requestType
+    );
+
+    @FormUrlEncoded
+    @POST("interactivePPT-server.php")
+    Call<ProcessingResultResponse> registerUser(
+            @Field("request_type") String requestType,
+            @Field("app_uid") String appUid,
+            @Field("name") String name
     );
 }

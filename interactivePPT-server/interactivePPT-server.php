@@ -149,6 +149,18 @@ switch ($_POST['request_type']) {
         echo $nameOfUser; 
 
         break;
+    case 'register_user':
+        $appUid = $_POST['app_uid'];
+        $fullName = $_POST['name'];
+        if ($dbHandler->query("SELECT * FROM Users WHERE app_uid='$appUid';")->num_rows === 0) {
+            $dbHandler->query("INSERT INTO Users VALUES (default, '$fullName', '$appUid', 3);");
+        }
+        else {
+            $dbHandler->query("UPDATE Users SET name='$fullName' WHERE app_uid='$appUid';");
+        }
+        echo '{"success":true}';
+
+        break;
     case 'delete_file':
 
 	$data=$_POST['file'];
