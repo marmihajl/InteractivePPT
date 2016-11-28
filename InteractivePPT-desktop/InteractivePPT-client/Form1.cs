@@ -29,10 +29,13 @@ namespace InteractivePPT_client
             this.Enabled = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        
+
+        private void button1_Click_1(object sender, EventArgs e)
         {
             User user = new User();
             user.name = "Marin Mihajlovic";
+            user.uid = "10210532062074946";
             Home h = new Home(user);
             h.WindowState = FormWindowState.Maximized;
             h.Show();
