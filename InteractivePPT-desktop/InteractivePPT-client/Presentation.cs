@@ -137,9 +137,26 @@ namespace InteractivePPT
             PowerPoint._Slide slide;
             slides = p.Slides;
             slide = slides.AddSlide(currentSlide() + move++, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
-            
-            var chart = slide.Shapes.AddChart(XlChartType.xlBarClustered, 10f, 10f, 900f, 400f).Chart;
-            
+            //var chart = slide.Shapes.AddChart(XlChartType.xlBarClustered, 10f, 10f, 900f, 400f).Chart;
+            PowerPoint.Chart chart = null;
+
+            if (radioBar.Checked == true)
+                chart = slide.Shapes.AddChart(XlChartType.xlBarClustered, 10f, 10f, 900f, 400f).Chart;
+
+            if (radioLine.Checked == true)
+                chart = slide.Shapes.AddChart(XlChartType.xlLine, 10f, 10f, 900f, 400f).Chart;
+
+            if (radioPie.Checked == true)
+            {
+                chart = slide.Shapes.AddChart(XlChartType.xlPie, 10f, 10f, 900f, 400f).Chart;
+                chart.ApplyDataLabels();
+                chart.HasLegend = true;
+            }
+            else
+            {
+                chart.HasLegend = false;
+            }
+
             var workbook = (EXCEL.Workbook)chart.ChartData.Workbook;
             workbook.Windows.Application.Visible = true;
 
@@ -164,8 +181,6 @@ namespace InteractivePPT
             chart.ChartTitle.Text = question;
             chart.ChartTitle.Font.Size = 12;
             chart.ChartTitle.Font.Color = Color.Black.ToArgb();
-
-            chart.HasLegend = false;
 
             chart.Refresh();
             workbook.Close();

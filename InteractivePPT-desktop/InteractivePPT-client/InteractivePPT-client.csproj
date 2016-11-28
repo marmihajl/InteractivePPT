@@ -208,6 +208,21 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\barChart3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\piechart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pie_chart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pie_chart %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\linechart.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">

@@ -32,6 +32,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.questionList = new System.Windows.Forms.CheckedListBox();
             this.btnAddGraph = new System.Windows.Forms.Button();
+            this.radioLine = new System.Windows.Forms.RadioButton();
+            this.radioPie = new System.Windows.Forms.RadioButton();
+            this.radioBar = new System.Windows.Forms.RadioButton();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -62,7 +66,7 @@
             // 
             // btnAddGraph
             // 
-            this.btnAddGraph.Location = new System.Drawing.Point(16, 261);
+            this.btnAddGraph.Location = new System.Drawing.Point(109, 352);
             this.btnAddGraph.Name = "btnAddGraph";
             this.btnAddGraph.Size = new System.Drawing.Size(75, 23);
             this.btnAddGraph.TabIndex = 4;
@@ -70,12 +74,58 @@
             this.btnAddGraph.UseVisualStyleBackColor = true;
             this.btnAddGraph.Click += new System.EventHandler(this.btnAddGraph_Click);
             // 
+            // radioLine
+            // 
+            this.radioLine.AutoSize = true;
+            this.radioLine.Image = global::InteractivePPT.Properties.Resources.linechart;
+            this.radioLine.Location = new System.Drawing.Point(237, 271);
+            this.radioLine.Name = "radioLine";
+            this.radioLine.Size = new System.Drawing.Size(57, 36);
+            this.radioLine.TabIndex = 7;
+            this.radioLine.TabStop = true;
+            this.radioLine.UseVisualStyleBackColor = true;
+            // 
+            // radioPie
+            // 
+            this.radioPie.AutoSize = true;
+            this.radioPie.Image = global::InteractivePPT.Properties.Resources.pie_chart__1_;
+            this.radioPie.Location = new System.Drawing.Point(158, 271);
+            this.radioPie.Name = "radioPie";
+            this.radioPie.Size = new System.Drawing.Size(57, 36);
+            this.radioPie.TabIndex = 6;
+            this.radioPie.TabStop = true;
+            this.radioPie.UseVisualStyleBackColor = true;
+            // 
+            // radioBar
+            // 
+            this.radioBar.AutoSize = true;
+            this.radioBar.Image = global::InteractivePPT.Properties.Resources.barChart3;
+            this.radioBar.Location = new System.Drawing.Point(84, 271);
+            this.radioBar.Name = "radioBar";
+            this.radioBar.Size = new System.Drawing.Size(57, 36);
+            this.radioBar.TabIndex = 5;
+            this.radioBar.TabStop = true;
+            this.radioBar.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 283);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(61, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Vrsta grafa:";
+            // 
             // Presentation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.ClientSize = new System.Drawing.Size(765, 433);
+            this.ClientSize = new System.Drawing.Size(371, 433);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.radioLine);
+            this.Controls.Add(this.radioPie);
+            this.Controls.Add(this.radioBar);
             this.Controls.Add(this.btnAddGraph);
             this.Controls.Add(this.questionList);
             this.Controls.Add(this.label1);
@@ -93,5 +143,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckedListBox questionList;
         private System.Windows.Forms.Button btnAddGraph;
+        private System.Windows.Forms.RadioButton radioBar;
+        private System.Windows.Forms.RadioButton radioPie;
+        private System.Windows.Forms.RadioButton radioLine;
+        private System.Windows.Forms.Label label2;
     }
 }
