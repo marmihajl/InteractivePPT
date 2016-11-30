@@ -1,1 +1,1 @@
-include ':app', ':heightbasedproportionallysizeableimageview', ':qrreader'
+include ':app', ':heightbasedproportionallysizeableimageview', ':qrreader', ':webservice', ':entities'

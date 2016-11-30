@@ -1,4 +1,4 @@
-package hr.air.interactiveppt.responses;
+package hr.air.interactiveppt.entities.responses;
 
 /**
  * Created by zeko868 on 15.11.2016..

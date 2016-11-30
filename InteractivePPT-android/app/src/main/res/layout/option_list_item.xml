@@ -24,7 +24,7 @@
             tools:text="Odgovor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/txtAnswer" />
+            android:id="@+id/txtOption" />
 
     </LinearLayout>
 

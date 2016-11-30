@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,29 +21,29 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
+import org.w3c.dom.ProcessingInstruction;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import hr.air.interactiveppt.responses.ProcessingResultResponse;
-import hr.air.interactiveppt.responses.Survey;
+import hr.air.interactiveppt.entities.Option;
+import hr.air.interactiveppt.entities.Question;
+import hr.air.interactiveppt.entities.SurveyWithQuestions;
+import hr.air.interactiveppt.entities.responses.ProcessingResultResponse;
+import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.ServiceGenerator;
+import hr.air.interactiveppt.webservice.WebService;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.Part;
 
 public class CreateSurvey extends AppCompatActivity {
 
@@ -52,7 +53,7 @@ public class CreateSurvey extends AppCompatActivity {
     private static Uri uriOfSelectedFile = null;
 
     ArrayList<Question> questions = new ArrayList<Question>();
-    ArrayList<Answer> answers = new ArrayList<Answer>();
+    ArrayList<Option> selectedOptions = new ArrayList<Option>();
     private QuestionRecyclerAdapter adapter;
     AddQuestion cdd;
     RecyclerView mRecycler;
@@ -80,7 +81,55 @@ public class CreateSurvey extends AppCompatActivity {
 
         String surveyName = ((EditText)findViewById(R.id.title_input)).getText().toString();
         String surveyDescription = ((EditText)findViewById(R.id.description_input)).getText().toString();
-        new RetrieveFeedTask().execute(surveyName, surveyDescription, surveyAuthorId);
+
+
+        MultipartBody.Part pptAsMessagePart = null;
+
+        if (uriOfSelectedFile != null) {
+            File fileHandler = FileUtils.getFile(getBaseContext(), uriOfSelectedFile);  //this instead of getBaseContext was before
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("multipart/form-data"), fileHandler);
+            pptAsMessagePart = MultipartBody.Part.createFormData("ppt", fileHandler.getName(), requestFile);
+        }
+
+        SurveyWithQuestions surveyWithQuestions = new SurveyWithQuestions(
+                surveyName,
+                surveyDescription,
+                questions,
+                surveyAuthorId
+        );
+
+        String serializedSurvey = (new Gson()).toJson(surveyWithQuestions);
+
+        RequestBody surveyDetailsAsMessagePart =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), serializedSurvey);
+
+        CommunicationHandler.SendDataAndProcessResponse(
+                ServiceGenerator.createService(WebService.class).createSurvey(
+                        pptAsMessagePart,
+                        surveyDetailsAsMessagePart
+                ),
+                new BiConsumer<Call<ProcessingResultResponse>, Response<ProcessingResultResponse>>() {
+                    @Override
+                    public void accept(Call<ProcessingResultResponse> call, Response<ProcessingResultResponse> response) {
+                        findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                        Toast.makeText(CreateSurvey.this,
+                                "Anketa je uspješno kreirana!",
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                },
+                new BiConsumer<Call<ProcessingResultResponse>, Throwable>() {
+                    @Override
+                    public void accept(Call<ProcessingResultResponse> sCall, Throwable throwable) {
+                        ;
+                    }
+                },
+                true,
+                getBaseContext()
+        );
+
 
         findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
     }
@@ -178,8 +227,8 @@ public class CreateSurvey extends AppCompatActivity {
         List<ExpandableQuestionItem> questionItemList = new ArrayList<ExpandableQuestionItem>();
 
         if(questions.size() > 0) {
-            for (Question store : questions) {
-                questionItemList.add(new ExpandableQuestionItem(store));
+            for (Question question : questions) {
+                questionItemList.add(new ExpandableQuestionItem(question));
             }
             if(mRecycler != null) {
                 adapter = new QuestionRecyclerAdapter(this, questionItemList);
@@ -188,119 +237,4 @@ public class CreateSurvey extends AppCompatActivity {
             }
         }
     }
-
-
-    class RetrieveFeedTask extends AsyncTask {
-
-        private Exception exception;
-
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-
-            MultipartBody.Part pptAsMessagePart = null;
-
-            if (uriOfSelectedFile != null) {
-                File fileHandler = FileUtils.getFile(getBaseContext(), uriOfSelectedFile);  //this instead of getBaseContext was before
-                RequestBody requestFile =
-                        RequestBody.create(MediaType.parse("multipart/form-data"), fileHandler);
-                pptAsMessagePart = MultipartBody.Part.createFormData("ppt", fileHandler.getName(), requestFile);
-            }
-
-            SurveyWithQuestions surveyWithQuestions = new SurveyWithQuestions(
-                    objects[0].toString(),
-                    objects[1].toString(),
-                    questions,
-                    objects[2].toString()
-            );
-
-            String serializedSurvey = (new Gson()).toJson(surveyWithQuestions);
-
-            RequestBody surveyDetailsAsMessagePart =
-                    RequestBody.create(
-                            MediaType.parse("multipart/form-data"), serializedSurvey);
-
-            WebService client = ServiceGenerator.createService(WebService.class);
-
-            Call<ProcessingResultResponse> call = client.createSurvey(
-                    pptAsMessagePart,
-                    surveyDetailsAsMessagePart
-            );
-
-            if(call != null){
-                call.enqueue(new Callback<ProcessingResultResponse>() {
-
-                    @Override
-                    public void onResponse(Call<ProcessingResultResponse> call, Response<ProcessingResultResponse> response) {
-                        if (response.isSuccessful() && response.body().success) {
-                            Handler mainHandler = new Handler(getBaseContext().getMainLooper());
-
-                            Runnable myRunnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                    Toast.makeText(CreateSurvey.this,
-                                            "Anketa je uspješno kreirana!",
-                                            Toast.LENGTH_LONG
-                                    ).show();
-
-                                }
-                            };
-                            mainHandler.post(myRunnable);
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<ProcessingResultResponse> call, Throwable t) {
-
-                    }
-                });
-            }
-            return null;
-
-        }
-    }
-}
-
-class ServiceGenerator {
-
-    public static final String API_BASE_URL = "http://46.101.68.86/";
-
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-    private static Retrofit.Builder builder =
-            new Retrofit.Builder()
-                    .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create());
-
-    public static <S> S createService(Class<S> serviceClass) {
-        Retrofit retrofit = builder.client(httpClient.build()).build();
-        return retrofit.create(serviceClass);
-    }
-}
-
-interface WebService {
-    @Multipart
-    @POST("interactivePPT-server.php")
-    Call<ProcessingResultResponse> createSurvey(
-            @Part MultipartBody.Part file,
-            @Part("json") RequestBody json
-    );
-
-    @FormUrlEncoded
-    @POST("interactivePPT-server.php")
-    Call<Survey> getDetails(
-            @Field("access_code") String accessCode,
-            @Field("request_type") String requestType
-    );
-
-    @FormUrlEncoded
-    @POST("interactivePPT-server.php")
-    Call<ProcessingResultResponse> registerUser(
-            @Field("request_type") String requestType,
-            @Field("app_uid") String appUid,
-            @Field("name") String name
-    );
 }

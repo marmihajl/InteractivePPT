@@ -1,6 +1,4 @@
-package hr.air.interactiveppt;
-
-import android.net.Uri;
+package hr.air.interactiveppt.entities;
 
 /**
  * Created by marin on 5.11.2016..

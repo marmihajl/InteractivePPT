@@ -13,6 +13,9 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
+import hr.air.interactiveppt.entities.Option;
+import hr.air.interactiveppt.entities.Question;
+
 /**
  * Created by marin on 9.11.2016..
  */
@@ -90,9 +93,9 @@ public class AddQuestion extends Dialog {
                 for (int i = 0; i < answerList.getChildCount(); i++){
                     View view = answerList.getChildAt(i);
                     if(view instanceof EditText){
-                        Answer answer = new Answer();
-                        answer.setAnswerText(((EditText) view).getText().toString());
-                        question.setAnswers(answer);
+                        Option answer = new Option();
+                        answer.setOptionText(((EditText) view).getText().toString());
+                        question.setOptions(answer);
                     }
                 }
                 questions.add(question);

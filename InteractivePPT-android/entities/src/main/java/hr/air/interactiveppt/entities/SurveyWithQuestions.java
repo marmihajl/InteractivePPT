@@ -1,4 +1,4 @@
-package hr.air.interactiveppt;
+package hr.air.interactiveppt.entities;
 
 import com.google.gson.annotations.SerializedName;
 

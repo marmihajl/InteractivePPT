@@ -4,8 +4,10 @@ package hr.air.interactiveppt;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -22,11 +24,15 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import hr.air.interactiveppt.responses.ProcessingResultResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.function.BiConsumer;
 
+import hr.air.interactiveppt.entities.User;
+import hr.air.interactiveppt.entities.responses.ProcessingResultResponse;
+import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.ServiceGenerator;
+import hr.air.interactiveppt.webservice.WebService;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -114,9 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 .Callback() {
             @Override
             public void onCompleted(GraphResponse graphResponse) {
-
                 LoginManager.getInstance().logOut();
-
             }
         }).executeAsync();
         finish();
@@ -135,29 +139,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registerUserIntoWebservice(User u) {
-        WebService client = ServiceGenerator.createService(WebService.class);
-        Call<ProcessingResultResponse> call = client.registerUser(
-                "register_user",
-                u.id,
-                u.fullName
-        );
-
-        if(call != null){
-            call.enqueue(new Callback<ProcessingResultResponse>() {
-
-                @Override
-                public void onResponse(Call<ProcessingResultResponse> call, Response<ProcessingResultResponse> response) {
-                    if (response.isSuccessful() && response.body().success) {
+        CommunicationHandler.SendDataAndProcessResponse(
+                ServiceGenerator.createService(WebService.class).registerUser(
+                        "register_user",
+                        u.id,
+                        u.fullName
+                ),
+                new BiConsumer<Call<ProcessingResultResponse>, Response<ProcessingResultResponse>>() {
+                    @Override
+                    public void accept(Call<ProcessingResultResponse> call, Response<ProcessingResultResponse> response) {
                         openHome();
                     }
-                }
-
-                @Override
-                public void onFailure(Call<ProcessingResultResponse> call, Throwable t) {
-
-                }
-            });
-        }
-
+                },
+                new BiConsumer<Call<ProcessingResultResponse>, Throwable>() {
+                    @Override
+                    public void accept(Call<ProcessingResultResponse> sCall, Throwable throwable) {
+                        ;
+                    }
+                },
+                false,
+                getBaseContext()
+        );
     }
 }

@@ -1,4 +1,4 @@
-package hr.air.interactiveppt;
+package hr.air.interactiveppt.entities;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -6,21 +6,21 @@ import com.google.gson.annotations.SerializedName;
  * Created by marin on 9.11.2016..
  */
 
-public class Answer {
+public class Option {
 
     @SerializedName("text")
     public String answerText;
 
     public int questionId;
 
-    public Answer() {
+    public Option() {
     }
 
-    public String getAnswerText() {
+    public String getOptionText() {
         return answerText;
     }
 
-    public void setAnswerText(String answerText) {
+    public void setOptionText(String answerText) {
         this.answerText = answerText;
     }
 

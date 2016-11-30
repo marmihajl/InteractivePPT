@@ -7,6 +7,7 @@ import com.bignerdranch.expandablerecyclerview.ChildViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hr.air.interactiveppt.entities.Option;
 
 /**
  * Created by marin on 9.11.2016..
@@ -14,12 +15,12 @@ import butterknife.ButterKnife;
 
 public class AnswerViewHolder extends ChildViewHolder {
 
-    @BindView(R.id.txtAnswer)
-    TextView answerText;
+    @BindView(R.id.txtOption)
+    TextView optionText;
 
     QuestionRecyclerAdapter mAdapter;
 
-    private Answer answer;
+    private Option option;
     View mViewItem;
 
     public  AnswerViewHolder(View itemView, QuestionRecyclerAdapter adapter){
@@ -29,9 +30,9 @@ public class AnswerViewHolder extends ChildViewHolder {
         ButterKnife.bind(this,itemView);
     }
 
-    public void bind(Answer a){
-        answer = a;
-        answerText.setText(answer.getAnswerText());
+    public void bind(Option o){
+        option = o;
+        optionText.setText(option.getOptionText());
     }
 
 }

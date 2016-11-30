@@ -10,12 +10,14 @@ import com.bignerdranch.expandablerecyclerview.ExpandableRecyclerAdapter;
 
 import java.util.List;
 
+import hr.air.interactiveppt.entities.Option;
+
 /**
  * Created by marin on 9.11.2016..
  */
 
 public class QuestionRecyclerAdapter extends ExpandableRecyclerAdapter<ExpandableQuestionItem,
-        Answer, QuestionViewHolder, AnswerViewHolder> {
+        Option, QuestionViewHolder, AnswerViewHolder> {
 
     private LayoutInflater layoutInflater;
     public QuestionRecyclerAdapter(Context context, @NonNull List<ExpandableQuestionItem> parentList) {
@@ -33,7 +35,7 @@ public class QuestionRecyclerAdapter extends ExpandableRecyclerAdapter<Expandabl
     @NonNull
     @Override
     public AnswerViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
-        View answerView = layoutInflater.inflate(R.layout.answer_list_item, childViewGroup, false);
+        View answerView = layoutInflater.inflate(R.layout.option_list_item, childViewGroup, false);
         return new AnswerViewHolder(answerView, this);
     }
 
@@ -44,8 +46,8 @@ public class QuestionRecyclerAdapter extends ExpandableRecyclerAdapter<Expandabl
     }
 
     @Override
-    public void onBindChildViewHolder(@NonNull AnswerViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull Answer childListItem) {
-        Answer answer = childListItem;
-        childViewHolder.bind(answer);
+    public void onBindChildViewHolder(@NonNull AnswerViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull Option childListItem) {
+        Option option = childListItem;
+        childViewHolder.bind(option);
     }
 }

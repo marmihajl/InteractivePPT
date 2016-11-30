@@ -1,4 +1,4 @@
-package hr.air.interactiveppt;
+package hr.air.interactiveppt.entities;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -17,8 +17,8 @@ public class Question {
     @SerializedName("type")
     public int questionType;
 
-    @SerializedName("answers")
-    public ArrayList<Answer> answers = new ArrayList<>();
+    @SerializedName("options")
+    public ArrayList<Option> options = new ArrayList<>();
 
     public Question() {
     }
@@ -33,7 +33,7 @@ public class Question {
     public Question(Question question) {
         this.questionText = question.getQuestionText();
         this.questionType = question.getQuestionType();
-        this.answers = question.getAnswers();
+        this.options = question.getOptions();
     }
 
     public int getQuestionId() {
@@ -60,12 +60,12 @@ public class Question {
         this.questionType = questionType;
     }
 
-    public ArrayList<Answer> getAnswers() {
-        return answers;
+    public ArrayList<Option> getOptions() {
+        return options;
     }
 
-    public void setAnswers(Answer a) {
-        answers.add(a);
+    public void setOptions(Option o) {
+        options.add(o);
     }
 
 
