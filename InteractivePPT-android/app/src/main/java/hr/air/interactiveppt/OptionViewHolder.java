@@ -13,7 +13,7 @@ import hr.air.interactiveppt.entities.Option;
  * Created by marin on 9.11.2016..
  */
 
-public class AnswerViewHolder extends ChildViewHolder {
+public class OptionViewHolder extends ChildViewHolder {
 
     @BindView(R.id.txtOption)
     TextView optionText;
@@ -23,7 +23,7 @@ public class AnswerViewHolder extends ChildViewHolder {
     private Option option;
     View mViewItem;
 
-    public  AnswerViewHolder(View itemView, QuestionRecyclerAdapter adapter){
+    public  OptionViewHolder(View itemView, QuestionRecyclerAdapter adapter){
         super(itemView);
         mViewItem = itemView;
         mAdapter = adapter;

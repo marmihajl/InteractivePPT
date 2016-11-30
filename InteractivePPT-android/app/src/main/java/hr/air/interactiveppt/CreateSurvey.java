@@ -212,14 +212,6 @@ public class CreateSurvey extends AppCompatActivity {
             }
 
         });
-
-        b = (Button)findViewById(R.id.button2);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadData();
-            }
-        });
     }
 
     public void loadData(){

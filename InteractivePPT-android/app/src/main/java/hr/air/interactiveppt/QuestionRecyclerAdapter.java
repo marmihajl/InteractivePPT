@@ -17,7 +17,7 @@ import hr.air.interactiveppt.entities.Option;
  */
 
 public class QuestionRecyclerAdapter extends ExpandableRecyclerAdapter<ExpandableQuestionItem,
-        Option, QuestionViewHolder, AnswerViewHolder> {
+        Option, QuestionViewHolder, OptionViewHolder> {
 
     private LayoutInflater layoutInflater;
     public QuestionRecyclerAdapter(Context context, @NonNull List<ExpandableQuestionItem> parentList) {
@@ -34,9 +34,9 @@ public class QuestionRecyclerAdapter extends ExpandableRecyclerAdapter<Expandabl
 
     @NonNull
     @Override
-    public AnswerViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
+    public OptionViewHolder onCreateChildViewHolder(@NonNull ViewGroup childViewGroup, int viewType) {
         View answerView = layoutInflater.inflate(R.layout.option_list_item, childViewGroup, false);
-        return new AnswerViewHolder(answerView, this);
+        return new OptionViewHolder(answerView, this);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class QuestionRecyclerAdapter extends ExpandableRecyclerAdapter<Expandabl
     }
 
     @Override
-    public void onBindChildViewHolder(@NonNull AnswerViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull Option childListItem) {
+    public void onBindChildViewHolder(@NonNull OptionViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull Option childListItem) {
         Option option = childListItem;
         childViewHolder.bind(option);
     }

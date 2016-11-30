@@ -30,8 +30,8 @@ public class AddQuestion extends Dialog {
         questions = q;
     }
 
-    int answerId = 1;
-    LinearLayout answerList;
+    int optionId = 1;
+    LinearLayout optionList;
     int id = 1;
 
     @Override
@@ -47,25 +47,25 @@ public class AddQuestion extends Dialog {
         spinner.setAdapter(adapter);
 
 
-        Button addAnswer =(Button)findViewById(R.id.btnAddAnswer);
-        Button removeAnswer = (Button)findViewById(R.id.btnRemoveAnswer);
-        answerList = (LinearLayout)findViewById(R.id.answerList);
+        Button addOption =(Button)findViewById(R.id.btnAddOption);
+        Button removeOption = (Button)findViewById(R.id.btnRemoveOption);
+        optionList = (LinearLayout)findViewById(R.id.optionList);
 
-        addAnswer.setOnClickListener(new View.OnClickListener() {
+        addOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText et = new EditText(getContext());
-                et.setId(answerId++);
-                et.setHint("Odgovor "+(answerId+1));
-                answerList.addView(et);
+                et.setId(optionId++);
+                et.setHint("Odgovor "+(optionId+1));
+                optionList.addView(et);
             }
         });
 
-        removeAnswer.setOnClickListener(new View.OnClickListener() {
+        removeOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText et = (EditText)answerList.getChildAt(answerId--);
-                answerList.removeView(et);
+                EditText et = (EditText)optionList.getChildAt(optionId--);
+                optionList.removeView(et);
             }
         });
 
@@ -90,15 +90,16 @@ public class AddQuestion extends Dialog {
                 EditText editText = (EditText)findViewById(R.id.questionText);
                 Question question = new Question(id, editText.getText().toString(),type);
                 id++;
-                for (int i = 0; i < answerList.getChildCount(); i++){
-                    View view = answerList.getChildAt(i);
+                for (int i = 0; i < optionList.getChildCount(); i++){
+                    View view = optionList.getChildAt(i);
                     if(view instanceof EditText){
-                        Option answer = new Option();
-                        answer.setOptionText(((EditText) view).getText().toString());
-                        question.setOptions(answer);
+                        Option option = new Option();
+                        option.setOptionText(((EditText) view).getText().toString());
+                        question.setOptions(option);
                     }
                 }
                 questions.add(question);
+                ((CreateSurvey)activity).loadData();
                 dismiss();
             }
         });

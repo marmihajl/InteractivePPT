@@ -18,7 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:id="@+id/textView"
+        android:id="@+id/title"
         android:fontFamily="sans-serif"
         android:textSize="24sp"
         android:textColor="@android:color/white"
@@ -28,9 +28,9 @@
         android:text="@string/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2"
+        android:id="@+id/subtitle"
         android:textSize="18sp"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="13dp"
         android:textColor="@android:color/white" />
@@ -42,12 +42,12 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/textView2" />
+        android:layout_alignEnd="@+id/subtitle" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/subtitle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:id="@+id/errorText"

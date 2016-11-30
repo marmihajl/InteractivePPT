@@ -87,23 +87,14 @@
             <TextView
                 android:text="@string/question"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView3"
-                android:layout_weight="1" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/btnAddQuestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_add_question"
-                android:layout_weight="1" />
-
-            <Button
-                android:text="@string/showData"
-                android:layout_width="88dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/button2"
-                android:layout_weight="3.44" />
+                android:layout_marginLeft="20dp" />
 
         </LinearLayout>
 

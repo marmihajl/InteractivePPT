@@ -22,7 +22,7 @@
     <string name="btnAddQuestion">Dodaj pitanje</string>
     <string name="question">Pitanja</string>
     <string name="questionType">Vrsta pitanja:</string>
-    <string name="answers">Odgovori:</string>
+    <string name="options">Odgovori:</string>
     <string name="questionText">Pitanje</string>
     <string name="saveQuestion">Spremi</string>
     <string name="cancelQuestion">Odustani</string>
