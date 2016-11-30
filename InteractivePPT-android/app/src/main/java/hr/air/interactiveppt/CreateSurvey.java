@@ -34,7 +34,6 @@ import butterknife.OnClick;
 import hr.air.interactiveppt.entities.Option;
 import hr.air.interactiveppt.entities.Question;
 import hr.air.interactiveppt.entities.SurveyWithQuestions;
-import hr.air.interactiveppt.entities.responses.ProcessingResultResponse;
 import hr.air.interactiveppt.webservice.CommunicationHandler;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
@@ -110,9 +109,9 @@ public class CreateSurvey extends AppCompatActivity {
                         pptAsMessagePart,
                         surveyDetailsAsMessagePart
                 ),
-                new BiConsumer<Call<ProcessingResultResponse>, Response<ProcessingResultResponse>>() {
+                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
                     @Override
-                    public void accept(Call<ProcessingResultResponse> call, Response<ProcessingResultResponse> response) {
+                    public void accept(Call<Boolean> call, Response<Boolean> response) {
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
                         Toast.makeText(CreateSurvey.this,
                                 "Anketa je uspješno kreirana!",
@@ -120,9 +119,9 @@ public class CreateSurvey extends AppCompatActivity {
                         ).show();
                     }
                 },
-                new BiConsumer<Call<ProcessingResultResponse>, Throwable>() {
+                new BiConsumer<Call<Boolean>, Throwable>() {
                     @Override
-                    public void accept(Call<ProcessingResultResponse> sCall, Throwable throwable) {
+                    public void accept(Call<Boolean> sCall, Throwable throwable) {
                         ;
                     }
                 },

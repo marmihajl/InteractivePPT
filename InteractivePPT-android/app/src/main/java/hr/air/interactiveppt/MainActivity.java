@@ -20,6 +20,7 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,12 +28,12 @@ import org.json.JSONObject;
 import java.util.function.BiConsumer;
 
 import hr.air.interactiveppt.entities.User;
-import hr.air.interactiveppt.entities.responses.ProcessingResultResponse;
 import hr.air.interactiveppt.webservice.CommunicationHandler;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -145,15 +146,15 @@ public class MainActivity extends AppCompatActivity {
                         u.id,
                         u.fullName
                 ),
-                new BiConsumer<Call<ProcessingResultResponse>, Response<ProcessingResultResponse>>() {
+                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
                     @Override
-                    public void accept(Call<ProcessingResultResponse> call, Response<ProcessingResultResponse> response) {
+                    public void accept(Call<Boolean> call, Response<Boolean> response) {
                         openHome();
                     }
                 },
-                new BiConsumer<Call<ProcessingResultResponse>, Throwable>() {
+                new BiConsumer<Call<Boolean>, Throwable>() {
                     @Override
-                    public void accept(Call<ProcessingResultResponse> sCall, Throwable throwable) {
+                    public void accept(Call<Boolean> sCall, Throwable throwable) {
                         ;
                     }
                 },

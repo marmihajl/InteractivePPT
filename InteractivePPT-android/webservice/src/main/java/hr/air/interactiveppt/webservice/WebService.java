@@ -1,6 +1,5 @@
 package hr.air.interactiveppt.webservice;
 
-import hr.air.interactiveppt.entities.responses.ProcessingResultResponse;
 import hr.air.interactiveppt.entities.responses.Survey;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -18,7 +17,7 @@ import retrofit2.http.Part;
 public interface WebService {
     @Multipart
     @POST("interactivePPT-server.php")
-    Call<ProcessingResultResponse> createSurvey(
+    Call<Boolean> createSurvey(
             @Part MultipartBody.Part file,
             @Part("json") RequestBody json
     );
@@ -32,7 +31,7 @@ public interface WebService {
 
     @FormUrlEncoded
     @POST("interactivePPT-server.php")
-    Call<ProcessingResultResponse> registerUser(
+    Call<Boolean> registerUser(
             @Field("request_type") String requestType,
             @Field("app_uid") String appUid,
             @Field("name") String name

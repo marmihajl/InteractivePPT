@@ -64,7 +64,7 @@ switch ($_POST['request_type']) {
             }
         }
 
-        echo '{"success":true}';
+        echo 'true';
         break;
     case 'edit_survey':
         $id = $_POST['id'];
@@ -158,7 +158,7 @@ switch ($_POST['request_type']) {
         else {
             $dbHandler->query("UPDATE Users SET name='$fullName' WHERE app_uid='$appUid';");
         }
-        echo '{"success":true}';
+        echo 'true';
 
         break;
     case 'delete_file':
