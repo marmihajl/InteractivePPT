@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("id",user.getId());
         intent.putExtra("fullName",user.getFullName());
         startActivity(intent);
-        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/", null, HttpMethod.DELETE, new GraphRequest
                 .Callback() {
             @Override
             public void onCompleted(GraphResponse graphResponse) {
