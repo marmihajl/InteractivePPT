@@ -14,6 +14,8 @@ namespace InteractivePPT
         Form1 f;
         User user = new User();
         List<string> userInfo = new List<string>();
+        private const string mobileAppId = "app-id-370728603269382";
+
         public Login(Form1 forma)
         {
             InitializeComponent();
@@ -44,7 +46,7 @@ namespace InteractivePPT
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
-            HtmlElement mobileAppThumbnail = webBrowser1.Document.GetElementById("app-id-370728603269382");
+            HtmlElement mobileAppThumbnail = webBrowser1.Document.GetElementById(mobileAppId);
             if (mobileAppThumbnail == null)
             {
                 DeleteCookiesOfIntegratedWebBrowser();
@@ -74,13 +76,14 @@ namespace InteractivePPT
         private void timer2_Tick(object sender, EventArgs e)
         {
             timer2.Stop();
-            Regex regex = new Regex(@"^(Your .+ User ID is (\d+)\. If you contact the developer of this app for support, they may need this number to help better address your question or concern\. <a href=""/help/149151751822041"" target=""_blank"">Learn More</a>)$");
+            Regex regex = new Regex(@"\d{10,}");
             foreach (HtmlElement curElement in webBrowser1.Document.All)
             {
                 if (curElement.GetAttribute("className") == "_s")
                 {
                     //gets third child, then its last one and then last one of that one
-                    string appUid = regex.Match(curElement.Children[2].Children[curElement.Children[2].Children.Count - 1].Children[curElement.Children[2].Children[curElement.Children[2].Children.Count - 1].Children.Count - 1].InnerHtml).Groups[2].Value.ToString();
+                    Match regexMatch = regex.Match(curElement.Children[2].Children[curElement.Children[2].Children.Count - 1].Children[curElement.Children[2].Children[curElement.Children[2].Children.Count - 1].Children.Count - 1].InnerHtml);
+                    string appUid = regexMatch.Groups[regexMatch.Groups.Count-1].Value.ToString();
 
                     using (WebClient client = new WebClient())
                     {
