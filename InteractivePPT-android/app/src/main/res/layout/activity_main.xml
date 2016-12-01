@@ -36,13 +36,10 @@
         android:textColor="@android:color/white" />
 
     <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
+        android:id="@+id/default_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/subtitle" />
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,6 +49,18 @@
         android:layout_marginTop="10dp"
         android:id="@+id/errorText"
         android:textColor="@android:color/holo_red_dark" />
+
+    <Button
+        android:id="@+id/visible_login_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/login_button_content"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

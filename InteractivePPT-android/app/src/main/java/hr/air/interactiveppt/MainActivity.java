@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,21 +28,25 @@ import org.json.JSONObject;
 
 import java.util.function.BiConsumer;
 
+import butterknife.BindView;
+import butterknife.OnClick;
 import hr.air.interactiveppt.entities.User;
 import hr.air.interactiveppt.webservice.CommunicationHandler;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.converter.gson.GsonConverterFactory;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private TextView text;
-    private ImageView profileImgView;
-    private LoginButton loginButton;
+    private LoginButton defaultLoginButton;
     User user;
+
+    @BindView(R.id.visible_login_button)
+    Button visibleLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +56,12 @@ public class MainActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         text = (TextView)findViewById(R.id.errorText);
-        loginButton = (LoginButton)findViewById(R.id.login_button);
+        defaultLoginButton = (LoginButton) findViewById(R.id.default_login_button);
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        defaultLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
@@ -101,6 +107,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @OnClick(R.id.visible_login_button)
+    protected void authenticateViaFacebook(View v) {
+        defaultLoginButton.performClick();
     }
 
     @Override

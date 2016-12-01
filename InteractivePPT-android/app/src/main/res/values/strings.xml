@@ -41,4 +41,5 @@
     <string name="not_valid_file_type_msg">Odabrana datoteka nije PowerPoint prezentacija: </string>
     <string name="add_presentation_caption">Dodaj</string>
     <string name="change_presentation_caption">Promijeni</string>
+    <string name="login_button_content">Prijava putem Facebooka</string>
 </resources>
