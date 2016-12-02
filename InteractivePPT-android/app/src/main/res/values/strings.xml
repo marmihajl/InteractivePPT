@@ -30,8 +30,8 @@
     <string name="btnDelete">Obriši</string>
     <string name="showData">Osvježi pitanja</string>
     <string-array name="spinnerItems">
-        <item>Single chose</item>
-        <item>Multiple chose</item>
+        <item>Single choice</item>
+        <item>Multiple choice</item>
         <item>Text edit</item>
     </string-array>
     <string name="chooser_title">Odaberite prezentaciju koju želite priložiti (opcionalno)</string>
