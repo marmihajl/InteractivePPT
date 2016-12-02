@@ -184,6 +184,10 @@ public class MainActivity extends AppCompatActivity {
     private void toggleVisibilityAtLoading() {
         switch (findViewById(R.id.loading_panel).getVisibility()) {
             case View.VISIBLE:
+                findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                findViewById(R.id.visible_login_button).setVisibility(View.VISIBLE);
+                findViewById(R.id.errorText).setVisibility(View.VISIBLE);
+                findViewById(R.id.subtitle).setVisibility(View.VISIBLE);
                 break;
             case View.GONE:
                 findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
