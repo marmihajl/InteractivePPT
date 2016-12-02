@@ -55,24 +55,30 @@
                 app:layout_heightPercent="28%"
                 app:layout_marginTopPercent="4%"
                 app:layout_marginLeftPercent="5%">
-                <hr.air.heightbasedproportionallysizeableimageview.HeightBasedProportionallySizeableImageView
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/moje_ankete" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/my_surveys_button_caption"
-                    android:textSize="10pt"
-                    android:textAllCaps="true"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorButtonCaption"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <hr.air.heightbasedproportionallysizeableimageview.HeightBasedProportionallySizeableImageView
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/moje_ankete"
+                        android:layout_alignParentStart="true"  />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/my_surveys_button_caption"
+                        android:textSize="10pt"
+                        android:textAllCaps="true"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="30dp"
+                        android:textColor="@color/colorButtonCaption" />
+                </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/button_create_survey"
@@ -84,25 +90,30 @@
                 android:layout_below="@id/button_my_surveys"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <hr.air.heightbasedproportionallysizeableimageview.HeightBasedProportionallySizeableImageView
-                    xmlns:app="http://schemas.android.com/apk/lib/hr.air.heightbasedproportionallysizeableimageview"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/nova_anketa" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/create_survey_button_caption"
-                    android:textSize="10pt"
-                    android:textAllCaps="true"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorButtonCaption"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <hr.air.heightbasedproportionallysizeableimageview.HeightBasedProportionallySizeableImageView
+                        xmlns:app="http://schemas.android.com/apk/lib/hr.air.heightbasedproportionallysizeableimageview"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/nova_anketa"  />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_survey_button_caption"
+                        android:textSize="10pt"
+                        android:textAllCaps="true"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="30dp"
+                        android:textColor="@color/colorButtonCaption"   />
+                </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -117,25 +128,30 @@
                 android:layout_below="@id/button_create_survey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <hr.air.heightbasedproportionallysizeableimageview.HeightBasedProportionallySizeableImageView
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ucitaj_anketu"   />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/load_survey_button_caption"
-                    android:textSize="10pt"
-                    android:textAllCaps="true"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorButtonCaption"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"    />
-                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <hr.air.heightbasedproportionallysizeableimageview.HeightBasedProportionallySizeableImageView
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ucitaj_anketu"   />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/load_survey_button_caption"
+                        android:textSize="10pt"
+                        android:textAllCaps="true"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="30dp"
+                        android:textColor="@color/colorButtonCaption" />
+                </LinearLayout>
+            </RelativeLayout>
         </android.support.percent.PercentRelativeLayout>
     </RelativeLayout>
 
