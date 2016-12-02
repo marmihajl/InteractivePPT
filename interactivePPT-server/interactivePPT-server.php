@@ -122,6 +122,39 @@ switch ($_POST['request_type']) {
         echo '{"questions":' . json_encode($outputArray) . '}';
 
         break;
+	case 'get_survey':
+		$surveyAccessCode=$_POST['access_code'];
+        $command = "SELECT name, description, link_to_presentation FROM Survey WHERE access_code='$surveyAccessCode';";
+        $recordSet = $dbHandler->query($command);
+        if ($recordSet) {
+            $surveyInfo = $recordSet->fetch_assoc();
+            $result = "{\"name\":\"$surveyInfo[name]\", \"description\":\"$surveyInfo[description]\", \"link_to_presentation\":\"$surveyInfo[link_to_presentation]\", \"questions\":[";
+            $recordSet->free();
+            $command= <<< EOS
+SELECT concat('{"id":', q.idQuestions, ',"name":"', q.name, '", "type":', qt.idQuestion_type, ', "required_answer":', q.answer_required, ', "multiple_answers":', q.multiple_answers, concat(',"options":[', GROUP_CONCAT('{"name":"', o.choice_name, '"}' ORDER BY o.idOptions ASC SEPARATOR ','), ']'), '}' ) FROM Questions q
+JOIN Question_options qo ON q.idQuestions=qo.idQuestions
+JOIN Options o ON qo.idOptions=o.idOptions
+JOIN Survey s ON s.idSurvey=q.Survey_idSurvey
+JOIN Question_type qt ON qt.idQuestion_type=q.Question_type_idQuestion_type
+WHERE s.access_code = '$surveyAccessCode'
+GROUP BY q.idQuestions
+ORDER BY q.idQuestions;
+EOS;
+            $recordSet= $dbHandler->query($command);
+            if($recordSet){
+                for($i = 0; $i < $recordSet->num_rows; $i++){
+                    $result .= $recordSet->fetch_row()[0] . ',';
+                }
+                $recordSet->free();
+                $result = rtrim($result, ",");
+            }
+            echo $result . ']}';            
+        }
+        else {
+            echo 'false';   //provjeriti kak primiti niš
+        }
+		
+		break;
     case 'get_results':
         $question = $_POST['id'];
         $command = "SELECT o.choice_name, count(o.idOptions) AS count FROM Answers a LEFT JOIN Options o ON a.Options_idOptions=o.idOptions LEFT JOIN Question_options qo ON qo.idOptions=o.idOptions LEFT JOIN Questions q ON q.idQuestions=qo.idQuestions WHERE q.idQuestions=$question GROUP BY o.idOptions;";
