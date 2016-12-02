@@ -38,6 +38,7 @@
         <activity android:name=".GetCode" />
         <activity android:name=".InputCode" />
         <activity android:name="hr.foi.air.qrreader.QrReader"/>
+        <activity android:name=".GetSurvey"/>
     </application>
 
 </manifest>

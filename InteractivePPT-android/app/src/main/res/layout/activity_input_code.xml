@@ -32,19 +32,21 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
+        android:inputType="textPersonName"
+        android:text="Name"
         android:ems="10"
-        android:layout_centerVertical="true"
+        android:id="@+id/lozinkaAnketa"
+        android:layout_above="@+id/posaljiSifruButton"
         android:layout_centerHorizontal="true"
-        android:id="@+id/lozinkaAnketa" />
+        android:layout_marginBottom="14dp" />
 
     <TextView
         android:text="@string/title2_input_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/upisiSifru"
+        android:layout_marginBottom="12dp"
+        android:textSize="14sp"
         android:layout_above="@+id/lozinkaAnketa"
-        android:layout_alignStart="@+id/lozinkaAnketa"
-        android:layout_marginBottom="14dp"
-        android:textSize="14sp" />
+        android:layout_alignStart="@+id/lozinkaAnketa" />
 </RelativeLayout>

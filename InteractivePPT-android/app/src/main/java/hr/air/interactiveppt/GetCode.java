@@ -45,9 +45,9 @@ public class GetCode extends AppCompatActivity {
         if(requestCode != RESULT_CANCELED){
             if(requestCode==2){
                 String message=data.getStringExtra("survey_code");
-                TextView mTview= (TextView)findViewById(R.id.testView);
-                mTview.setText(message);
-                mTview.invalidate();
+                Intent intent=new Intent(this,GetSurvey.class);
+                intent.putExtra("message",message);
+                startActivity(intent);
             }
         }
     }
