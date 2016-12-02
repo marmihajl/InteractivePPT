@@ -21,15 +21,6 @@ import retrofit2.Response;
  * Created by zeko868 on 26.11.2016..
  */
 public class CommunicationHandler {
-    private static CommunicationHandler ourInstance = new CommunicationHandler();
-
-    public static CommunicationHandler getInstance() {
-        return ourInstance;
-    }
-
-    private CommunicationHandler() {
-    }
-
 
     public static <S> void SendDataAndProcessResponse(Call<S> consumerSend, final BiConsumer<Call<S>, Response<S>> consumerSuccess, final BiConsumer<Call<S>, Throwable> consumerError, final boolean forcePerformTaskOnMainThread, final Context baseContext) {
 
@@ -89,19 +80,5 @@ class RetrieveFeedTask extends AsyncTask {
         ((Call)consumerSend).enqueue((Callback)callback);
         return null;
     }
-/*        boolean isSuccess = (boolean)params[0];
-        Call<?> call = (Call<?>)params[2];
-        if (isSuccess) {
-            BiConsumer<Call<?>, Response<?>> consumer = (BiConsumer<Call<?>, Response<?>>)params[1];
-            Response<?> response = (Response<?>)params[3];
-            consumer.accept(call, response);
-        }
-        else {
-            BiConsumer<Call<?>, Throwable> consumer = (BiConsumer<Call<?>, Throwable>)params[1];
-            Throwable t = (Throwable)params[3];
-            consumer.accept(call, t);
-        }
-        return null;
-    }*/
 }
 

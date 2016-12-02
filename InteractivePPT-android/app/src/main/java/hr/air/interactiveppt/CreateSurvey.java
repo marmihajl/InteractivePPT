@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +58,6 @@ public class CreateSurvey extends AppCompatActivity {
     AddQuestion cdd;
     RecyclerView mRecycler;
     boolean show = false;
-    Button b;
     String surveyAuthorId;
 
     @BindView(R.id.button_attach_presentation)
@@ -112,17 +112,23 @@ public class CreateSurvey extends AppCompatActivity {
                 new BiConsumer<Call<Boolean>, Response<Boolean>>() {
                     @Override
                     public void accept(Call<Boolean> call, Response<Boolean> response) {
-                        findViewById(R.id.loading_panel).setVisibility(View.GONE);
                         Toast.makeText(CreateSurvey.this,
                                 "Anketa je uspješno kreirana!",
                                 Toast.LENGTH_LONG
                         ).show();
+                        findViewById(R.id.activity_create_survey).setClickable(true);
+                        findViewById(R.id.loading_panel).setVisibility(View.GONE);
                     }
                 },
                 new BiConsumer<Call<Boolean>, Throwable>() {
                     @Override
                     public void accept(Call<Boolean> sCall, Throwable throwable) {
-                        ;
+                        Toast.makeText(CreateSurvey.this,
+                                "Neuspjeh kod slanja ankete! Provjerite vezu s Internetom",
+                                Toast.LENGTH_LONG
+                        ).show();
+                        findViewById(R.id.activity_create_survey).setClickable(true);
+                        findViewById(R.id.loading_panel).setVisibility(View.GONE);
                     }
                 },
                 true,
@@ -131,6 +137,7 @@ public class CreateSurvey extends AppCompatActivity {
 
 
         findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
+        findViewById(R.id.activity_create_survey).setClickable(false);
     }
 
     @OnClick(R.id.button_discard_changes)
@@ -199,8 +206,8 @@ public class CreateSurvey extends AppCompatActivity {
         setContentView(R.layout.activity_create_survey);
         ButterKnife.bind(this);
         surveyAuthorId = getIntent().getStringExtra("id");
-        findViewById(R.id.loading_panel).setVisibility(View.GONE);
 
+        findViewById(R.id.loading_panel).setVisibility(View.GONE);
         mRecycler = (RecyclerView) findViewById(R.id.main_recycler);
         Button addQuestion = (Button)findViewById(R.id.btn_add_question);
         addQuestion.setOnClickListener(new View.OnClickListener() {

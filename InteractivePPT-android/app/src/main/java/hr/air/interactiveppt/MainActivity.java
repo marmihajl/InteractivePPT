@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        findViewById(R.id.loading_panel).setVisibility(View.GONE);
         text = (TextView)findViewById(R.id.errorText);
         defaultLoginButton = (LoginButton) findViewById(R.id.default_login_button);
 
@@ -160,17 +161,36 @@ public class MainActivity extends AppCompatActivity {
                 new BiConsumer<Call<Boolean>, Response<Boolean>>() {
                     @Override
                     public void accept(Call<Boolean> call, Response<Boolean> response) {
+                        toggleVisibilityAtLoading();
                         openHome();
                     }
                 },
                 new BiConsumer<Call<Boolean>, Throwable>() {
                     @Override
                     public void accept(Call<Boolean> sCall, Throwable throwable) {
-                        ;
+                        Toast.makeText(MainActivity.this,
+                                "Neuspjeh kod registracije u sustav! Provjerite vezu s Internetom",
+                                Toast.LENGTH_LONG
+                        ).show();
+                        toggleVisibilityAtLoading();
                     }
                 },
                 false,
                 getBaseContext()
         );
+        toggleVisibilityAtLoading();
+    }
+
+    private void toggleVisibilityAtLoading() {
+        switch (findViewById(R.id.loading_panel).getVisibility()) {
+            case View.VISIBLE:
+                break;
+            case View.GONE:
+                findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
+                findViewById(R.id.visible_login_button).setVisibility(View.GONE);
+                findViewById(R.id.errorText).setVisibility(View.GONE);
+                findViewById(R.id.subtitle).setVisibility(View.GONE);
+                break;
+        }
     }
 }

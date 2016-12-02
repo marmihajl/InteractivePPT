@@ -1,5 +1,6 @@
 package hr.air.interactiveppt.webservice;
 
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -12,7 +13,9 @@ public class ServiceGenerator {
 
     public static final String API_BASE_URL = "http://46.101.68.86/";
 
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+            .readTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(10, TimeUnit.SECONDS);
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
