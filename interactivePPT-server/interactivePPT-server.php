@@ -23,8 +23,15 @@ switch ($_POST['request_type']) {
         rand();
         do {
             $accessCode = '';
-            for ($i=0 ; $i<15 ; $i++) {
-                $accessCode .= chr(rand(33,126));
+            for ($i=0 ; $i<10 ; $i++) {
+                switch (rand(0,1)) {
+                    case 0:
+                        $accessCode .= rand(0,9);
+                        break;
+                    case 1:
+                        $accessCode .= chr(rand(97,122));
+                        break;
+                }
             }
             $recordSet = $dbHandler->query("SELECT * FROM Survey WHERE access_code='$accessCode' LIMIT 1;");
         } while ($recordSet->num_rows > 0);
@@ -37,32 +44,19 @@ switch ($_POST['request_type']) {
             }            
         }
 
-        $author = $dbHandler->query("SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1;")->fetch_assoc()['idUser'];
-        $command = "INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode', $fileUri, $author);";
-        $dbHandler->query($command);
-
-        $idSurvey = $dbHandler->insert_id;
+        $command = "INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode', $fileUri, (SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1));SET @survey := LAST_INSERT_ID();";
 
         if (count($questions)) {
             foreach ($questions as $q) {
-                $dbHandler->query("INSERT INTO Questions VALUES (default, '$q[text]', 0, 0, $q[type], $idSurvey);");
-
-                $idQuestion = $dbHandler->insert_id;
-                foreach ($q['answers'] as $o) {
-                    $optionRecordSet = $dbHandler->query("SELECT o.idOptions FROM Options o, Question_options qo WHERE qo.idQuestions=$idQuestion AND o.choice_name='$o[text]' LIMIT 1;");
-                    $idAnswer = -1;
-                    if ($optionRecordSet->num_rows) {
-                        $idAnswer = $optionRecordSet->fetch_assoc()['idOptions'];
-                    }
-                    $optionRecordSet->free();
-                    if ($idAnswer === -1) {
-                        $dbHandler->query("INSERT INTO Options VALUES (default, '$o[text]');");
-                        $idAnswer = $dbHandler->insert_id;
-                    }
-                    $dbHandler->query("INSERT INTO Question_options VALUES ($idAnswer, $idQuestion);");
+                $command .= "INSERT INTO Questions VALUES (default, '$q[name]', 0, 0, $q[type], @survey);SET @question := LAST_INSERT_ID();";
+                $command .= "INSERT INTO Question_options VALUES ";
+                foreach ($q['options'] as $o) {
+                    $command .= "(createOptionAndGetId('$o[text]'), @question),";
                 }
+                $command[strlen($command)-1] = ';';
             }
         }
+        $dbHandler->multi_query($command);
 
         echo 'true';
         break;

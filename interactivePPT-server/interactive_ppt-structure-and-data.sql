@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 24, 2016 at 01:00 AM
+-- Generation Time: Dec 03, 2016 at 10:10 PM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -19,6 +19,22 @@ SET time_zone = "+00:00";
 --
 -- Database: `interactive_ppt`
 --
+
+DELIMITER $$
+--
+-- Functions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `createOptionAndGetId` (`name` VARCHAR(100)) RETURNS INT(11) BEGIN
+DECLARE returnValue int(11);
+SET returnValue := (SELECT idOptions FROM Options WHERE choice_name = name LIMIT 1);
+IF returnValue IS NULL THEN
+    INSERT IGNORE INTO Options VALUES (default, name);
+    SET returnValue := LAST_INSERT_ID();
+END IF;
+RETURN returnValue;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -77,7 +93,7 @@ INSERT INTO `Log` (`Users_idUser`, `action`, `datetime`) VALUES
 
 CREATE TABLE `Options` (
   `idOptions` int(11) NOT NULL,
-  `choice_name` varchar(45) CHARACTER SET utf8 DEFAULT NULL
+  `choice_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -121,7 +137,13 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 (34, 'mozda'),
 (35, '1'),
 (36, '2'),
-(37, '3');
+(37, '3'),
+(38, 'a'),
+(39, 'b'),
+(40, 'da'),
+(41, 'ne'),
+(50, 'nedodijeljeni'),
+(51, 'sfsdfsdf');
 
 -- --------------------------------------------------------
 
@@ -131,7 +153,7 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 
 CREATE TABLE `Questions` (
   `idQuestions` int(11) NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `name` varchar(1000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `answer_required` tinyint(1) DEFAULT NULL,
   `multiple_answers` tinyint(1) DEFAULT NULL,
   `Question_type_idQuestion_type` int(11) NOT NULL,
@@ -157,7 +179,14 @@ INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `multiple_ans
 (12, 'Zasto igrate racunalne igre', 0, 0, 3, 3),
 (13, 'Smatrate li da ste ovisni o racunalnim igrama:', 0, 0, 1, 3),
 (14, 'Prvo pitanje', 0, 0, 1, 4),
-(15, 'Drugo pitanje', 0, 0, 2, 4);
+(15, 'Drugo pitanje', 0, 0, 2, 4),
+(28, 'tekstualno', 0, 0, 3, 25),
+(29, 'aaa', 0, 0, 1, 26),
+(30, 'qqq', 0, 0, 2, 26),
+(31, 'tekstualno pitanje', 0, 0, 3, 26),
+(32, 'single', 0, 0, 1, 27),
+(33, 'textedit', 0, 0, 3, 27),
+(34, 'multiple', 0, 0, 2, 27);
 
 -- --------------------------------------------------------
 
@@ -185,6 +214,8 @@ INSERT INTO `Question_options` (`idOptions`, `idQuestions`) VALUES
 (4, 5),
 (8, 5),
 (9, 5),
+(35, 5),
+(36, 5),
 (10, 6),
 (11, 6),
 (12, 6),
@@ -282,7 +313,13 @@ INSERT INTO `Survey` (`idSurvey`, `name`, `description`, `access_code`, `link_to
 (1, 'Probna anketa', '', 'kod_za_pristup', NULL, 1),
 (2, 'HerbariumApp', 'Anketa o poznavanju biljnih vrsta', 'TwmbaYl<^0BkcBL', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima.pptx', 1),
 (3, 'Upitnik o ovisnosti o racunalnim igrama', 'Molimo Vas da odgovorite na ovu anketu u kojoj se ispituje ovisnost ljudi o racunalnim igrama:', 'tCx|(l[[eM6Kut*', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1),
-(4, 'Moja prva anketa', 'Ovo je moja prva anketa potrebna za testiranje', '123456', NULL, 2);
+(4, 'Moja prva anketa', 'Ovo je moja prva anketa potrebna za testiranje', '123456', NULL, 2),
+(5, '30112016', 'dada', '7=:R^#2ni!9|;)H', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1),
+(6, '31112016', 'gfhfghfgh', '~U}oZFn7d=mX:BW', NULL, 1),
+(7, 'maknut boolean', 'to kaj pise', 'HBW-5*b:0;44)$v', NULL, 1),
+(25, 'Testna anketa', 'Ovo je anketa koja se kreira kao test za dodavanje ankete', '<]S*/7D^9w^6B]-', NULL, 2),
+(26, 'treca anketa', 'Ovo je moja treca anketa', '~rw-he<kG20<Xng', NULL, 2),
+(27, '03122016', 'wsfsdgsdgds', 'VRh/T%;q:Sk-;a{', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -325,8 +362,10 @@ CREATE TABLE `Users` (
 
 INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`) VALUES
 (1, 'Petar Šestak', '1431307750213523', 1),
-(2, 'Marin Mihajlović', '10210532062074946', 2),
-(3, 'Mario Šelek', 'kontakt', 3);
+(2, 'Marin Mihajlovic', '10210532062074946', 2),
+(3, 'Mario Šelek', 'kontakt', 3),
+(8, 'Marinela Levak', '1336022606431703', 3),
+(10, 'Mario Šelek', '1256649427742897', 3);
 
 --
 -- Indexes for dumped tables
@@ -351,6 +390,7 @@ ALTER TABLE `Log`
 --
 ALTER TABLE `Options`
   ADD PRIMARY KEY (`idOptions`);
+ALTER TABLE `Options` ADD FULLTEXT KEY `choice_name` (`choice_name`);
 
 --
 -- Indexes for table `Questions`
@@ -399,7 +439,9 @@ ALTER TABLE `Survey_Selection`
 --
 ALTER TABLE `Users`
   ADD PRIMARY KEY (`idUser`),
-  ADD KEY `fk_Users_Role1_idx` (`Role_idRole`);
+  ADD UNIQUE KEY `app_uid_2` (`app_uid`),
+  ADD KEY `fk_Users_Role1_idx` (`Role_idRole`),
+  ADD KEY `app_uid` (`app_uid`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -414,12 +456,12 @@ ALTER TABLE `Answers`
 -- AUTO_INCREMENT for table `Options`
 --
 ALTER TABLE `Options`
-  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 --
 -- AUTO_INCREMENT for table `Questions`
 --
 ALTER TABLE `Questions`
-  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 --
 -- AUTO_INCREMENT for table `Question_type`
 --
@@ -434,12 +476,12 @@ ALTER TABLE `Role`
 -- AUTO_INCREMENT for table `Survey`
 --
 ALTER TABLE `Survey`
-  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT for table `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- Constraints for dumped tables
 --
