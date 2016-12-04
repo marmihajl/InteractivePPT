@@ -42,4 +42,5 @@
     <string name="add_presentation_caption">Dodaj</string>
     <string name="change_presentation_caption">Promijeni</string>
     <string name="login_button_content">Prijava putem Facebooka</string>
+    <string name="logout_button_content">Odjavi se s trenutnog računa</string>
 </resources>

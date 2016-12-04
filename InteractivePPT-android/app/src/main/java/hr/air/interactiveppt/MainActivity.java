@@ -4,6 +4,8 @@ package hr.air.interactiveppt;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private TextView text;
-    private LoginButton defaultLoginButton;
     User user;
+
+    @BindView(R.id.default_login_button)
+    LoginButton defaultLoginButton;
 
     @BindView(R.id.visible_login_button)
     Button visibleLoginButton;
@@ -61,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.loading_panel).setVisibility(View.GONE);
         text = (TextView)findViewById(R.id.errorText);
         defaultLoginButton = (LoginButton) findViewById(R.id.default_login_button);
+        defaultLoginButton.addTextChangedListener(textWatcher);
+        visibleLoginButton.setText(defaultLoginButton.getText());
 
         defaultLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -161,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 new BiConsumer<Call<Boolean>, Response<Boolean>>() {
                     @Override
                     public void accept(Call<Boolean> call, Response<Boolean> response) {
-                        toggleVisibilityAtLoading();
+                        toggleVisibilityAtLoading(false);
                         openHome();
                     }
                 },
@@ -172,22 +178,24 @@ public class MainActivity extends AppCompatActivity {
                                 "Neuspjeh kod registracije u sustav! Provjerite vezu s Internetom",
                                 Toast.LENGTH_LONG
                         ).show();
-                        toggleVisibilityAtLoading();
+                        toggleVisibilityAtLoading(true);
                     }
                 },
                 false,
                 getBaseContext()
         );
-        toggleVisibilityAtLoading();
+        toggleVisibilityAtLoading(true);
     }
 
-    private void toggleVisibilityAtLoading() {
+    private void toggleVisibilityAtLoading(boolean showHiddenViews) {
         switch (findViewById(R.id.loading_panel).getVisibility()) {
             case View.VISIBLE:
                 findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                findViewById(R.id.visible_login_button).setVisibility(View.VISIBLE);
-                findViewById(R.id.errorText).setVisibility(View.VISIBLE);
-                findViewById(R.id.subtitle).setVisibility(View.VISIBLE);
+                if (showHiddenViews) {
+                    findViewById(R.id.visible_login_button).setVisibility(View.VISIBLE);
+                    findViewById(R.id.errorText).setVisibility(View.VISIBLE);
+                    findViewById(R.id.subtitle).setVisibility(View.VISIBLE);
+                }
                 break;
             case View.GONE:
                 findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
@@ -197,4 +205,23 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    protected boolean changeTextOfVisibleLoginButton() {
+        return true;
+    }
+
+    TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            visibleLoginButton.setText(defaultLoginButton.getText());
+        }
+    };
 }
