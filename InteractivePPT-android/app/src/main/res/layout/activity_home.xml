@@ -50,6 +50,7 @@
                 android:id="@+id/button_my_surveys"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:background="@drawable/layout_border_button"
                 app:layout_widthPercent="90%"
                 app:layout_heightPercent="28%"
@@ -82,6 +83,7 @@
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/button_create_survey"
+                android:clickable="true"
                 android:background="@drawable/layout_border_button"
                 app:layout_widthPercent="90%"
                 app:layout_heightPercent="28%"
@@ -119,6 +121,7 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/button_load_survey"
+                android:clickable="true"
                 android:background="@drawable/layout_border_button"
                 app:layout_widthPercent="90%"
                 app:layout_heightPercent="28%"
