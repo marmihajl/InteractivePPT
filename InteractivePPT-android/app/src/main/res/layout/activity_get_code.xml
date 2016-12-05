@@ -8,25 +8,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/com_facebook_button_like_background_color_selected"
     tools:context="hr.air.interactiveppt.GetCode">
-
-    <TextView
-        android:text="@string/survey_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:id="@+id/naslovAktivnosti"
-        android:layout_marginTop="31dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
         android:id="@+id/qrRead"
-        android:layout_below="@+id/naslovAktivnosti"
         android:text="@string/qr_read"
+        android:layout_marginBottom="15dp"
+        android:layout_above="@+id/upisiSifru"
         android:layout_alignStart="@+id/upisiSifru"
         android:layout_alignEnd="@+id/upisiSifru" />
 
@@ -35,15 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/upisiSifru"
-        android:layout_centerVertical="true"
+        android:layout_marginBottom="94dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/upisiSifru"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="57dp"
-        android:id="@+id/testView"
-        android:text="Tekst" />
+
 </RelativeLayout>

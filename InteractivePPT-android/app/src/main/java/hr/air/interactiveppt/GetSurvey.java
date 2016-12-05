@@ -1,5 +1,7 @@
 package hr.air.interactiveppt;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -71,16 +73,24 @@ public class GetSurvey extends AppCompatActivity{
 
         ScrollView scrollView = new ScrollView(this);
 
+        RelativeLayout relativeLayout = new RelativeLayout(this);
+        relativeLayout.setBackgroundColor(getResources().getColor(R.color.com_facebook_button_like_background_color_selected));
+
         LinearLayout lL = new LinearLayout(this);
         lL.setOrientation(LinearLayout.VERTICAL);
         //name
         TextView surveyName = new TextView(GetSurvey.this);
         surveyName.setText(object.name);
+        surveyName.setTextColor(Color.BLACK);
+        surveyName.setTextSize(16);
+        surveyName.setTypeface(Typeface.DEFAULT_BOLD);
         lL.addView(surveyName);
 
         //description
         TextView surveyDescription= new TextView(GetSurvey.this);
         surveyDescription.setText(object.description);
+        surveyDescription.setTextColor(Color.BLACK);
+        surveyDescription.setTextSize(16);
         lL.addView(surveyDescription);
 
         //questions
@@ -91,6 +101,7 @@ public class GetSurvey extends AppCompatActivity{
         for (int i=0 ; i < numberOfQuestions; i++){
             TextView question = new TextView(this);
             question.setText(object.questions.get(i).getQuestionText());
+            question.setTextColor(Color.BLACK);
             lL.addView(question);
             //options
             numberOfOptions=object.questions.get(i).getOptions().size();
@@ -133,7 +144,8 @@ public class GetSurvey extends AppCompatActivity{
         // TODO: 5.12.2016. implementirati slanje podataka na server 
 
         scrollView.addView(lL);
-
-        setContentView(scrollView);
+        relativeLayout.addView(scrollView);
+        //setContentView(scrollView);
+        setContentView(relativeLayout);
     }//end displaySurvey
 }//end class

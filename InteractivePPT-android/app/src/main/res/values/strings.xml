@@ -17,7 +17,7 @@
     <string name="input_code">Upiši šifru ankete</string>
     <string name="title_input_code">Unos šifre</string>
     <string name="title_activity_survey_code">Šifra ankete</string>
-    <string name="title2_input_code">Upiši šifru</string>
+    <string name="title2_input_code">Upiši šifru:</string>
     <string name="send_code_button">Pošalji</string>
     <string name="btnAddQuestion">Dodaj pitanje</string>
     <string name="question">Pitanja</string>
