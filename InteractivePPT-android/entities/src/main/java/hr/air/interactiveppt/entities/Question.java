@@ -11,11 +11,17 @@ public class Question {
     @SerializedName("id")
     public int questionId;
 
-    @SerializedName("text")
+    @SerializedName("name")
     public String questionText;
 
     @SerializedName("type")
     public int questionType;
+
+    @SerializedName("required_answer")
+    public int requiredAnswer;
+
+    @SerializedName("multiple_answers")
+    public int multipleAnswers;
 
     @SerializedName("options")
     public ArrayList<Option> options = new ArrayList<>();
@@ -28,12 +34,18 @@ public class Question {
         this.questionText = questionText;
         this.questionType = questionType;
     }
-
-
     public Question(Question question) {
         this.questionText = question.getQuestionText();
         this.questionType = question.getQuestionType();
         this.options = question.getOptions();
+    }
+
+    public Question(int id, String questionText, int questionType, int multipleAnswers, int requiredAnswer) {
+        this.questionId = id;
+        this.questionText = questionText;
+        this.questionType = questionType;
+        this.multipleAnswers = multipleAnswers;
+        this.requiredAnswer = requiredAnswer;
     }
 
     public int getQuestionId() {
@@ -68,5 +80,12 @@ public class Question {
         options.add(o);
     }
 
+    public void setRequiredAnswer(int requiredAnswer){this.requiredAnswer = requiredAnswer;}
+
+    public int getRequiredAnswer(){return requiredAnswer;}
+
+    public void setMultipleAnswers(int multipleAnswers){this.multipleAnswers = multipleAnswers;}
+
+    public int getMultipleAnswers(){return multipleAnswers;}
 
 }

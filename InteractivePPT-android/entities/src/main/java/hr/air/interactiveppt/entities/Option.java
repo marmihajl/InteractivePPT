@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Option {
 
-    @SerializedName("text")
+    @SerializedName("name")
     public String answerText;
 
     public int questionId;
