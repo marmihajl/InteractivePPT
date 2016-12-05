@@ -11,8 +11,20 @@ public class Option {
     @SerializedName("name")
     public String optionText;
 
+    @SerializedName("id_option")
+    public int id;
+
     public Option() {
     }
+
+    public Option(int id, String name){
+        this.id = id;
+        this.optionText = name;
+    }
+
+    public int getId(){return id;}
+
+    public void setId(int id){this.id = id;}
 
     public String getOptionText() {
         return optionText;

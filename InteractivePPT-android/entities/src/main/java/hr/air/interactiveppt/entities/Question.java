@@ -20,9 +20,6 @@ public class Question {
     @SerializedName("required_answer")
     public int requiredAnswer;
 
-    @SerializedName("multiple_answers")
-    public int multipleAnswers;
-
     @SerializedName("options")
     public ArrayList<Option> options = new ArrayList<>();
 
@@ -40,11 +37,10 @@ public class Question {
         this.options = question.getOptions();
     }
 
-    public Question(int id, String questionText, int questionType, int multipleAnswers, int requiredAnswer) {
+    public Question(int id, String questionText, int questionType, int requiredAnswer) {
         this.questionId = id;
         this.questionText = questionText;
         this.questionType = questionType;
-        this.multipleAnswers = multipleAnswers;
         this.requiredAnswer = requiredAnswer;
     }
 
@@ -83,9 +79,5 @@ public class Question {
     public void setRequiredAnswer(int requiredAnswer){this.requiredAnswer = requiredAnswer;}
 
     public int getRequiredAnswer(){return requiredAnswer;}
-
-    public void setMultipleAnswers(int multipleAnswers){this.multipleAnswers = multipleAnswers;}
-
-    public int getMultipleAnswers(){return multipleAnswers;}
 
 }
