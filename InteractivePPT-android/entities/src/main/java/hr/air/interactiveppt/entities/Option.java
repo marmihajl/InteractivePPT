@@ -9,27 +9,17 @@ import com.google.gson.annotations.SerializedName;
 public class Option {
 
     @SerializedName("name")
-    public String answerText;
-
-    public int questionId;
+    public String optionText;
 
     public Option() {
     }
 
     public String getOptionText() {
-        return answerText;
+        return optionText;
     }
 
-    public void setOptionText(String answerText) {
-        this.answerText = answerText;
-    }
-
-    public int getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(int questionId) {
-        this.questionId = questionId;
+    public void setOptionText(String optionText) {
+        this.optionText = optionText;
     }
 
 }
