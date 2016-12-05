@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,7 +41,7 @@ public class AddQuestion extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_add_question);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.spinnerItems, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -76,7 +77,7 @@ public class AddQuestion extends Dialog {
             @Override
             public void onClick(View v) {
                 int type = 0;
-                switch (((Spinner) findViewById(R.id.spinner)).getSelectedItem().toString()){
+                switch (spinner.getSelectedItem().toString()){
                     case "Single choice":
                         type = 1;
                         break;
@@ -90,12 +91,14 @@ public class AddQuestion extends Dialog {
                 EditText editText = (EditText)findViewById(R.id.questionText);
                 Question question = new Question(id, editText.getText().toString(),type);
                 id++;
-                for (int i = 0; i < optionList.getChildCount(); i++){
-                    View view = optionList.getChildAt(i);
-                    if(view instanceof EditText){
-                        Option option = new Option();
-                        option.setOptionText(((EditText) view).getText().toString());
-                        question.setOptions(option);
+                if (type != 3) {
+                    for (int i = 0; i < optionList.getChildCount(); i++) {
+                        View view = optionList.getChildAt(i);
+                        if (view instanceof EditText) {
+                            Option option = new Option();
+                            option.setOptionText(((EditText) view).getText().toString());
+                            question.setOptions(option);
+                        }
                     }
                 }
                 questions.add(question);
@@ -108,6 +111,27 @@ public class AddQuestion extends Dialog {
             @Override
             public void onClick(View v) {
                 dismiss();
+            }
+        });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (spinner.getSelectedItem().toString()) {
+                    case "Text edit":
+                        optionList.setVisibility(View.INVISIBLE);
+                        (findViewById(R.id.pumpOrDumpOptions)).setVisibility(View.INVISIBLE);
+                        break;
+                    default:
+                        optionList.setVisibility(View.VISIBLE);
+                        (findViewById(R.id.pumpOrDumpOptions)).setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
