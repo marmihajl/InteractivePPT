@@ -48,7 +48,7 @@ switch ($_POST['request_type']) {
 
         if (count($questions)) {
             foreach ($questions as $q) {
-                $command .= "INSERT INTO Questions VALUES (default, '$q[name]', 0, 0, $q[type], @survey);SET @question := LAST_INSERT_ID();";
+                $command .= "INSERT INTO Questions VALUES (default, '$q[name]', $q[required_answer], $q[type], @survey);SET @question := LAST_INSERT_ID();";
                 $command .= "INSERT INTO Question_options VALUES ";
                 foreach ($q['options'] as $o) {
                     $command .= "(createOptionAndGetId('$o[name]'), @question),";

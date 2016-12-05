@@ -26,15 +26,11 @@ public class Question {
     public Question() {
     }
 
-    public Question(int id, String questionText, int questionType) {
-        this.questionId = id;
-        this.questionText = questionText;
-        this.questionType = questionType;
-    }
     public Question(Question question) {
         this.questionText = question.getQuestionText();
         this.questionType = question.getQuestionType();
         this.options = question.getOptions();
+        this.requiredAnswer = question.getRequiredAnswer();
     }
 
     public Question(int id, String questionText, int questionType, int requiredAnswer) {

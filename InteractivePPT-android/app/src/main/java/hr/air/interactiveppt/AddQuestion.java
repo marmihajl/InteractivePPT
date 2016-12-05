@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -88,8 +89,9 @@ public class AddQuestion extends Dialog {
                         type = 3;
                         break;
                 }
-                EditText editText = (EditText)findViewById(R.id.questionText);
-                Question question = new Question(id, editText.getText().toString(),type);
+                String questionName = ((EditText)findViewById(R.id.questionText)).getText().toString();
+                int answerRequired = ((CheckBox)findViewById(R.id.answerRequired)).isChecked() ? 1 : 0;
+                Question question = new Question(id, questionName, type, answerRequired);
                 id++;
                 if (type != 3) {
                     for (int i = 0; i < optionList.getChildCount(); i++) {

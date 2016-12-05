@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 03, 2016 at 10:10 PM
+-- Generation Time: Dec 05, 2016 at 05:06 PM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -143,7 +143,16 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 (40, 'da'),
 (41, 'ne'),
 (50, 'nedodijeljeni'),
-(51, 'sfsdfsdf');
+(51, 'sfsdfsdf'),
+(52, 'muško'),
+(53, 'žensko'),
+(54, 'direktan pristup'),
+(55, 'putem web-aplikacija'),
+(56, 'putem e-maila'),
+(57, 'putem telefona'),
+(60, 'true'),
+(61, 'false'),
+(62, '');
 
 -- --------------------------------------------------------
 
@@ -155,7 +164,6 @@ CREATE TABLE `Questions` (
   `idQuestions` int(11) NOT NULL,
   `name` varchar(1000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `answer_required` tinyint(1) DEFAULT NULL,
-  `multiple_answers` tinyint(1) DEFAULT NULL,
   `Question_type_idQuestion_type` int(11) NOT NULL,
   `Survey_idSurvey` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -164,29 +172,37 @@ CREATE TABLE `Questions` (
 -- Dumping data for table `Questions`
 --
 
-INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `multiple_answers`, `Question_type_idQuestion_type`, `Survey_idSurvey`) VALUES
-(1, 'Pitanje 1', 0, 0, 1, 1),
-(2, 'Pitanje 2', 0, 0, 2, 1),
-(3, 'prepoznajete li gljivu sa slike', 0, 0, 1, 2),
-(4, 'vase omiljeno jelo od gljiva', 0, 0, 1, 2),
-(5, 'od gljiva sakupljam sljedece', 0, 0, 2, 2),
-(6, 'Koliko imate godina:', 0, 0, 1, 3),
-(7, 'Oznacite spol:', 0, 0, 1, 3),
-(8, 'Status zaposlenja:', 0, 0, 1, 3),
-(9, 'Igrate li racunalne igre:', 0, 0, 1, 3),
-(10, 'Koji tip igara najcesce igrate:', 0, 0, 2, 3),
-(11, 'Koliko vremena tjedno provodite igrajuci:', 0, 0, 1, 3),
-(12, 'Zasto igrate racunalne igre', 0, 0, 3, 3),
-(13, 'Smatrate li da ste ovisni o racunalnim igrama:', 0, 0, 1, 3),
-(14, 'Prvo pitanje', 0, 0, 1, 4),
-(15, 'Drugo pitanje', 0, 0, 2, 4),
-(28, 'tekstualno', 0, 0, 3, 25),
-(29, 'aaa', 0, 0, 1, 26),
-(30, 'qqq', 0, 0, 2, 26),
-(31, 'tekstualno pitanje', 0, 0, 3, 26),
-(32, 'single', 0, 0, 1, 27),
-(33, 'textedit', 0, 0, 3, 27),
-(34, 'multiple', 0, 0, 2, 27);
+INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `Question_type_idQuestion_type`, `Survey_idSurvey`) VALUES
+(1, 'Pitanje 1', 0, 1, 1),
+(2, 'Pitanje 2', 0, 2, 1),
+(3, 'prepoznajete li gljivu sa slike', 0, 1, 2),
+(4, 'vase omiljeno jelo od gljiva', 0, 1, 2),
+(5, 'od gljiva sakupljam sljedece', 0, 2, 2),
+(6, 'Koliko imate godina:', 0, 1, 3),
+(7, 'Oznacite spol:', 0, 1, 3),
+(8, 'Status zaposlenja:', 0, 1, 3),
+(9, 'Igrate li racunalne igre:', 0, 1, 3),
+(10, 'Koji tip igara najcesce igrate:', 0, 2, 3),
+(11, 'Koliko vremena tjedno provodite igrajuci:', 0, 1, 3),
+(12, 'Zasto igrate racunalne igre', 0, 3, 3),
+(13, 'Smatrate li da ste ovisni o racunalnim igrama:', 0, 1, 3),
+(14, 'Prvo pitanje', 0, 1, 4),
+(15, 'Drugo pitanje', 0, 2, 4),
+(28, 'tekstualno', 0, 3, 25),
+(29, 'aaa', 0, 1, 26),
+(30, 'qqq', 0, 2, 26),
+(31, 'tekstualno pitanje', 0, 3, 26),
+(32, 'single', 0, 1, 27),
+(33, 'textedit', 0, 3, 27),
+(34, 'multiple', 0, 2, 27),
+(37, 'Vaš spol:', 0, 1, 29),
+(38, 'Način na koji vršite anketiranje:', 0, 2, 29),
+(39, 'Pozdravna poruka kojom najčešće počinju vaše ankete:', 0, 3, 29),
+(42, 'pitanje s 2 odgovora', 0, 1, 32),
+(43, 'radio box', 0, 1, 33),
+(44, 'text edit', 0, 3, 33),
+(45, 'radio box 2', 0, 1, 33),
+(46, 'kak se zoveš?', 0, 3, 34);
 
 -- --------------------------------------------------------
 
@@ -247,7 +263,22 @@ INSERT INTO `Question_options` (`idOptions`, `idQuestions`) VALUES
 (3, 14),
 (1, 15),
 (2, 15),
-(3, 15);
+(3, 15),
+(52, 37),
+(53, 37),
+(54, 38),
+(55, 38),
+(56, 38),
+(57, 38),
+(60, 42),
+(61, 42),
+(34, 43),
+(40, 43),
+(41, 43),
+(62, 44),
+(35, 45),
+(36, 45),
+(37, 45);
 
 -- --------------------------------------------------------
 
@@ -312,36 +343,18 @@ CREATE TABLE `Survey` (
 INSERT INTO `Survey` (`idSurvey`, `name`, `description`, `access_code`, `link_to_presentation`, `author`) VALUES
 (1, 'Probna anketa', '', 'kod_za_pristup', NULL, 1),
 (2, 'HerbariumApp', 'Anketa o poznavanju biljnih vrsta', 'TwmbaYl<^0BkcBL', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima.pptx', 1),
-(3, 'Upitnik o ovisnosti o racunalnim igrama', 'Molimo Vas da odgovorite na ovu anketu u kojoj se ispituje ovisnost ljudi o racunalnim igrama:', 'tCx|(l[[eM6Kut*', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1),
+(3, 'Upitnik o ovisnosti o racunalnim igrama', 'Molimo Vas da odgovorite na ovu anketu u kojoj se ispituje ovisnost ljudi o racunalnim igrama:', 'rpk_anketa', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1),
 (4, 'Moja prva anketa', 'Ovo je moja prva anketa potrebna za testiranje', '123456', NULL, 2),
 (5, '30112016', 'dada', '7=:R^#2ni!9|;)H', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1),
 (6, '31112016', 'gfhfghfgh', '~U}oZFn7d=mX:BW', NULL, 1),
 (7, 'maknut boolean', 'to kaj pise', 'HBW-5*b:0;44)$v', NULL, 1),
 (25, 'Testna anketa', 'Ovo je anketa koja se kreira kao test za dodavanje ankete', '<]S*/7D^9w^6B]-', NULL, 2),
-(26, 'treca anketa', 'Ovo je moja treca anketa', '~rw-he<kG20<Xng', NULL, 2),
-(27, '03122016', 'wsfsdgsdgds', 'VRh/T%;q:Sk-;a{', NULL, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Survey_Selection`
---
-
-CREATE TABLE `Survey_Selection` (
-  `Survey_idSurvey` int(11) NOT NULL,
-  `Users_idUser` int(11) NOT NULL,
-  `selected` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `Survey_Selection`
---
-
-INSERT INTO `Survey_Selection` (`Survey_idSurvey`, `Users_idUser`, `selected`) VALUES
-(1, 1, '2016-11-10 03:50:34'),
-(1, 2, '2016-11-10 03:50:34'),
-(1, 3, '2016-11-10 03:50:34'),
-(4, 2, '2016-11-22 13:00:00');
+(26, 'treca anketa', 'Ovo je moja treca anketa', '789666', NULL, 2),
+(27, '03122016', 'wsfsdgsdgds', 'VRh/T%;q:Sk-;a{', NULL, 1),
+(29, 'Anketa o anketama', 'Ovo je anketa napravljena za potrebu projekta na kolegiju Računalom posredovana komunikacija', '8e3e81fcdr', NULL, 1),
+(32, 'anketa s jednim pitanjem', 'dasdasd', '0fo7p5u8rm', NULL, 1),
+(33, 'Test', 'Anketa za test radio boxa i text edita', '5n4ugcumj2', NULL, 2),
+(34, 'anketa s text edit pitanjem', 'fsdfdafsf', 'cj1op4e3l8', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -428,13 +441,6 @@ ALTER TABLE `Survey`
   ADD KEY `fk_survey_author` (`author`);
 
 --
--- Indexes for table `Survey_Selection`
---
-ALTER TABLE `Survey_Selection`
-  ADD PRIMARY KEY (`Survey_idSurvey`,`Users_idUser`),
-  ADD KEY `fk_Survey_Selection_Users1_idx` (`Users_idUser`);
-
---
 -- Indexes for table `Users`
 --
 ALTER TABLE `Users`
@@ -451,17 +457,17 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Answers`
 --
 ALTER TABLE `Answers`
-  MODIFY `idAnswers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idAnswers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `Options`
 --
 ALTER TABLE `Options`
-  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 --
 -- AUTO_INCREMENT for table `Questions`
 --
 ALTER TABLE `Questions`
-  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 --
 -- AUTO_INCREMENT for table `Question_type`
 --
@@ -476,7 +482,7 @@ ALTER TABLE `Role`
 -- AUTO_INCREMENT for table `Survey`
 --
 ALTER TABLE `Survey`
-  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 --
 -- AUTO_INCREMENT for table `Users`
 --
@@ -518,13 +524,6 @@ ALTER TABLE `Question_options`
 --
 ALTER TABLE `Survey`
   ADD CONSTRAINT `fk_survey_author` FOREIGN KEY (`author`) REFERENCES `Users` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `Survey_Selection`
---
-ALTER TABLE `Survey_Selection`
-  ADD CONSTRAINT `fk_Survey_Selection_Survey` FOREIGN KEY (`Survey_idSurvey`) REFERENCES `Survey` (`idSurvey`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Survey_Selection_Users1` FOREIGN KEY (`Users_idUser`) REFERENCES `Users` (`idUser`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `Users`
