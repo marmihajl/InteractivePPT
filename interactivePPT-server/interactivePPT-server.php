@@ -125,7 +125,8 @@ switch ($_POST['request_type']) {
             $result = "{\"name\":\"$surveyInfo[name]\", \"description\":\"$surveyInfo[description]\", \"link_to_presentation\":\"$surveyInfo[link_to_presentation]\", \"questions\":[";
             $recordSet->free();
             $command= <<< EOS
-SELECT concat('{"id":', q.idQuestions, ',"name":"', q.name, '", "type":', qt.idQuestion_type, ', "required_answer":', q.answer_required, ', "multiple_answers":', q.multiple_answers, concat(',"options":[', GROUP_CONCAT('{"name":"', o.choice_name, '"}' ORDER BY o.idOptions ASC SEPARATOR ','), ']'), '}' ) FROM Questions q
+SELECT concat('{"id":', q.idQuestions, ',"name":"', q.name, '", "type":', qt.idQuestion_type, ', 
+"required_answer":', q.answer_required, concat(',"options":[', GROUP_CONCAT(concat('{"id":',o.idOptions, ',"name":"', o.choice_name, '"}') ORDER BY o.idOptions ASC SEPARATOR ','), ']'), '}' ) FROM Questions q
 JOIN Question_options qo ON q.idQuestions=qo.idQuestions
 JOIN Options o ON qo.idOptions=o.idOptions
 JOIN Survey s ON s.idSurvey=q.Survey_idSurvey
@@ -164,10 +165,17 @@ EOS;
 
         break;
     case 'submit_answers':
-        $id = $_POST['id'];
-        $command = "";    //              NEED TO BE ADDED
-        $result = $dbHandler->query($command);
-
+        $answers = $_POST['answers'];
+		$command="INSERT INTO Answers VALUES";
+		if(count($answers)){
+			foreach ($answers as $a){
+			$command.= "(default, '$a[id]', '$a[id_option]'),";
+			}
+		}
+		$command = rtrim($command, ",");
+        $dbHandler->query($command);
+		echo 'true';
+		
         break;
     case 'get_user_info':
         $appUid = $_POST['app_uid'];
