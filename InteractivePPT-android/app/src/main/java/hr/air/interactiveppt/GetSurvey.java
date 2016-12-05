@@ -2,6 +2,7 @@ package hr.air.interactiveppt;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Gravity;
 import android.widget.Button;
@@ -9,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -95,12 +97,13 @@ public class GetSurvey extends AppCompatActivity{
             typeOfQuestion=object.questions.get(i).getQuestionType();
             switch (typeOfQuestion){
                 case 1:
+                    RadioGroup radioGroup = new RadioGroup(this);
                     for (int j=0; j < numberOfOptions; j++) {
                         RadioButton radioButton = new RadioButton(this);
                         radioButton.setText(object.questions.get(i).getOptions().get(j).getOptionText());
-                        lL.addView(radioButton);
-                        // TODO: 5.12.2016. implementirati da može biti samo 1 radio button označen u jedno vrijeme  
+                        radioGroup.addView(radioButton);
                     }
+                    lL.addView(radioGroup);
                     break;
                 case 2:
                     for (int j=0; j < numberOfOptions; j++) {
@@ -116,7 +119,9 @@ public class GetSurvey extends AppCompatActivity{
                     editText.setLines(5);
                     editText.setMaxLines(10);
                     lL.addView(editText);
-                    // TODO: 5.12.2016. dodati input filter za ograničavanje broja znakova 
+                    InputFilter[] inputFilters = new InputFilter[1];
+                    inputFilters[0] = new InputFilter.LengthFilter(50);
+                    editText.setFilters(inputFilters);
             }
         }
 
