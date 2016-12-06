@@ -8,24 +8,36 @@ import com.google.gson.annotations.SerializedName;
 
 public class Answer {
 
+    @SerializedName("id_question")
+    public int idQuest;
+
     @SerializedName("id")
-    public int idUser;
+    public String idUser;
 
     @SerializedName("id_option")
     public int idOption;
 
     public Answer(){}
 
-    public Answer(int idUser, int idOption){
+    public Answer(int idQuest, String idUser, int idOption){
+        this.idQuest=idQuest;
         this.idUser=idUser;
         this.idOption=idOption;
     }
 
-    public int getIdUser() {
+    public int getIdQuest() {
+        return idQuest;
+    }
+
+    public void setIdQuest(int idQuest) {
+        this.idQuest = idQuest;
+    }
+
+    public String getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(String idUser) {
         this.idUser = idUser;
     }
 
@@ -36,4 +48,5 @@ public class Answer {
     public void setIdOption(int idOption) {
         this.idOption = idOption;
     }
+
 }

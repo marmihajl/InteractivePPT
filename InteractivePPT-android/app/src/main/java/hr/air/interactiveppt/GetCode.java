@@ -20,16 +20,20 @@ public class GetCode extends AppCompatActivity {
     @BindView(R.id.qrRead)
     Button qrButton;
 
+    String id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_code);
         ButterKnife.bind(this);
+        id= getIntent().getStringExtra("id");
     }
 
     @OnClick(R.id.upisiSifru)
     public void sifraButtonClick(View view){
         Intent intent= new Intent(this, InputCode.class);
+        intent.putExtra("id",id);
         startActivity(intent);
     }
 
@@ -47,6 +51,7 @@ public class GetCode extends AppCompatActivity {
                 String message=data.getStringExtra("survey_code");
                 Intent intent=new Intent(this,GetSurvey.class);
                 intent.putExtra("message",message);
+                intent.putExtra("id",id);
                 startActivity(intent);
             }
         }

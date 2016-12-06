@@ -14,17 +14,20 @@ import butterknife.OnClick;
 public class InputCode extends AppCompatActivity {
     @BindView(R.id.lozinkaAnketa)EditText mEditText;
     @BindView(R.id.posaljiSifruButton)Button button;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_code);
         ButterKnife.bind(this);
+        id=getIntent().getStringExtra("id");
     }
 
     @OnClick(R.id.posaljiSifruButton)
     public void onButtonClick(View view){
         Intent intent= new Intent(this, GetSurvey.class);
+        intent.putExtra("id",id);
         intent.putExtra("message",mEditText.getText().toString());
         startActivity(intent);
     }

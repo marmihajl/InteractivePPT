@@ -1,5 +1,9 @@
 package hr.air.interactiveppt.webservice;
 
+import java.util.ArrayList;
+
+import hr.air.interactiveppt.entities.Answer;
+import hr.air.interactiveppt.entities.ListOfAnswers;
 import hr.air.interactiveppt.entities.RetrieveSurvey;
 import hr.air.interactiveppt.entities.responses.Survey;
 import okhttp3.MultipartBody;
@@ -42,6 +46,13 @@ public interface WebService {
     @POST("interactivePPT-server.php")
     Call<RetrieveSurvey> getSurvey(
             @Field("access_code") String accessCode,
+            @Field("request_type") String requestType
+    );
+
+    @FormUrlEncoded
+    @POST("interactivePPT-server.php")
+    Call<Boolean> sendAnswersToServer(
+            @Field("answers") ListOfAnswers answers,
             @Field("request_type") String requestType
     );
 }
