@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -103,6 +104,12 @@ public class AddQuestion extends Dialog {
                         }
                     }
                 }
+
+                String reasonsOfIncompletion;
+                if ((reasonsOfIncompletion = getReasonsWhyCurrentQuestionIsntComplete(question)) != "") {
+                    Toast.makeText(getContext(), "Neuspjeh kod kreiranja:" + reasonsOfIncompletion, Toast.LENGTH_LONG).show();
+                    return;
+                }
                 questions.add(question);
                 ((CreateSurvey)activity).loadData();
                 dismiss();
@@ -138,5 +145,25 @@ public class AddQuestion extends Dialog {
         });
     }
 
+    private String getReasonsWhyCurrentQuestionIsntComplete(Question question) {
+        String reasonsOfIncompletion = "";
+        if (question.getQuestionText().isEmpty()) {
+            reasonsOfIncompletion += "\nTekst pitanja ne može biti prazan!";
+        }
+        if (question.getQuestionType() != 3) {
+            if (question.options.size() == 0) {
+                reasonsOfIncompletion += "\nZa odabrani tip pitanja trebaju biti definirane opcije!";
+            }
+            else {
+                for (Option option : question.options) {
+                    if (option.getOptionText().isEmpty()) {
+                        reasonsOfIncompletion += "\nPostoje definirane opcije bez teksta!";
+                        break;
+                    }
+                }
+            }
+        }
+        return reasonsOfIncompletion;
+    }
 
 }

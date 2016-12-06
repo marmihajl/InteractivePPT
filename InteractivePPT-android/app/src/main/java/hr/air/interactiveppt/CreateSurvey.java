@@ -3,9 +3,6 @@ package hr.air.interactiveppt;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,14 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ipaulpro.afilechooser.utils.FileUtils;
-
-import org.w3c.dom.ProcessingInstruction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -81,6 +75,11 @@ public class CreateSurvey extends AppCompatActivity {
         String surveyName = ((EditText)findViewById(R.id.title_input)).getText().toString();
         String surveyDescription = ((EditText)findViewById(R.id.description_input)).getText().toString();
 
+        String reasonsOfIncompletion;
+        if ((reasonsOfIncompletion = getReasonsWhyCurrentSurveyIsntComplete(surveyName, surveyDescription)) != "") {
+            Toast.makeText(CreateSurvey.this, "Neuspjeh kod kreiranja:" + reasonsOfIncompletion, Toast.LENGTH_LONG).show();
+            return;
+        }
 
         MultipartBody.Part pptAsMessagePart = null;
 
@@ -234,5 +233,19 @@ public class CreateSurvey extends AppCompatActivity {
                 mRecycler.setLayoutManager(new LinearLayoutManager(this));
             }
         }
+    }
+
+    private String getReasonsWhyCurrentSurveyIsntComplete(String title, String description) {
+        String reasonsOfIncompetion = "";
+        if (title.isEmpty()) {
+            reasonsOfIncompetion += "\nNaslov ankete nije postavljen!";
+        }
+        if (description.isEmpty()) {
+            reasonsOfIncompetion += "\nOpis ankete nije postavljen!";
+        }
+        if (questions.isEmpty()) {
+            reasonsOfIncompetion += "\nAnketa je trenutno bez pitanja!";
+        }
+        return reasonsOfIncompetion;
     }
 }
