@@ -13,7 +13,11 @@ public class ListOfAnswers {
     @SerializedName("data")
     public ArrayList<Answer> answers;
 
-    public ListOfAnswers(ArrayList<Answer> answers){
+    @SerializedName("app_uid")
+    public String idUser;
+
+    public ListOfAnswers(ArrayList<Answer> answers, String idUser){
         this.answers = answers;
+        this.idUser = idUser;
     }
 }

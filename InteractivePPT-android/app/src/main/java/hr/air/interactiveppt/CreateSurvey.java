@@ -1,9 +1,11 @@
 package hr.air.interactiveppt;
 
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,7 +38,6 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CreateSurvey extends AppCompatActivity {
@@ -70,10 +71,10 @@ public class CreateSurvey extends AppCompatActivity {
     }
 
     @OnClick(R.id.button_save_changes)
-    protected void sendRequestForSaving(View view){
+    protected void createSurvey(View view){
 
-        String surveyName = ((EditText)findViewById(R.id.title_input)).getText().toString();
-        String surveyDescription = ((EditText)findViewById(R.id.description_input)).getText().toString();
+        final String surveyName = ((EditText)findViewById(R.id.title_input)).getText().toString();
+        final String surveyDescription = ((EditText)findViewById(R.id.description_input)).getText().toString();
 
         String reasonsOfIncompletion;
         if ((reasonsOfIncompletion = getReasonsWhyCurrentSurveyIsntComplete(surveyName, surveyDescription)) != "") {
@@ -81,67 +82,28 @@ public class CreateSurvey extends AppCompatActivity {
             return;
         }
 
-        MultipartBody.Part pptAsMessagePart = null;
+        new AlertDialog.Builder(this)
+                .setTitle("Upozorenje")
+                .setMessage("Jeste li sigurni da želite pohraniti anketu?")
+                .setIcon(android.R.drawable.ic_menu_save)
+                .setNegativeButton("da", new DialogInterface.OnClickListener() {
 
-        if (uriOfSelectedFile != null) {
-            File fileHandler = FileUtils.getFile(getBaseContext(), uriOfSelectedFile);  //this instead of getBaseContext was before
-            RequestBody requestFile =
-                    RequestBody.create(MediaType.parse("multipart/form-data"), fileHandler);
-            pptAsMessagePart = MultipartBody.Part.createFormData("ppt", fileHandler.getName(), requestFile);
-        }
-
-        SurveyWithQuestions surveyWithQuestions = new SurveyWithQuestions(
-                surveyName,
-                surveyDescription,
-                questions,
-                surveyAuthorId
-        );
-
-        String serializedSurvey = (new Gson()).toJson(surveyWithQuestions);
-
-        RequestBody surveyDetailsAsMessagePart =
-                RequestBody.create(
-                        MediaType.parse("multipart/form-data"), serializedSurvey);
-
-        CommunicationHandler.SendDataAndProcessResponse(
-                ServiceGenerator.createService(WebService.class).createSurvey(
-                        pptAsMessagePart,
-                        surveyDetailsAsMessagePart
-                ),
-                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
-                    @Override
-                    public void accept(Call<Boolean> call, Response<Boolean> response) {
-                        Toast.makeText(CreateSurvey.this,
-                                "Anketa je uspješno kreirana!",
-                                Toast.LENGTH_LONG
-                        ).show();
-                        findViewById(R.id.activity_create_survey).setClickable(true);
-                        findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        sendRequestForSaving(surveyName, surveyDescription);
                     }
-                },
-                new BiConsumer<Call<Boolean>, Throwable>() {
-                    @Override
-                    public void accept(Call<Boolean> sCall, Throwable throwable) {
-                        Toast.makeText(CreateSurvey.this,
-                                "Neuspjeh kod slanja ankete! Provjerite vezu s Internetom",
-                                Toast.LENGTH_LONG
-                        ).show();
-                        findViewById(R.id.activity_create_survey).setClickable(true);
-                        findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                    }
-                },
-                true,
-                getBaseContext()
-        );
+                })
+                .setPositiveButton("ne", null).show();
 
-
-        findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
-        findViewById(R.id.activity_create_survey).setClickable(false);
     }
 
     @OnClick(R.id.button_discard_changes)
-    protected void returnBackToHome(View view){
-        finish();
+    protected void clearCurrentSurvey(View view){
+        ((EditText)findViewById(R.id.title_input)).setText("");
+        ((EditText)findViewById(R.id.description_input)).setText("");
+        ((TextView)findViewById(R.id.attached_file_name)).setText(R.string.no_any_file_attached_msg);
+        uriOfSelectedFile = null;
+        questions.clear();
+        loadData();
     }
 
     private void showFileChooser() {
@@ -227,11 +189,11 @@ public class CreateSurvey extends AppCompatActivity {
             for (Question question : questions) {
                 questionItemList.add(new ExpandableQuestionItem(question));
             }
-            if(mRecycler != null) {
-                adapter = new QuestionRecyclerAdapter(this, questionItemList);
-                mRecycler.setAdapter(adapter);
-                mRecycler.setLayoutManager(new LinearLayoutManager(this));
-            }
+        }
+        if(mRecycler != null) {
+            adapter = new QuestionRecyclerAdapter(this, questionItemList);
+            mRecycler.setAdapter(adapter);
+            mRecycler.setLayoutManager(new LinearLayoutManager(this));
         }
     }
 
@@ -247,5 +209,65 @@ public class CreateSurvey extends AppCompatActivity {
             reasonsOfIncompetion += "\nAnketa je trenutno bez pitanja!";
         }
         return reasonsOfIncompetion;
+    }
+
+    void sendRequestForSaving(String surveyName, String surveyDescription) {
+        MultipartBody.Part pptAsMessagePart = null;
+
+        if (uriOfSelectedFile != null) {
+            File fileHandler = FileUtils.getFile(getBaseContext(), uriOfSelectedFile);  //this instead of getBaseContext was before
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("multipart/form-data"), fileHandler);
+            pptAsMessagePart = MultipartBody.Part.createFormData("ppt", fileHandler.getName(), requestFile);
+        }
+
+        SurveyWithQuestions surveyWithQuestions = new SurveyWithQuestions(
+                surveyName,
+                surveyDescription,
+                questions,
+                surveyAuthorId
+        );
+
+        String serializedSurvey = (new Gson()).toJson(surveyWithQuestions);
+        String serializedSurveyWithRequestType = "{\"request_type\":\"create_survey\",\"survey\":" + serializedSurvey + "}";
+
+        RequestBody surveyDetailsAsMessagePart =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), serializedSurveyWithRequestType);
+
+        CommunicationHandler.SendDataAndProcessResponse(
+                ServiceGenerator.createService(WebService.class).createSurvey(
+                        pptAsMessagePart,
+                        surveyDetailsAsMessagePart
+                ),
+                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                    @Override
+                    public void accept(Call<Boolean> call, Response<Boolean> response) {
+                        Toast.makeText(CreateSurvey.this,
+                                "Anketa je uspješno kreirana!",
+                                Toast.LENGTH_LONG
+                        ).show();
+                        findViewById(R.id.activity_create_survey).setClickable(true);
+                        findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                    }
+                },
+                new BiConsumer<Call<Boolean>, Throwable>() {
+                    @Override
+                    public void accept(Call<Boolean> sCall, Throwable throwable) {
+                        Toast.makeText(CreateSurvey.this,
+                                "Neuspjeh kod slanja ankete! Provjerite vezu s Internetom",
+                                Toast.LENGTH_LONG
+                        ).show();
+                        findViewById(R.id.activity_create_survey).setClickable(true);
+                        findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                    }
+                },
+                true,
+                getBaseContext()
+        );
+
+
+        findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
+        findViewById(R.id.activity_create_survey).setClickable(false);
     }
 }

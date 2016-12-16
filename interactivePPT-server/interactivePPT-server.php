@@ -14,10 +14,11 @@ if (isset($_POST['json'])) {
 }
 switch ($_POST['request_type']) {
     case 'create_survey':
-        $title = $_POST['title'];
-        $description = $_POST['description'];
-        $facebookId = $_POST['author'];
-        $questions = $_POST['questions'];
+        $survey = $_POST['survey'];
+        $title = $survey['name'];
+        $description = $survey['description'];
+        $facebookId = $survey['author'];
+        $questions = $survey['questions'];
         $accessCode;
         srand(time(0));
         rand();
@@ -62,7 +63,7 @@ switch ($_POST['request_type']) {
         break;
     case 'edit_survey':
         $id = $_POST['id'];
-        $newTitle = $_POST['title'];
+        $newTitle = $_POST['name'];
         $newDescription = $_POST['description'];
         $command = "";    //              NEED TO BE ADDED
         $result = $dbHandler->query($command);
@@ -124,17 +125,7 @@ switch ($_POST['request_type']) {
             $surveyInfo = $recordSet->fetch_assoc();
             $result = "{\"name\":\"$surveyInfo[name]\", \"description\":\"$surveyInfo[description]\", \"link_to_presentation\":\"$surveyInfo[link_to_presentation]\", \"questions\":[";
             $recordSet->free();
-            $command= <<< EOS
-SELECT concat('{"id":', q.idQuestions, ',"name":"', q.name, '", "type":', qt.idQuestion_type, ', 
-"required_answer":', q.answer_required, concat(',"options":[', GROUP_CONCAT(concat('{"id":',o.idOptions, ',"name":"', o.choice_name, '"}') ORDER BY o.idOptions ASC SEPARATOR ','), ']'), '}' ) FROM Questions q
-JOIN Question_options qo ON q.idQuestions=qo.idQuestions
-JOIN Options o ON qo.idOptions=o.idOptions
-JOIN Survey s ON s.idSurvey=q.Survey_idSurvey
-JOIN Question_type qt ON qt.idQuestion_type=q.Question_type_idQuestion_type
-WHERE s.access_code = '$surveyAccessCode'
-GROUP BY q.idQuestions
-ORDER BY q.idQuestions;
-EOS;
+            $command= "SELECT question_details FROM getQuestionDetails WHERE access_code = '$surveyAccessCode';";
             $recordSet= $dbHandler->query($command);
             if($recordSet){
                 for($i = 0; $i < $recordSet->num_rows; $i++){
@@ -152,7 +143,7 @@ EOS;
 		break;
     case 'get_results':
         $question = $_POST['id'];
-        $command = "SELECT o.choice_name, count(o.idOptions) AS count FROM Answers a LEFT JOIN Options o ON a.Options_idOptions=o.idOptions LEFT JOIN Question_options qo ON qo.idOptions=o.idOptions LEFT JOIN Questions q ON q.idQuestions=qo.idQuestions WHERE q.idQuestions=$question GROUP BY o.idOptions;";
+        $command = "SELECT o.choice_name, count(o.idOptions) AS count FROM Answers a LEFT JOIN Options o ON a.idOption=o.idOptions WHERE a.idQuestion=$question GROUP BY o.idOptions;";
         $recordSet = $dbHandler->query($command);
         $outputArray = array();
         if ($recordSet) {
@@ -165,11 +156,14 @@ EOS;
 
         break;
     case 'submit_answers':
-        $answers = $_POST['answers'];
+        $answers = json_decode($_POST['answers'], true);
+        $appUid = $answers['app_uid'];
+        $answers = $answers['data'];
+        $userId = $dbHandler->query("SELECT idUser FROM Users WHERE app_uid='$appUid';")->fetch_row()[0];
 		$command="INSERT INTO Answers VALUES";
 		if(count($answers)){
 			foreach ($answers as $a){
-			$command.= "(default, '$a[id]', '$a[id_option]'),";
+			$command.= "(default, $userId, '$a[id_question]', createOptionAndGetId('$a[option_name]')),";
 			}
 		}
 		$command = rtrim($command, ",");

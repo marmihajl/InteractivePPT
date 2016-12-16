@@ -43,4 +43,6 @@
     <string name="change_presentation_caption">Promijeni</string>
     <string name="login_button_content">Prijava putem Facebooka</string>
     <string name="logout_button_content">Odjavi se s trenutnog računa</string>
+    <string name="reset_survey">Odbaci</string>
+    <string name="create_survey">Kreiraj</string>
 </resources>

@@ -9,14 +9,14 @@ import java.util.List;
  */
 
 public class SurveyWithQuestions {
-    @SerializedName("request_type")
-    public String requestType;
-
-    @SerializedName("title")
+    @SerializedName("name")
     public String name;
 
     @SerializedName("description")
     public String description;
+
+    @SerializedName("link_to_presentation")
+    public String link;
 
     @SerializedName("questions")
     public List<Question> questions;
@@ -25,7 +25,6 @@ public class SurveyWithQuestions {
     public String authorId;
 
     public SurveyWithQuestions(String name, String description, List<Question> questions, String authorId) {
-        this.requestType = "create_survey";
         this.name = name;
         this.description = description;
         this.questions = questions;

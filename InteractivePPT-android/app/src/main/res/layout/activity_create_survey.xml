@@ -118,7 +118,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             app:layout_widthPercent="45%"
             app:layout_marginLeftPercent="2.5%"
-            android:text="Kreiraj"  />
+            android:text="@string/create_survey"  />
         <Button
             android:id="@+id/button_discard_changes"
             android:layout_width="match_parent"
@@ -127,7 +127,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             app:layout_widthPercent="45%"
             app:layout_marginLeftPercent="52.5%"
-            android:text="Odbaci"   />
+            android:text="@string/reset_survey"   />
     </android.support.percent.PercentRelativeLayout>
     <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"

@@ -11,18 +11,14 @@ public class Answer {
     @SerializedName("id_question")
     public int idQuest;
 
-    @SerializedName("id")
-    public String idUser;
-
-    @SerializedName("id_option")
-    public int idOption;
+    @SerializedName("option_name")
+    public String optionName;
 
     public Answer(){}
 
-    public Answer(int idQuest, String idUser, int idOption){
+    public Answer(int idQuest, String optionName){
         this.idQuest=idQuest;
-        this.idUser=idUser;
-        this.idOption=idOption;
+        this.optionName=optionName;
     }
 
     public int getIdQuest() {
@@ -33,20 +29,12 @@ public class Answer {
         this.idQuest = idQuest;
     }
 
-    public String getIdUser() {
-        return idUser;
+    public String getOptionName() {
+        return optionName;
     }
 
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
-    }
-
-    public int getIdOption() {
-        return idOption;
-    }
-
-    public void setIdOption(int idOption) {
-        this.idOption = idOption;
+    public void getOptionName(String optionName) {
+        this.optionName = optionName;
     }
 
 }

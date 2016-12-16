@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 05, 2016 at 05:06 PM
+-- Generation Time: Dec 16, 2016 at 02:20 AM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -43,21 +43,33 @@ DELIMITER ;
 --
 
 CREATE TABLE `Answers` (
-  `idAnswers` int(11) NOT NULL,
-  `Users_idUser` int(11) NOT NULL,
-  `Options_idOptions` int(11) NOT NULL
+  `idAnswer` int(11) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `idQuestion` int(11) NOT NULL,
+  `idOption` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Answers`
 --
 
-INSERT INTO `Answers` (`idAnswers`, `Users_idUser`, `Options_idOptions`) VALUES
-(1, 1, 1),
-(2, 2, 1),
-(3, 3, 1),
-(4, 2, 1),
-(5, 2, 3);
+INSERT INTO `Answers` (`idAnswer`, `idUser`, `idQuestion`, `idOption`) VALUES
+(9, 1, 15, 2),
+(10, 1, 15, 3),
+(11, 1, 14, 1),
+(12, 1, 47, 63),
+(13, 1, 14, 1),
+(14, 1, 47, 64);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `getQuestionDetails`
+--
+CREATE TABLE `getQuestionDetails` (
+`access_code` varchar(45)
+,`question_details` text
+);
 
 -- --------------------------------------------------------
 
@@ -152,7 +164,9 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 (57, 'putem telefona'),
 (60, 'true'),
 (61, 'false'),
-(62, '');
+(62, ''),
+(63, 'dasda'),
+(64, 'dsadafgfdgd');
 
 -- --------------------------------------------------------
 
@@ -202,7 +216,8 @@ INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `Question_typ
 (43, 'radio box', 0, 1, 33),
 (44, 'text edit', 0, 3, 33),
 (45, 'radio box 2', 0, 1, 33),
-(46, 'kak se zoveš?', 0, 3, 34);
+(46, 'kak se zoveš?', 0, 3, 34),
+(47, 'textedit pitanje', 1, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -380,6 +395,15 @@ INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`) VALUES
 (8, 'Marinela Levak', '1336022606431703', 3),
 (10, 'Mario Šelek', '1256649427742897', 3);
 
+-- --------------------------------------------------------
+
+--
+-- Structure for view `getQuestionDetails`
+--
+DROP TABLE IF EXISTS `getQuestionDetails`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `getQuestionDetails`  AS  select `result`.`access_code` AS `access_code`,`result`.`question_details` AS `question_details` from (select `s`.`access_code` AS `access_code`,concat('{"id":',`q`.`idQuestions`,',"name":"',`q`.`name`,'", "type":',`q`.`Question_type_idQuestion_type`,', "required_answer":',`q`.`answer_required`,concat(',"options":[',group_concat(concat('{"id":',`o`.`idOptions`,',"name":"',`o`.`choice_name`,'"}') order by `o`.`idOptions` ASC separator ','),']'),'}') AS `question_details` from (((`Questions` `q` join `Question_options` `qo` on((`q`.`idQuestions` = `qo`.`idQuestions`))) join `Options` `o` on((`qo`.`idOptions` = `o`.`idOptions`))) join `Survey` `s` on((`s`.`idSurvey` = `q`.`Survey_idSurvey`))) where (`q`.`Question_type_idQuestion_type` <> 3) group by `q`.`idQuestions` union select `s`.`access_code` AS `access_code`,concat('{"id":',`q`.`idQuestions`,',"name":"',`q`.`name`,'", "type":',`q`.`Question_type_idQuestion_type`,', "required_answer":',`q`.`answer_required`,',"options":[]}') AS `question_details` from (`Questions` `q` join `Survey` `s` on((`s`.`idSurvey` = `q`.`Survey_idSurvey`))) where (`q`.`Question_type_idQuestion_type` = 3) group by `q`.`idQuestions`) `result` order by `result`.`access_code`,`result`.`question_details` ;
+
 --
 -- Indexes for dumped tables
 --
@@ -388,9 +412,10 @@ INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`) VALUES
 -- Indexes for table `Answers`
 --
 ALTER TABLE `Answers`
-  ADD PRIMARY KEY (`idAnswers`),
-  ADD KEY `fk_Answers_Users1_idx` (`Users_idUser`),
-  ADD KEY `fk_Answers_Questions1_idx` (`Options_idOptions`);
+  ADD PRIMARY KEY (`idAnswer`),
+  ADD KEY `fk_Answers_Users1_idx` (`idUser`),
+  ADD KEY `fk_Answers_Questions1_idx` (`idOption`),
+  ADD KEY `idQuestion` (`idQuestion`);
 
 --
 -- Indexes for table `Log`
@@ -457,17 +482,17 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Answers`
 --
 ALTER TABLE `Answers`
-  MODIFY `idAnswers` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idAnswer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `Options`
 --
 ALTER TABLE `Options`
-  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 --
 -- AUTO_INCREMENT for table `Questions`
 --
 ALTER TABLE `Questions`
-  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 --
 -- AUTO_INCREMENT for table `Question_type`
 --
@@ -496,8 +521,9 @@ ALTER TABLE `Users`
 -- Constraints for table `Answers`
 --
 ALTER TABLE `Answers`
-  ADD CONSTRAINT `fk_Answers_Options1` FOREIGN KEY (`Options_idOptions`) REFERENCES `Options` (`idOptions`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Answers_Users1` FOREIGN KEY (`Users_idUser`) REFERENCES `Users` (`idUser`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `Answers_ibfk_1` FOREIGN KEY (`idQuestion`) REFERENCES `Questions` (`idQuestions`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Answers_Options1` FOREIGN KEY (`idOption`) REFERENCES `Options` (`idOptions`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Answers_Users1` FOREIGN KEY (`idUser`) REFERENCES `Users` (`idUser`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `Log`
