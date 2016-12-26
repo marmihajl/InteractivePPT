@@ -206,10 +206,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected boolean changeTextOfVisibleLoginButton() {
-        return true;
-    }
-
     TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

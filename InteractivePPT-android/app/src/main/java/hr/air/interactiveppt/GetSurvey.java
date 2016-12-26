@@ -84,6 +84,7 @@ public class GetSurvey extends AppCompatActivity{
         ScrollView scrollView = new ScrollView(this);
 
         RelativeLayout relativeLayout = new RelativeLayout(this);
+        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         relativeLayout.setBackgroundColor(getResources().getColor(R.color.com_facebook_button_like_background_color_selected));
 
         lL = new LinearLayout(this);
@@ -169,11 +170,16 @@ public class GetSurvey extends AppCompatActivity{
         Button button= new Button(this);
         button.setText("Pošalji odgovore");
         button.setOnClickListener(onClick(button));
-        lL.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        buttonLayoutParams.setMargins(30, 5, 30, 20);
+        button.setLayoutParams(buttonLayoutParams);
+        lL.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         lL.setGravity(Gravity.CENTER);
         lL.addView(button);
 
         scrollView.addView(lL);
+        scrollView.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
         relativeLayout.addView(scrollView);
         //setContentView(scrollView);
         setContentView(relativeLayout);
