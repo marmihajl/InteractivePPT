@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="hr.air.interactiveppt">
 
+    <uses-sdk tools:overrideLibrary="hr.air.heightbasedproportionallysizeableimageview" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <uses-sdk tools:overrideLibrary="hr.air.heightbasedproportionallysizeableimageview"/>
 
     <application
         android:allowBackup="true"
@@ -37,8 +37,10 @@
         <activity android:name=".CreateSurvey" />
         <activity android:name=".GetCode" />
         <activity android:name=".InputCode" />
-        <activity android:name="hr.foi.air.qrreader.QrReader"/>
-        <activity android:name=".GetSurvey"/>
+        <activity android:name="hr.foi.air.qrreader.QrReader" />
+        <activity android:name=".GetSurvey" />
+        <activity android:name=".OpenPresentation" />
+        <activity android:name=".ViewPresentation"></activity>
     </application>
 
 </manifest>

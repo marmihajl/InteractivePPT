@@ -61,8 +61,10 @@ public class Home extends AppCompatActivity {
 
     @OnClick(R.id.button_load_survey)
     public void loadSurveyClick(View view){
-        Intent intent = new Intent(this, GetCode.class);
+        /*Intent intent = new Intent(this, GetCode.class);
         intent.putExtra("id",user.getId());
+        startActivity(intent);*/
+        Intent intent = new Intent(this, OpenPresentation.class);
         startActivity(intent);
     }
 

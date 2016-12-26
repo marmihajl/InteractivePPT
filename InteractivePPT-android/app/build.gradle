@@ -46,4 +46,6 @@ dependencies {
     compile project(':webservice')
     compile project(':entities')
     compile project(':toggleableradiobutton')
+
+    compile 'org.jsoup:jsoup:1.7.3'
 }

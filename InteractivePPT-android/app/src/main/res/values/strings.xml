@@ -11,7 +11,7 @@
     <string name="survey_questions_label">Pitanja</string>
     <string name="my_surveys_button_caption">Moje\nankete</string>
     <string name="create_survey_button_caption">Nova\nanketa</string>
-    <string name="load_survey_button_caption">Učitaj\nanketu</string>
+    <string name="load_survey_button_caption">Učitaj\nprezentaciju</string>
     <string name="survey_code">Kod ankete</string>
     <string name="qr_read">Skeniraj Qr kod</string>
     <string name="input_code">Upiši šifru ankete</string>
@@ -45,4 +45,6 @@
     <string name="logout_button_content">Odjavi se s trenutnog računa</string>
     <string name="reset_survey">Odbaci</string>
     <string name="create_survey">Kreiraj</string>
+    <string name="openSurvey">Otvori prezentaciju</string>
+    <string name="sinc">Sinkroniziraj</string>
 </resources>
