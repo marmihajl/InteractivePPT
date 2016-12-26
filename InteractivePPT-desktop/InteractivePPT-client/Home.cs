@@ -17,6 +17,7 @@ namespace InteractivePPT
         static string path;
         PowerPoint.Presentation p = null;
         SurveyList mySurveyList = null;
+        private const string serverRootDirectoryUri = "http://46.101.68.86/";
 
         public Home(User u)
         {
@@ -36,7 +37,7 @@ namespace InteractivePPT
                 try
                 {
                     byte[] response =
-                    client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                    client.UploadValues(serverRootDirectoryUri + "interactivePPT-server.php", new NameValueCollection()
                     {
                        { "request_type", "get_surveys" },
                        { "app_uid", user.uid }
@@ -61,7 +62,7 @@ namespace InteractivePPT
                 mySurveysDgv.Rows.Add(
                     survey.name,
                     survey.access_code,
-                    survey.link_to_presentation,
+                    survey.link_to_presentation == null ? null : serverRootDirectoryUri + survey.link_to_presentation,
                     (new QRCodeWriter()).encode(survey.access_code, BarcodeFormat.QR_CODE, 50, 50).ToBitmap()
                 );
             }
@@ -93,6 +94,12 @@ namespace InteractivePPT
 
                     form.Controls.Add(pb);
                     form.ShowDialog();
+                }
+            }
+            else if (e.ColumnIndex == 2 && e.RowIndex >= 0)
+            {
+                if (mySurveysDgv[e.ColumnIndex, e.RowIndex].Value != null) {
+                    Clipboard.SetText(mySurveysDgv[e.ColumnIndex, e.RowIndex].Value.ToString());
                 }
             }
         }
