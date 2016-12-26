@@ -159,16 +159,21 @@ switch ($_POST['request_type']) {
         $answers = json_decode($_POST['answers'], true);
         $appUid = $answers['app_uid'];
         $answers = $answers['data'];
-        $userId = $dbHandler->query("SELECT idUser FROM Users WHERE app_uid='$appUid';")->fetch_row()[0];
-		$command="INSERT INTO Answers VALUES";
-		if(count($answers)){
-			foreach ($answers as $a){
-			$command.= "(default, $userId, '$a[id_question]', createOptionAndGetId('$a[option_name]')),";
-			}
-		}
-		$command = rtrim($command, ",");
-        $dbHandler->query($command);
-		echo 'true';
+        $userId = $dbHandler->query("SELECT idUser FROM Users WHERE app_uid='$appUid' LIMIT 1;")->fetch_row()[0];
+        if (count($answers) && !$dbHandler->query("SELECT * FROM Answers a WHERE a.idUser=$userId AND a.idQuestion=$answers[id_question] LIMIT 1;")->num_rows) {
+            echo 'false';
+        }
+        else {
+            $command="INSERT INTO Answers VALUES";
+            if(count($answers)){
+                foreach ($answers as $a){
+                    $command.= "(default, $userId, '$a[id_question]', createOptionAndGetId('$a[option_name]')),";
+                }
+                $command = rtrim($command, ",");
+                $dbHandler->query($command);
+            }
+            echo 'true';
+        }
 		
         break;
     case 'get_user_info':

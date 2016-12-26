@@ -4,16 +4,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -26,7 +23,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 import java.util.function.BiConsumer;
 
 import hr.air.interactiveppt.entities.Answer;
@@ -49,10 +45,12 @@ public class GetSurvey extends AppCompatActivity{
     ArrayList<Answer> answers= new ArrayList<Answer>();
     public int idQuestion;
     String idUser;
+    LinearLayout lL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_get_survey);
         idUser = getIntent().getStringExtra("id");
 
         access_code= getIntent().getExtras().getString("message");
@@ -88,7 +86,7 @@ public class GetSurvey extends AppCompatActivity{
         RelativeLayout relativeLayout = new RelativeLayout(this);
         relativeLayout.setBackgroundColor(getResources().getColor(R.color.com_facebook_button_like_background_color_selected));
 
-        LinearLayout lL = new LinearLayout(this);
+        lL = new LinearLayout(this);
         lL.setOrientation(LinearLayout.VERTICAL);
         //name
         TextView surveyName = new TextView(GetSurvey.this);
@@ -114,7 +112,17 @@ public class GetSurvey extends AppCompatActivity{
             TextView question = new TextView(this);
             question.setText(object.questions.get(i).getQuestionText());
             question.setTextColor(Color.BLACK);
-            lL.addView(question);
+            TextView requiredSign = new TextView(this);
+            requiredSign.setId(object.questions.get(i).getQuestionType());
+            if (object.questions.get(i).getRequiredAnswer()==1) {
+                requiredSign.setText("*");
+                requiredSign.setTextColor(Color.RED);
+            }
+            LinearLayout questionWithRequiredSign = new LinearLayout(this);
+            questionWithRequiredSign.setOrientation(LinearLayout.HORIZONTAL);
+            questionWithRequiredSign.addView(question);
+            questionWithRequiredSign.addView(requiredSign);
+            lL.addView(questionWithRequiredSign);
 
             idQuestion=object.questions.get(i).getQuestionId();
 
@@ -126,39 +134,15 @@ public class GetSurvey extends AppCompatActivity{
                     final RadioGroup radioGroup = new RadioGroup(this);
                     radioGroup.setId(idQuestion);
                     for (int j=0; j < numberOfOptions; j++) {
-                        RadioButton radioButton = new RadioButton(this);
+                        RadioButton radioButton = object.questions.get(i).getRequiredAnswer()==1 ? new RadioButton(this) : new hr.air.interactiveppt.ToggleableRadioButton(this);
                         radioButton.setText(object.questions.get(i).getOptions().get(j).getOptionText());
                         radioButton.setId(j);
                         radioGroup.addView(radioButton);
                     }
-                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(RadioGroup group, int checkedId) {
-                            boolean existsInArray = false;
-                            ListIterator<Answer> iterator = answers.listIterator();
-                            String selectedOption = ((RadioButton)radioGroup.getChildAt(checkedId)).getText().toString();
-
-                            while (iterator.hasNext()) {
-                                Answer temp = iterator.next();
-                                if (temp.getIdQuest() == group.getId()) {
-                                    iterator.remove();
-                                    temp = new Answer(group.getId(), selectedOption);
-                                    answers.add(temp);
-                                    existsInArray = true;
-                                    break;
-                                }
-                            }
-                            if (!existsInArray) {
-                                Answer answer = new Answer(group.getId(), selectedOption);
-                                answers.add(answer);
-                            }
-                        }
-                    });
                     lL.addView(radioGroup);
                     break;
-
                 case 2:
-                    final LinearLayout checkBoxGroup = new LinearLayout(this);
+                    LinearLayout checkBoxGroup = new LinearLayout(this);
                     checkBoxGroup.setOrientation(LinearLayout.VERTICAL);
                     checkBoxGroup.setId(idQuestion);
                     for (int j=0; j < numberOfOptions; j++) {
@@ -166,62 +150,19 @@ public class GetSurvey extends AppCompatActivity{
                         checkBox.setText(object.questions.get(i).getOptions().get(j).getOptionText());
                         checkBox.setId(j);
                         checkBoxGroup.addView(checkBox);
-                        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                ListIterator<Answer> iterator = answers.listIterator();
-                                if(isChecked){
-                                    Answer answer = new Answer(checkBoxGroup.getId(), buttonView.getText().toString());
-                                    answers.add(answer);
-                                }
-                                else{
-                                    while (iterator.hasNext()){
-                                        Answer temp= iterator.next();
-                                        if(temp.getIdQuest() == checkBoxGroup.getId() && temp.getOptionName().equals(buttonView.getText().toString())){
-                                            iterator.remove();
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        });
                     }
                     lL.addView(checkBoxGroup);
                     break;
                 case 3:
-                    final EditText editText= new EditText(this);
+                    EditText editText= new EditText(this);
                     editText.setSingleLine(false);
                     editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     editText.setLines(5);
                     editText.setMaxLines(10);
                     lL.addView(editText);
                     InputFilter[] inputFilters = new InputFilter[1];
-                    inputFilters[0] = new InputFilter.LengthFilter(50);
+                    inputFilters[0] = new InputFilter.LengthFilter(100);
                     editText.setFilters(inputFilters);
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                        }
-
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            removeAnswer(idQuestion);
-                            if(s.length() != 0) {
-                                Answer answer = new Answer(idQuestion, s.toString());
-                                answers.add(answer);
-                            }
-                        }
-                    });
-                    editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                        @Override
-                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                            return true;
-                        }
-                    });
             }
         }
 
@@ -241,19 +182,61 @@ public class GetSurvey extends AppCompatActivity{
     View.OnClickListener onClick(final Button button){
         return new View.OnClickListener(){
             public void onClick(View view){
-                ListOfAnswers listOfAnswers= new ListOfAnswers(answers, idUser);
-                sendAnswersToServer(listOfAnswers);
+                ListOfAnswers listOfAnswers = getAllDefinedAnswers();
+                if (listOfAnswers != null) {
+                    sendAnswersToServer(listOfAnswers);
+                }
+                else {
+                    Toast.makeText(GetSurvey.this, "Nije moguće predati odgovore dok nije odgovoreno na sva obvezna pitanja!", Toast.LENGTH_LONG).show();
+                }
             }
         };
     }
 
-    private void removeAnswer(int questionId) {
-        for (int i=0; i<answers.size(); i++) {
-            if (answers.get(i).getIdQuest() == questionId) {
-                answers.remove(i);
-                break;
+    private ListOfAnswers getAllDefinedAnswers() {
+        ArrayList<Answer> answers = new ArrayList<>();
+        int numOfQuestions = (lL.getChildCount() - 3) / 2;  //in children are surveyName, surveyDesc, submitButton and N pairs of question names and question option groups
+        for (int i=0; i < numOfQuestions; i++) {
+            short numOfProvidedOptions = 0;
+            LinearLayout ithQuestion = ((LinearLayout)lL.getChildAt(2 + 2*i));
+            Object ithOptionGroup = lL.getChildAt(2 + 2*i + 1);
+            TextView requiredSign = ((TextView)ithQuestion.getChildAt(1));
+            boolean requiredQuestion = requiredSign.getText()=="*";
+            int questionType = requiredSign.getId();
+            int questionId = ((View)ithOptionGroup).getId();
+            switch (questionType) {
+                case 1:
+                    int selectedOptionId = ((RadioGroup)ithOptionGroup).getCheckedRadioButtonId();
+                    if (selectedOptionId != -1) {
+                        answers.add(new Answer(questionId, ((RadioButton) ((RadioGroup) ithOptionGroup).getChildAt(selectedOptionId)).getText().toString()));
+                        numOfProvidedOptions++;
+                    }
+                    break;
+                case 2:
+                    LinearLayout checkBoxGroup = ((LinearLayout)ithOptionGroup);
+                    int numOfOptions = checkBoxGroup.getChildCount();
+                    for (int j=0; j < numOfOptions; j++) {
+                        if (((CheckBox)checkBoxGroup.getChildAt(j)).isChecked()) {
+                            answers.add(new Answer(questionId, ((CheckBox)checkBoxGroup.getChildAt(j)).getText().toString()));
+                            numOfProvidedOptions++;
+                        }
+                    }
+                    break;
+                case 3:
+                    EditText textEditField = ((EditText)ithOptionGroup);
+                    if (!textEditField.getText().toString().isEmpty()) {
+                        answers.add(new Answer(questionId, textEditField.getText().toString()));
+                        numOfProvidedOptions++;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (requiredQuestion && numOfProvidedOptions == 0) {
+                return null;
             }
         }
+        return new ListOfAnswers(answers, idUser);
     }
 
     private void sendAnswersToServer(ListOfAnswers answers){
@@ -266,10 +249,18 @@ public class GetSurvey extends AppCompatActivity{
                 new BiConsumer<Call<Boolean>, Response<Boolean>>() {
                     @Override
                     public void accept(Call<Boolean> answerCall, Response<Boolean> answerResponse) {
-                        Toast.makeText(GetSurvey.this,
-                                "Odgovori uspješno poslani!",
-                                Toast.LENGTH_LONG
-                        ).show();
+                        if (answerResponse.body()) {
+                            Toast.makeText(GetSurvey.this,
+                                    "Odgovori uspješno poslani!",
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
+                        else {
+                            Toast.makeText(GetSurvey.this,
+                                    "Već ste prethodno predali odgovore na ovu anketu!",
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
                     }
                 },
                 new BiConsumer<Call<Boolean>, Throwable>() {

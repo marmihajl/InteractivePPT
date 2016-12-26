@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/entities" />
             <option value="$PROJECT_DIR$/heightbasedproportionallysizeableimageview" />
             <option value="$PROJECT_DIR$/qrreader" />
+            <option value="$PROJECT_DIR$/toggleableradiobutton" />
             <option value="$PROJECT_DIR$/webservice" />
           </set>
         </option>

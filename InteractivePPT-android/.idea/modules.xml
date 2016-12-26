@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/entities/entities.iml" filepath="$PROJECT_DIR$/entities/entities.iml" />
       <module fileurl="file://$PROJECT_DIR$/heightbasedproportionallysizeableimageview/heightbasedproportionallysizeableimageview.iml" filepath="$PROJECT_DIR$/heightbasedproportionallysizeableimageview/heightbasedproportionallysizeableimageview.iml" />
       <module fileurl="file://$PROJECT_DIR$/qrreader/qrreader.iml" filepath="$PROJECT_DIR$/qrreader/qrreader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/toggleableradiobutton/toggleableradiobutton.iml" filepath="$PROJECT_DIR$/toggleableradiobutton/toggleableradiobutton.iml" />
       <module fileurl="file://$PROJECT_DIR$/webservice/webservice.iml" filepath="$PROJECT_DIR$/webservice/webservice.iml" />
     </modules>
   </component>

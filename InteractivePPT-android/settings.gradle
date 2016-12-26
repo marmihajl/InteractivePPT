@@ -1,1 +1,1 @@
-include ':app', ':heightbasedproportionallysizeableimageview', ':qrreader', ':webservice', ':entities'
+include ':app', ':heightbasedproportionallysizeableimageview', ':qrreader', ':webservice', ':entities', ':toggleableradiobutton'
