@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import java.util.function.BiConsumer;
 
-import hr.air.interactiveppt.entities.Presentations;
-import hr.air.interactiveppt.entities.SurveyWithQuestions;
 import hr.air.interactiveppt.webservice.CommunicationHandler;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
@@ -41,15 +39,15 @@ public class OpenPresentation extends AppCompatActivity {
 
                 CommunicationHandler.SendDataAndProcessResponse(ServiceGenerator.createService(WebService.class)
                                 .getPresentation(presentationCode,requestType),
-                        new BiConsumer<Call<Presentations>, Response<Presentations>>() {
+                        new BiConsumer<Call<String>, Response<String>>() {
                             @Override
-                            public void accept(Call<Presentations> call, Response<Presentations> response) {
+                            public void accept(Call<String> call, Response<String> response) {
                                 openPres(response.body());
                             }
                         },
-                        new BiConsumer<Call<Presentations>, Throwable>() {
+                        new BiConsumer<Call<String>, Throwable>() {
                             @Override
-                            public void accept(Call<Presentations> call, Throwable throwable) {
+                            public void accept(Call<String> call, Throwable throwable) {
                                 Toast.makeText(OpenPresentation.this,"Greška kod dobavljanja prezentacije", Toast.LENGTH_LONG).show();
                             }
                         },
@@ -62,8 +60,8 @@ public class OpenPresentation extends AppCompatActivity {
         });
     }
 
-    public void openPres(Presentations object){
-        intent.putExtra("code",object.path);
+    public void openPres(String path){
+        intent.putExtra("code",path);
         startActivity(intent);
     }
 }

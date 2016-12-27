@@ -158,17 +158,16 @@ switch ($_POST['request_type']) {
 		
 	case 'get_presentation':
         $code = $_POST['access_code'];
-        $command = "SELECT p.id,p.path, p.access_code FROM Presentation p WHERE p.access_code='$code';";
+        $command = "SELECT p.path FROM Presentation p WHERE p.access_code='$code' LIMIT 1;";
         $recordSet = $dbHandler->query($command);
-		$outputArray = array();
-        if ($recordSet) {
-            for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
-                array_push($outputArray, $recordSet->fetch_assoc());
-            }
+        if ($recordSet) {		
+			echo $recordSet->fetch_row()[0];
             $recordSet->free();
+			return;
         }
-        echo '{"data":' . json_encode($outputArray) . '}';
-        
+		else{
+			echo '';
+		}        
         break;
 	
     case 'submit_answers':
