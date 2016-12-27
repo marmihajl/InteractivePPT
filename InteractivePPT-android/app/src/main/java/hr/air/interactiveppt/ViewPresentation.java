@@ -1,18 +1,12 @@
 package hr.air.interactiveppt;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class ViewPresentation extends AppCompatActivity {
 
@@ -24,7 +18,11 @@ public class ViewPresentation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_presentation);
 
-        doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/ppt/test.pptx&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
+        String presentation = "";
+        Intent intent = getIntent();
+        presentation = intent.getStringExtra("code");
+
+        doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/"+presentation+"&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
 
 
         wv = (WebView)findViewById(R.id.webview);

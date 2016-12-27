@@ -155,6 +155,22 @@ switch ($_POST['request_type']) {
         echo '{"results":' . json_encode($outputArray, JSON_NUMERIC_CHECK) . '}';
 
         break;
+		
+	case 'get_presentation':
+        $code = $_POST['access_code'];
+        $command = "SELECT p.id,p.path, p.access_code FROM Presentation p WHERE p.access_code='$code';";
+        $recordSet = $dbHandler->query($command);
+		$outputArray = array();
+        if ($recordSet) {
+            for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
+                array_push($outputArray, $recordSet->fetch_assoc());
+            }
+            $recordSet->free();
+        }
+        echo '{"data":' . json_encode($outputArray) . '}';
+        
+        break;
+	
     case 'submit_answers':
         $answers = json_decode($_POST['answers'], true);
         $appUid = $answers['app_uid'];

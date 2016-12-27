@@ -16,9 +16,20 @@
         android:text="Otvori prezentaciju"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="67dp"
+        android:id="@+id/button3"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="16dp"
-        android:id="@+id/button3" />
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Šifra prezentacije"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/button3"
+        android:layout_marginTop="14dp"
+        android:id="@+id/presentationCode" />
 </RelativeLayout>
