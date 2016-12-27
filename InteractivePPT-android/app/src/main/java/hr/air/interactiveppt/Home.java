@@ -16,6 +16,9 @@ import hr.air.interactiveppt.entities.User;
 public class Home extends AppCompatActivity {
     User user;
 
+    @BindView(R.id.button_my_surveys)
+    RelativeLayout mySurveysButton;
+
     @BindView(R.id.button_create_survey)
     RelativeLayout createSurveyButton;
 
@@ -65,6 +68,13 @@ public class Home extends AppCompatActivity {
         intent.putExtra("id",user.getId());
         startActivity(intent);*/
         Intent intent = new Intent(this, OpenPresentation.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.button_my_surveys)
+    public void loadMySurveys(View view) {
+        Intent intent = new Intent(this, PresentationList.class);
+        intent.putExtra("id",user.getId());
         startActivity(intent);
     }
 
