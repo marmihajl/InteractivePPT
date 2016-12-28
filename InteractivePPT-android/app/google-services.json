@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1049413114228",
+    "firebase_url": "https://interactiveppt-ad930.firebaseio.com",
+    "project_id": "interactiveppt-ad930",
+    "storage_bucket": "interactiveppt-ad930.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049413114228:android:88cdf543579c3bfb",
+        "android_client_info": {
+          "package_name": "hr.air.interactiveppt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049413114228-kpsh1r47479eo6ua52too1lis9mdvb68.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9PmooqOuj4RlAY4EhiT7OLy2k_URtNao"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

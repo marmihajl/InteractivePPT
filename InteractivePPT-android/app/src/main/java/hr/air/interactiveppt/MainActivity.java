@@ -2,6 +2,8 @@ package hr.air.interactiveppt;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+
 
         findViewById(R.id.loading_panel).setVisibility(View.GONE);
         text = (TextView)findViewById(R.id.errorText);

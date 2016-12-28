@@ -1,6 +1,7 @@
 package hr.air.interactiveppt;
 
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,6 +40,7 @@ public class Home extends AppCompatActivity {
 
         user = new User(fullName,id);
 
+        String token = PreferenceManager.getDefaultSharedPreferences(this).getString("FCM_TOKEN","");
         TextView textView = (TextView)findViewById(R.id.userName);
         textView.setText(user.getFullName());
 
