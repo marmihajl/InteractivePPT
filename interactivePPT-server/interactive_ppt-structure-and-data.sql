@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 27, 2016 at 05:35 PM
+-- Generation Time: Dec 28, 2016 at 03:36 AM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -127,7 +127,7 @@ INSERT INTO `Answers` (`idAnswer`, `idUser`, `idQuestion`, `idOption`) VALUES
 -- Stand-in structure for view `getQuestionDetails`
 --
 CREATE TABLE `getQuestionDetails` (
-`access_code` varchar(45)
+`idSurvey` int(11)
 ,`question_details` text
 );
 
@@ -235,7 +235,16 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 (72, 'opcijaaaaaaaaaaaaa 1'),
 (73, 'opcijbbbbbbbbbbbbb 2'),
 (74, 'x'),
-(75, 'y');
+(75, 'y'),
+(76, 'no, John Cena'),
+(77, 'yees ^_^'),
+(78, 'goto'),
+(79, 'return'),
+(80, 'break'),
+(81, 'case'),
+(82, 'continue'),
+(83, 'točno'),
+(84, 'netočno');
 
 -- --------------------------------------------------------
 
@@ -246,15 +255,19 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 CREATE TABLE `Presentation` (
   `id` int(11) NOT NULL,
   `path` varchar(255) NOT NULL,
-  `access_code` varchar(10) NOT NULL
+  `access_code` varchar(10) NOT NULL,
+  `author` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Presentation`
 --
 
-INSERT INTO `Presentation` (`id`, `path`, `access_code`) VALUES
-(3, 'ppt/test.pptx', 'd9b4vs69v2');
+INSERT INTO `Presentation` (`id`, `path`, `access_code`, `author`) VALUES
+(3, 'ppt/test.pptx', 'd9b4vs69v2', 2),
+(4, 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 'rpk_anketa', 1),
+(5, 'ppt/Proizvodnja vina.pptx', '7dsR6n2n', 1),
+(7, 'ppt/Varijable i pokazivači.pptx', 'm45k0fz42t', 1);
 
 -- --------------------------------------------------------
 
@@ -307,7 +320,11 @@ INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `Question_typ
 (46, 'kak se zoveš?', 0, 3, 34),
 (47, 'textedit pitanje', 1, 3, 4),
 (49, 'pitaaaaaaanjeee 1', 0, 1, 36),
-(50, 'bljablja', 1, 1, 37);
+(50, 'bljablja', 1, 1, 37),
+(51, 'can you see me?', 1, 1, 38),
+(52, 'Označite naredbe iz skupine skokova:', 0, 2, 39),
+(53, 'Rekurzivni algoritmi su manje realne vremenske složenosti u odnosu na iterativne', 0, 1, 39),
+(54, 'Navedite naziv neke biblioteke u C++', 0, 3, 39);
 
 -- --------------------------------------------------------
 
@@ -387,7 +404,16 @@ INSERT INTO `Question_options` (`idOptions`, `idQuestions`) VALUES
 (72, 49),
 (73, 49),
 (74, 50),
-(75, 50);
+(75, 50),
+(76, 51),
+(77, 51),
+(78, 52),
+(79, 52),
+(80, 52),
+(81, 52),
+(82, 52),
+(83, 53),
+(84, 53);
 
 -- --------------------------------------------------------
 
@@ -433,6 +459,25 @@ INSERT INTO `Role` (`idRole`, `name`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Subscription`
+--
+
+CREATE TABLE `Subscription` (
+  `idUser` int(11) NOT NULL,
+  `idPresentation` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Subscription`
+--
+
+INSERT INTO `Subscription` (`idUser`, `idPresentation`) VALUES
+(1, 3),
+(3, 5);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Survey`
 --
 
@@ -440,32 +485,30 @@ CREATE TABLE `Survey` (
   `idSurvey` int(11) NOT NULL,
   `name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `description` varchar(500) CHARACTER SET utf8 NOT NULL,
-  `access_code` varchar(45) CHARACTER SET utf8 DEFAULT NULL,
-  `link_to_presentation` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
-  `author` int(11) NOT NULL
+  `access_code` varchar(10) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Survey`
 --
 
-INSERT INTO `Survey` (`idSurvey`, `name`, `description`, `access_code`, `link_to_presentation`, `author`) VALUES
-(1, 'Probna anketa', '', 'kod_za_pristup', NULL, 1),
-(2, 'HerbariumApp', 'Anketa o poznavanju biljnih vrsta', 'TwmbaYl<^0BkcBL', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1),
-(3, 'Upitnik o ovisnosti o racunalnim igrama', 'Molimo Vas da odgovorite na ovu anketu u kojoj se ispituje ovisnost ljudi o racunalnim igrama:', 'rpk_anketa', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1),
-(4, 'Moja prva anketa', 'Ovo je moja prva anketa potrebna za testiranje', '123456', NULL, 2),
-(5, '30112016', 'dada', '7=:R^#2ni!9|;)H', 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 1),
-(6, '31112016', 'gfhfghfgh', '~U}oZFn7d=mX:BW', NULL, 1),
-(7, 'maknut boolean', 'to kaj pise', 'HBW-5*b:0;44)$v', NULL, 1),
-(25, 'Testna anketa', 'Ovo je anketa koja se kreira kao test za dodavanje ankete', '<]S*/7D^9w^6B]-', NULL, 2),
-(26, 'treca anketa', 'Ovo je moja treca anketa', '789666', NULL, 2),
-(27, '03122016', 'wsfsdgsdgds', 'VRh/T%;q:Sk-;a{', NULL, 1),
-(29, 'Anketa o anketama', 'Ovo je anketa napravljena za potrebu projekta na kolegiju Računalom posredovana komunikacija', '8e3e81fcdr', NULL, 1),
-(32, 'anketa s jednim pitanjem', 'dasdasd', '0fo7p5u8rm', NULL, 1),
-(33, 'Test', 'Anketa za test radio boxa i text edita', '5n4ugcumj2', NULL, 2),
-(34, 'anketa s text edit pitanjem', 'fsdfdafsf', 'cj1op4e3l8', NULL, 1),
-(36, 'neka anketa s jako dugackim naslovom tstirati dal šljaka app u landscape orijentaciji', 'neka anketa s jaaako dugackim nasloovoooom koji je tak dugi da bi trebal testirati dal šljaka app u landscape orijentaciji (nešto nešto nešto nešto nešto nešto)', '81d3m4i7t5', NULL, 1),
-(37, '27122016', 'testna anketica', '3e4438gagt', NULL, 1);
+INSERT INTO `Survey` (`idSurvey`, `name`, `description`, `access_code`) VALUES
+(1, 'Probna anketa', '', 'rpk_anketa'),
+(2, 'HerbariumApp', 'Anketa o poznavanju biljnih vrsta', 'rpk_anketa'),
+(3, 'Upitnik o ovisnosti o racunalnim igrama', 'Molimo Vas da odgovorite na ovu anketu u kojoj se ispituje ovisnost ljudi o racunalnim igrama:', 'rpk_anketa'),
+(4, 'Moja prva anketa', 'Ovo je moja prva anketa potrebna za testiranje', 'd9b4vs69v2'),
+(5, '30112016', 'dada', '7dsR6n2n'),
+(25, 'Testna anketa', 'Ovo je anketa koja se kreira kao test za dodavanje ankete', 'd9b4vs69v2'),
+(26, 'treca anketa', 'Ovo je moja treca anketa', 'd9b4vs69v2'),
+(27, '03122016', 'wsfsdgsdgds', '7dsR6n2n'),
+(29, 'Anketa o anketama', 'Ovo je anketa napravljena za potrebu projekta na kolegiju Računalom posredovana komunikacija', '7dsR6n2n'),
+(32, 'anketa s jednim pitanjem', 'dasdasd', '7dsR6n2n'),
+(33, 'Test', 'Anketa za test radio boxa i text edita', 'd9b4vs69v2'),
+(34, 'anketa s text edit pitanjem', 'fsdfdafsf', 'rpk_anketa'),
+(36, 'neka anketa s jako dugackim naslovom tstirati dal šljaka app u landscape orijentaciji', 'neka anketa s jaaako dugackim nasloovoooom koji je tak dugi da bi trebal testirati dal šljaka app u landscape orijentaciji (nešto nešto nešto nešto nešto nešto)', 'rpk_anketa'),
+(37, '27122016', 'testna anketica', 'rpk_anketa'),
+(38, 'dfsdfdsfs', '\\\\xF0\\\\x9F\\\\x90\\\\xBC', 'rpk_anketa'),
+(39, 'Provjera znanja iz Programiranja', 'Ovo je kratka provjera znanja iz programiranja - i provjera ispravnosti aplikacije', 'm45k0fz42t');
 
 -- --------------------------------------------------------
 
@@ -498,7 +541,7 @@ INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`) VALUES
 --
 DROP TABLE IF EXISTS `getQuestionDetails`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `getQuestionDetails`  AS  select `result`.`access_code` AS `access_code`,`result`.`question_details` AS `question_details` from (select `s`.`access_code` AS `access_code`,concat('{"id":',`q`.`idQuestions`,',"name":"',`q`.`name`,'", "type":',`q`.`Question_type_idQuestion_type`,', "required_answer":',`q`.`answer_required`,concat(',"options":[',group_concat(concat('{"id":',`o`.`idOptions`,',"name":"',`o`.`choice_name`,'"}') order by `o`.`idOptions` ASC separator ','),']'),'}') AS `question_details` from (((`Questions` `q` join `Question_options` `qo` on((`q`.`idQuestions` = `qo`.`idQuestions`))) join `Options` `o` on((`qo`.`idOptions` = `o`.`idOptions`))) join `Survey` `s` on((`s`.`idSurvey` = `q`.`Survey_idSurvey`))) where (`q`.`Question_type_idQuestion_type` <> 3) group by `q`.`idQuestions` union select `s`.`access_code` AS `access_code`,concat('{"id":',`q`.`idQuestions`,',"name":"',`q`.`name`,'", "type":',`q`.`Question_type_idQuestion_type`,', "required_answer":',`q`.`answer_required`,',"options":[]}') AS `question_details` from (`Questions` `q` join `Survey` `s` on((`s`.`idSurvey` = `q`.`Survey_idSurvey`))) where (`q`.`Question_type_idQuestion_type` = 3) group by `q`.`idQuestions`) `result` order by `result`.`access_code`,`result`.`question_details` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `getQuestionDetails`  AS  select `result`.`idSurvey` AS `idSurvey`,`result`.`question_details` AS `question_details` from (select `s`.`idSurvey` AS `idSurvey`,concat('{"id":',`q`.`idQuestions`,',"name":"',`q`.`name`,'", "type":',`q`.`Question_type_idQuestion_type`,', "required_answer":',`q`.`answer_required`,concat(',"options":[',group_concat(concat('{"id":',`o`.`idOptions`,',"name":"',`o`.`choice_name`,'"}') order by `o`.`idOptions` ASC separator ','),']'),'}') AS `question_details` from (((`Questions` `q` join `Question_options` `qo` on((`q`.`idQuestions` = `qo`.`idQuestions`))) join `Options` `o` on((`qo`.`idOptions` = `o`.`idOptions`))) join `Survey` `s` on((`s`.`idSurvey` = `q`.`Survey_idSurvey`))) where (`q`.`Question_type_idQuestion_type` <> 3) group by `q`.`idQuestions` union select `s`.`idSurvey` AS `idSurvey`,concat('{"id":',`q`.`idQuestions`,',"name":"',`q`.`name`,'", "type":',`q`.`Question_type_idQuestion_type`,', "required_answer":',`q`.`answer_required`,',"options":[]}') AS `question_details` from (`Questions` `q` join `Survey` `s` on((`s`.`idSurvey` = `q`.`Survey_idSurvey`))) where (`q`.`Question_type_idQuestion_type` = 3) group by `q`.`idQuestions`) `result` order by `result`.`idSurvey`,`result`.`question_details` ;
 
 --
 -- Indexes for dumped tables
@@ -530,7 +573,9 @@ ALTER TABLE `Options` ADD FULLTEXT KEY `choice_name` (`choice_name`);
 -- Indexes for table `Presentation`
 --
 ALTER TABLE `Presentation`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `access_code` (`access_code`),
+  ADD KEY `fk_Ppt_User` (`author`);
 
 --
 -- Indexes for table `Questions`
@@ -561,11 +606,18 @@ ALTER TABLE `Role`
   ADD PRIMARY KEY (`idRole`);
 
 --
+-- Indexes for table `Subscription`
+--
+ALTER TABLE `Subscription`
+  ADD PRIMARY KEY (`idUser`,`idPresentation`),
+  ADD KEY `fk_Subscription_Ppt` (`idPresentation`);
+
+--
 -- Indexes for table `Survey`
 --
 ALTER TABLE `Survey`
   ADD PRIMARY KEY (`idSurvey`),
-  ADD KEY `fk_survey_author` (`author`);
+  ADD KEY `fk_survey_ppt` (`access_code`);
 
 --
 -- Indexes for table `Users`
@@ -589,17 +641,17 @@ ALTER TABLE `Answers`
 -- AUTO_INCREMENT for table `Options`
 --
 ALTER TABLE `Options`
-  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 --
 -- AUTO_INCREMENT for table `Presentation`
 --
 ALTER TABLE `Presentation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `Questions`
 --
 ALTER TABLE `Questions`
-  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 --
 -- AUTO_INCREMENT for table `Question_type`
 --
@@ -614,7 +666,7 @@ ALTER TABLE `Role`
 -- AUTO_INCREMENT for table `Survey`
 --
 ALTER TABLE `Survey`
-  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT for table `Users`
 --
@@ -639,6 +691,12 @@ ALTER TABLE `Log`
   ADD CONSTRAINT `fk_Log_Users1` FOREIGN KEY (`Users_idUser`) REFERENCES `Users` (`idUser`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
+-- Constraints for table `Presentation`
+--
+ALTER TABLE `Presentation`
+  ADD CONSTRAINT `Presentation_ibfk_1` FOREIGN KEY (`author`) REFERENCES `Users` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `Questions`
 --
 ALTER TABLE `Questions`
@@ -653,10 +711,17 @@ ALTER TABLE `Question_options`
   ADD CONSTRAINT `fk_Options_has_Questions_Questions1` FOREIGN KEY (`idQuestions`) REFERENCES `Questions` (`idQuestions`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
+-- Constraints for table `Subscription`
+--
+ALTER TABLE `Subscription`
+  ADD CONSTRAINT `fk_Subscription_Ppt` FOREIGN KEY (`idPresentation`) REFERENCES `Presentation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_Subscription_User` FOREIGN KEY (`idUser`) REFERENCES `Users` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `Survey`
 --
 ALTER TABLE `Survey`
-  ADD CONSTRAINT `fk_survey_author` FOREIGN KEY (`author`) REFERENCES `Users` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `Survey_ibfk_1` FOREIGN KEY (`access_code`) REFERENCES `Presentation` (`access_code`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `Users`

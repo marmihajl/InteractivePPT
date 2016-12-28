@@ -15,7 +15,6 @@ namespace InteractivePPT
         private User user;
         PowerPoint.Application pptApp = new PowerPoint.Application();
         static string path;
-        PowerPoint.Presentation p = null;
         SurveyList mySurveyList = null;
         private const string serverRootDirectoryUri = "http://46.101.68.86/";
 
@@ -57,9 +56,10 @@ namespace InteractivePPT
                 mySurveyList = JsonConvert.DeserializeObject<SurveyList>(serializedUserSurveys);
             }
 
-            foreach (var survey in mySurveyList.data)
+            foreach (Survey survey in mySurveyList.data)
             {
                 mySurveysDgv.Rows.Add(
+                    survey.id,
                     survey.name,
                     survey.access_code,
                     survey.link_to_presentation == null ? null : serverRootDirectoryUri + survey.link_to_presentation,
@@ -77,7 +77,7 @@ namespace InteractivePPT
 
         private void mySurveysDgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 3 && e.RowIndex >= 0)
+            if (e.ColumnIndex == 4 && e.RowIndex >= 0)
             {
                 using (Form form = new Form())
                 {
@@ -96,7 +96,7 @@ namespace InteractivePPT
                     form.ShowDialog();
                 }
             }
-            else if (e.ColumnIndex == 2 && e.RowIndex >= 0)
+            else if (e.ColumnIndex == 3 && e.RowIndex >= 0)
             {
                 if (mySurveysDgv[e.ColumnIndex, e.RowIndex].Value != null) {
                     Clipboard.SetText(mySurveysDgv[e.ColumnIndex, e.RowIndex].Value.ToString());
@@ -106,7 +106,7 @@ namespace InteractivePPT
 
         private void mySurveysDgv_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 3 && e.RowIndex >= 0)
+            if (e.ColumnIndex == 4 && e.RowIndex >= 0)
             {
                 Cursor = Cursors.Hand;
             }
@@ -114,7 +114,7 @@ namespace InteractivePPT
 
         private void mySurveysDgv_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 3 && e.RowIndex >= 0)
+            if (e.ColumnIndex == 4 && e.RowIndex >= 0)
             {
                 Cursor = Cursors.Default;
             }
@@ -136,5 +136,5 @@ namespace InteractivePPT
             }
         }
 
-            }
+    }
 }

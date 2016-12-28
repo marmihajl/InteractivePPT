@@ -31,11 +31,12 @@
             this.lblUser = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.mySurveysDgv = new System.Windows.Forms.DataGridView();
+            this.button1 = new System.Windows.Forms.Button();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.access_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.link_to_presentation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.qr_code = new System.Windows.Forms.DataGridViewImageColumn();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.mySurveysDgv)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,9 +45,10 @@
             this.lblUser.AutoSize = true;
             this.lblUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(601, 9);
+            this.lblUser.Location = new System.Drawing.Point(801, 11);
+            this.lblUser.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(0, 20);
+            this.lblUser.Size = new System.Drawing.Size(0, 25);
             this.lblUser.TabIndex = 0;
             // 
             // label1
@@ -55,9 +57,10 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(502, 9);
+            this.label1.Location = new System.Drawing.Point(669, 11);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 20);
+            this.label1.Size = new System.Drawing.Size(64, 25);
             this.label1.TabIndex = 1;
             this.label1.Text = "label1";
             // 
@@ -71,22 +74,41 @@
             this.mySurveysDgv.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.mySurveysDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.mySurveysDgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id,
             this.name,
             this.access_code,
             this.link_to_presentation,
             this.qr_code});
-            this.mySurveysDgv.Location = new System.Drawing.Point(35, 46);
-            this.mySurveysDgv.Margin = new System.Windows.Forms.Padding(2);
+            this.mySurveysDgv.Location = new System.Drawing.Point(47, 57);
+            this.mySurveysDgv.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.mySurveysDgv.MultiSelect = false;
             this.mySurveysDgv.Name = "mySurveysDgv";
             this.mySurveysDgv.ReadOnly = true;
             this.mySurveysDgv.RowTemplate.Height = 24;
             this.mySurveysDgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.mySurveysDgv.Size = new System.Drawing.Size(563, 184);
+            this.mySurveysDgv.Size = new System.Drawing.Size(751, 226);
             this.mySurveysDgv.TabIndex = 3;
             this.mySurveysDgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.mySurveysDgv_CellContentClick);
             this.mySurveysDgv.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.mySurveysDgv_CellMouseEnter);
             this.mySurveysDgv.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.mySurveysDgv_CellMouseLeave);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(319, 402);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(136, 52);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Odabir prezentacije";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // id
+            // 
+            this.id.HeaderText = "Id";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            this.id.Width = 50;
             // 
             // name
             // 
@@ -94,7 +116,7 @@
             this.name.HeaderText = "Survey name";
             this.name.Name = "name";
             this.name.ReadOnly = true;
-            this.name.Width = 87;
+            this.name.Width = 120;
             // 
             // access_code
             // 
@@ -102,7 +124,7 @@
             this.access_code.HeaderText = "Access code";
             this.access_code.Name = "access_code";
             this.access_code.ReadOnly = true;
-            this.access_code.Width = 87;
+            this.access_code.Width = 117;
             // 
             // link_to_presentation
             // 
@@ -119,28 +141,19 @@
             this.qr_code.ReadOnly = true;
             this.qr_code.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.qr_code.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.qr_code.Width = 65;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(239, 327);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 42);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Odabir prezentacije";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.qr_code.Width = 88;
             // 
             // Home
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.ClientSize = new System.Drawing.Size(643, 428);
+            this.ClientSize = new System.Drawing.Size(857, 527);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.mySurveysDgv);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblUser);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Home";
             this.Text = "Home";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Home_FormClosed);
@@ -156,10 +169,11 @@
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView mySurveysDgv;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn access_code;
         private System.Windows.Forms.DataGridViewTextBoxColumn link_to_presentation;
         private System.Windows.Forms.DataGridViewImageColumn qr_code;
-        private System.Windows.Forms.Button button1;
     }
 }

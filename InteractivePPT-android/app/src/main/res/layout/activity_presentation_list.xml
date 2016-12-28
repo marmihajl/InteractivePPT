@@ -53,4 +53,14 @@
                 android:layout_below="@id/subbed_ppts_title"    />
         </RelativeLayout>
     </android.support.percent.PercentRelativeLayout>
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/loading_panel">
+        <ProgressBar
+            android:layout_width="match_parent"
+            app:layout_heightPercent="50%"
+            app:layout_marginTopPercent="25%"
+            android:indeterminate="true" />
+    </android.support.percent.PercentRelativeLayout>
 </RelativeLayout>

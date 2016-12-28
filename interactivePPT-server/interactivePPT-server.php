@@ -34,7 +34,7 @@ switch ($_POST['request_type']) {
                         break;
                 }
             }
-            $recordSet = $dbHandler->query("SELECT * FROM Survey WHERE access_code='$accessCode' LIMIT 1;");
+            $recordSet = $dbHandler->query("SELECT * FROM Presentation WHERE access_code='$accessCode' LIMIT 1;");
         } while ($recordSet->num_rows > 0);
         $recordSet->free();
         $fileUri = 'null';
@@ -45,7 +45,7 @@ switch ($_POST['request_type']) {
             }            
         }
 
-        $command = "INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode', $fileUri, (SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1));SET @survey := LAST_INSERT_ID();";
+        $command = "INSERT INTO Presentation VALUES (default, $fileUri, '$accessCode', (SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1));INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode');SET @survey := LAST_INSERT_ID();";
 
         if (count($questions)) {
             foreach ($questions as $q) {
@@ -77,7 +77,7 @@ switch ($_POST['request_type']) {
         break;
     case 'get_surveys':
         $appUid = $_POST['app_uid'];
-        $command = "SELECT s.name,s.access_code,s.link_to_presentation FROM Survey s, Users u WHERE u.app_uid='$appUid' AND u.idUser=s.author;";
+        $command = "SELECT s.idSurvey AS \"id\",s.name,s.access_code,p.path AS \"link_to_presentation\" FROM Survey s, Users u, Presentation p WHERE u.app_uid='$appUid' AND u.idUser=p.author AND p.access_code=s.access_code;";
         $recordSet = $dbHandler->query($command);
         $outputArray = array();
         if ($recordSet) {
@@ -89,23 +89,9 @@ switch ($_POST['request_type']) {
         echo '{"data":' . json_encode($outputArray) . '}';
         
         break;
-    case 'get_details':
-        $accessCode = $_POST['access_code'];
-        $command = "SELECT name, description, link_to_presentation FROM Survey WHERE access_code='$accessCode';";    //              NEED TO BE ADDED
-        $recordSet = $dbHandler->query($command);
-        $outputArray = array();
-        if ($recordSet) {
-            for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
-                array_push($outputArray, $recordSet->fetch_assoc());
-            }
-            $recordSet->free();
-        }
-        echo json_encode($outputArray);
-
-        break;
     case 'get_questions':
-        $survey = $_POST['access_code'];
-        $command = "SELECT q.idQuestions, q.name FROM Questions q, Survey s WHERE s.access_code='$survey' AND s.idSurvey=q.Survey_idSurvey;";
+        $survey = $_POST['survey_id'];
+        $command = "SELECT q.idQuestions, q.name FROM Questions q, Survey s WHERE s.idSurvey='$survey' AND s.idSurvey=q.Survey_idSurvey;";
         $recordSet = $dbHandler->query($command);
         $outputArray = array();
         if ($recordSet) {
@@ -118,14 +104,14 @@ switch ($_POST['request_type']) {
 
         break;
 	case 'get_survey':
-		$surveyAccessCode=$_POST['access_code'];
-        $command = "SELECT name, description, link_to_presentation FROM Survey WHERE access_code='$surveyAccessCode';";
+		$idSurvey=$_POST['survey_id'];
+        $command = "SELECT s.name, s.description, p.link_to_presentation FROM Survey s, Presentation p WHERE idSurvey='$idSurvey' AND p.access_code=s.access_code;";
         $recordSet = $dbHandler->query($command);
         if ($recordSet) {
             $surveyInfo = $recordSet->fetch_assoc();
             $result = "{\"name\":\"$surveyInfo[name]\", \"description\":\"$surveyInfo[description]\", \"link_to_presentation\":\"$surveyInfo[link_to_presentation]\", \"questions\":[";
             $recordSet->free();
-            $command= "SELECT question_details FROM getQuestionDetails WHERE access_code = '$surveyAccessCode';";
+            $command= "SELECT question_details FROM getQuestionDetails WHERE idSurvey = '$idSurvey';";
             $recordSet= $dbHandler->query($command);
             if($recordSet){
                 for($i = 0; $i < $recordSet->num_rows; $i++){
@@ -137,7 +123,7 @@ switch ($_POST['request_type']) {
             echo $result . ']}';            
         }
         else {
-            echo 'false';   //provjeriti kak primiti niš
+            echo 'false';
         }
 		
 		break;
@@ -211,25 +197,39 @@ switch ($_POST['request_type']) {
 
         break;
     case 'delete_file':
-
-	$data=$_POST['file'];
-
+	    $data=$_POST['file'];
         $dir = "ppt";
-
         $dirHandle = opendir($dir);
-
         while ($file = readdir($dirHandle)) {
-
             if($file==$data) {
                 unlink($dir.'/'.$file);
             }
         }
-
         closedir($dirHandle);
 
+    	break;
+    case 'get_presentation_list':
+        $uid = $_POST['uid'];
+        $userPpts = array();
+        $subbedPpts = array();
+        $recordSet = $dbHandler->query("SELECT count(s.access_code) AS \"num_of_surveys\", p.access_code, (SELECT p2.path FROM Presentation p2 WHERE p.access_code=p2.access_code) AS \"path\" FROM Presentation p LEFT JOIN Survey s ON s.access_code=p.access_code WHERE p.author=(SELECT idUser FROM Users WHERE app_uid='$uid') GROUP BY p.access_code, s.access_code;");
+        if ($recordSet) {
+            for ($i=0; $i<$recordSet->num_rows; $i++) {
+                array_push($userPpts, $recordSet->fetch_assoc());
+            }
+            $recordSet->free();
+        }
 
-	break;
+        $recordSet = $dbHandler->query("SELECT count(s.access_code) AS \"num_of_surveys\", p.access_code, (SELECT p2.path FROM Presentation p2 WHERE p.access_code=p2.access_code) AS \"path\", (SELECT u2.name FROM Users u2 WHERE u.idUser=u2.idUser LIMIT 1) AS \"author_name\" FROM Presentation p JOIN Subscription sub ON sub.idUser=(SELECT idUser FROM Users WHERE app_uid='$uid') AND sub.idPresentation=p.id LEFT JOIN Users u ON u.idUser=p.author LEFT JOIN Survey s ON s.access_code=p.access_code GROUP BY p.access_code, s.access_code, u.idUser;");
+        if ($recordSet) {
+            for ($i=0; $i<$recordSet->num_rows; $i++) {
+                array_push($subbedPpts, $recordSet->fetch_assoc());
+            }
+            $recordSet->free();
+        }
+        echo json_encode(array('my_ppts' => $userPpts, 'subbed_ppts' => $subbedPpts));
 
+        break;
 }
 $dbHandler->close();
 

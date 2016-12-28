@@ -45,7 +45,7 @@ namespace InteractivePPT
             bs.DataSource = surveyList.data;
             comboBox1.DataSource = bs;
             comboBox1.DisplayMember = "name";
-            comboBox1.ValueMember = "access_code";
+            comboBox1.ValueMember = "id";
             comboBox1.SelectedIndex = -1;
         }
 
@@ -54,7 +54,7 @@ namespace InteractivePPT
             if (comboBox1.SelectedIndex != -1)
             {
 
-                string choosedSurvey = comboBox1.SelectedValue.ToString();
+                string chosenSurvey = comboBox1.SelectedValue.ToString();
                 using (WebClient client = new WebClient())
                 {
                     try
@@ -63,7 +63,7 @@ namespace InteractivePPT
                         client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                         {
                        { "request_type", "get_questions" },
-                       { "access_code", choosedSurvey }
+                       { "survey_id", chosenSurvey }
                         });
                         serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
                     }
