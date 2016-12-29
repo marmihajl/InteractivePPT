@@ -242,6 +242,28 @@ switch ($_POST['request_type']) {
 		echo 'true';
 		
 		break;
+		
+	case 'save_notification':
+	
+		$id = $_POST['id'];
+		$path = $_POST['path'];
+		
+		$command = "SELECT id FROM Presentation WHERE path = '$path' LIMIT 1;";	
+		$result = $dbHandler->query($command);
+		$row = $result->fetch_assoc();
+		$presentationID = (int)$row['id'];
+		
+		$command = "SELECT token FROM Users WHERE app_uid = '$id' LIMIT 1;";	
+		$result = $dbHandler->query($command);
+		$row = $result->fetch_assoc();
+		$token = $row['token'];
+		
+		$command = "INSERT INTO Notification VALUES($presentationID,'$token');";	
+		$dbHandler->query($command);
+		
+		echo 'true';
+		
+		break;
 }
 $dbHandler->close();
 

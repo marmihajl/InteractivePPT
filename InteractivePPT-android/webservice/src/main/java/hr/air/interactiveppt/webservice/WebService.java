@@ -67,4 +67,11 @@ public interface WebService {
             @Field("id") String id
     );
 
+    @FormUrlEncoded
+    @POST("interactivePPT-server.php")
+    Call<Boolean> saveNotification(
+            @Field("request_type") String requestType,
+            @Field("path") String path,
+            @Field("id") String id
+    );
 }

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import java.util.function.BiConsumer;
 
+import hr.air.interactiveppt.entities.User;
 import hr.air.interactiveppt.webservice.CommunicationHandler;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
@@ -22,11 +23,15 @@ public class OpenPresentation extends AppCompatActivity {
     static public String requestType="get_presentation";
     Intent intent;
     String presentationCode;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_presentation);
+
+        Intent intent1 = getIntent();
+        userID = intent1.getStringExtra("id");
 
         intent = new Intent(this, ViewPresentation.class);
 
@@ -63,6 +68,31 @@ public class OpenPresentation extends AppCompatActivity {
 
     public void openPres(String path){
         intent.putExtra("code",path);
-        startActivity(intent);
+        CommunicationHandler.SendDataAndProcessResponse(
+                ServiceGenerator.createService(WebService.class).saveNotification(
+                        "save_notification",
+                        path,
+                        userID
+                ),
+                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                    @Override
+                    public void accept(Call<Boolean> call, Response<Boolean> response) {
+                        startActivity(intent);
+                    }
+                },
+                new BiConsumer<Call<Boolean>, Throwable>() {
+                    @Override
+                    public void accept(Call<Boolean> sCall, Throwable throwable) {
+                        Toast.makeText(OpenPresentation.this,
+                                "Neuspjesno otvaranje prezentacije!",
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                },
+                false,
+                getBaseContext()
+        );
+
+
     }
 }

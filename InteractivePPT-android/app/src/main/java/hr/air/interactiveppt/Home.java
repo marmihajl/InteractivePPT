@@ -104,6 +104,7 @@ public class Home extends AppCompatActivity {
         intent.putExtra("id",user.getId());
         startActivity(intent);*/
         Intent intent = new Intent(this, OpenPresentation.class);
+        intent.putExtra("id",user.getId());
         startActivity(intent);
     }
 
