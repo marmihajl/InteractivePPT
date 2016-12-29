@@ -12,13 +12,14 @@ public class ViewPresentation extends AppCompatActivity {
 
     WebView wv;
     String doc;
+    String presentation = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_presentation);
 
-        String presentation = "";
+
         Intent intent = getIntent();
         presentation = intent.getStringExtra("code");
 
@@ -26,18 +27,13 @@ public class ViewPresentation extends AppCompatActivity {
 
 
         wv = (WebView)findViewById(R.id.webview);
-        wv.setVisibility(WebView.VISIBLE);
-        wv.getSettings().setJavaScriptEnabled(true);
-        wv.getSettings().setAllowFileAccess(true);
-        wv.getSettings().setPluginState(WebSettings.PluginState.ON);
-        //wv.setWebViewClient(new Callback());
-        wv.loadData(doc, "text/html", "UTF-8");
+        InitPresentation.openPresentation(presentation,wv);
 
         Button button = (Button)findViewById(R.id.sinc);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wv.loadData(doc, "text/html", "UTF-8");
+                InitPresentation.refrashPresentation(presentation);
             }
         });
 
