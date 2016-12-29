@@ -59,5 +59,12 @@ public interface WebService {
             @Field("request_type") String requestType
     );
 
+    @FormUrlEncoded
+    @POST("interactivePPT-server.php")
+    Call<Boolean> saveToken(
+            @Field("request_type") String requestType,
+            @Field("token") String token,
+            @Field("id") String id
+    );
 
 }

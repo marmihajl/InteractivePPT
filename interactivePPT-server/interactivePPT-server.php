@@ -230,6 +230,18 @@ switch ($_POST['request_type']) {
         echo json_encode(array('my_ppts' => $userPpts, 'subbed_ppts' => $subbedPpts));
 
         break;
+		
+	case 'save_token':
+	
+		$token = $_POST['token'];
+		$id = $_POST['id'];
+		
+		$command = "UPDATE Users u SET u.token = '$token' WHERE u.app_uid = '$id'";	
+		$dbHandler->query($command);
+		
+		echo 'true';
+		
+		break;
 }
 $dbHandler->close();
 

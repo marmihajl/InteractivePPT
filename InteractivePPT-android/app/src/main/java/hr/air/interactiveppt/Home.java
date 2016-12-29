@@ -8,11 +8,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.function.BiConsumer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hr.air.interactiveppt.entities.User;
+import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.ServiceGenerator;
+import hr.air.interactiveppt.webservice.WebService;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class Home extends AppCompatActivity {
     User user;
@@ -54,6 +62,32 @@ public class Home extends AppCompatActivity {
                 System.exit(0);
             }
         });
+
+        if(token != ""){
+            CommunicationHandler.SendDataAndProcessResponse(
+                    ServiceGenerator.createService(WebService.class).saveToken(
+                            "save_token",
+                            token,
+                            user.id
+                    ),
+                    new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                        @Override
+                        public void accept(Call<Boolean> call, Response<Boolean> response) {
+                        }
+                    },
+                    new BiConsumer<Call<Boolean>, Throwable>() {
+                        @Override
+                        public void accept(Call<Boolean> sCall, Throwable throwable) {
+                            Toast.makeText(Home.this,
+                                    "Neuspjeh unos tokena u bazu!",
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
+                    },
+                    false,
+                    getBaseContext()
+            );
+        }
 
     }
 
