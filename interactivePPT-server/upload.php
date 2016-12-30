@@ -4,7 +4,7 @@ function sendGCM($message, $id) {
     $url = 'https://fcm.googleapis.com/fcm/send';
 
     $fields = array (
-            'registration_ids' => array($id),
+            'registration_ids' => $id,
             'data' => array (
                     "message" => $message
             )
