@@ -4,15 +4,13 @@ function sendGCM($message, $id) {
     $url = 'https://fcm.googleapis.com/fcm/send';
 
     $fields = array (
-            'registration_ids' => $id,
-            'data' => array (
-                    "message" => $message
-            )
+            'registration_ids' => array($id),
+            'data' => array("message" => $message)
     );
     $fields = json_encode ( $fields );
 
     $headers = array (
-            'Authorization: key=' . "AIzaSyBwVsMO4cJqYy-sgm_A6dU-cW96ujH73Kg",
+            'Authorization: key=' . "AAAA9FXlWXQ:APA91bEByAfXZmjQb7vXGwIrj3V9b59glPuDPh99vc0nks1XSGcN1xuLfCmX-ajD6LgiJnNbze7wkeJA1L8rK-uexFgs-YF6Z0Yw1bHulxUWf0pKzGpW5J43uzwqDsxyT1YUrPpRcC_j1-Uf01qESDydVqJzBrzTpg",
             'Content-Type: application/json'
     );
 
@@ -60,15 +58,9 @@ function sendGCM($message, $id) {
 	if($recordSet->num_rows > 0){
 		$result = $recordSet->fetch_assoc();
 		$pId = $result['id'];
-		$command = "SELECT token FROM Notification WHERE presentationID = $pId;";
-		$recordSet = $dbHandler->query($command);
-		if ($recordSet) {
-            for ($i=0; $i<$recordSet->num_rows; $i++) {
-                array_push($ids, $recordSet->fetch_assoc());
-            }
-            $recordSet->free();
-        }
-		sendGCM($uploadfile,$ids);
+		$command = "SELECT userToken FROM Notification WHERE presentationID = (SELECT id FROM Presentation WHERE path = 'ppt/test.pptx' LIMIT 1);";
+		$recordSet = $dbHandler->query($command)->fetch_array()['userToken'];
+		sendGCM($uploadfile,$recordSet);
 	}else{
 		$command = "INSERT INTO Presentation VALUES (default, '$uploadfile', '$accessCode',2);";
 		$dbHandler->query($command);
