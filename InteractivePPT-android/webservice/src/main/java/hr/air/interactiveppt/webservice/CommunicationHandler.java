@@ -3,14 +3,6 @@ package hr.air.interactiveppt.webservice;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.widget.Toast;
-
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.function.BiConsumer;
 
 import retrofit2.Call;

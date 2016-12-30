@@ -14,7 +14,7 @@ public class Presentation {
     @SerializedName("access_code")
     public String accessCode;
 
-    @SerializedName("presentation_name")
+    @SerializedName("path")
     public String presentationName;
 
     @SerializedName("author_name")

@@ -26,11 +26,12 @@
                 android:text="Moje prezentacije"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/my_ppts_recycler"
+            <ExpandableListView
+                android:id="@+id/my_ppts_listview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/my_ppts_title"  />
+                android:layout_below="@id/my_ppts_title"  >
+            </ExpandableListView>
         </RelativeLayout>
         <RelativeLayout
             app:layout_marginTopPercent="5%"
@@ -46,11 +47,12 @@
                 android:text="Pretplaćene prezentacije"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/subbed_ppts_recycler"
+            <ExpandableListView
+                android:id="@+id/subbed_ppts_listview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/subbed_ppts_title"    />
+                android:layout_below="@id/subbed_ppts_title"    >
+            </ExpandableListView>
         </RelativeLayout>
     </android.support.percent.PercentRelativeLayout>
     <android.support.percent.PercentRelativeLayout
