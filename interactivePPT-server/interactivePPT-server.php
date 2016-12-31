@@ -123,7 +123,7 @@ switch ($_POST['request_type']) {
             echo $result . ']}';            
         }
         else {
-            echo 'false';
+            echo 'null';
         }
 		
 		break;
@@ -146,13 +146,13 @@ switch ($_POST['request_type']) {
         $accessCode = $_POST['access_code'];
         $command = "SELECT presentation_details FROM getPresentationDetails WHERE access_code='$accessCode' LIMIT 1;";
         $recordSet = $dbHandler->query($command);
-        if ($recordSet) {
+        if ($recordSet && $recordSet->num_rows) {
 			echo $recordSet->fetch_row()[0];
             $recordSet->free();
         }
 		else {
-			echo '{}';
-		}        
+            echo 'null';
+        }
         break;
 	
     case 'submit_answers':

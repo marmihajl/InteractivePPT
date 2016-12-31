@@ -76,12 +76,19 @@ public class PresentationList extends AppCompatActivity {
                         new BiConsumer<Call<PresentationWithSurveys>, Response<PresentationWithSurveys>>() {
                             @Override
                             public void accept(Call<PresentationWithSurveys> call, Response<PresentationWithSurveys> response) {
-                                Intent intent = new Intent(PresentationList.this, ViewPresentation.class);
-                                intent.putExtra("id", userId);
-                                intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
-                                findViewById(R.id.activity_presentation_list).setClickable(true);
-                                findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                startActivity(intent);
+                                if (response.body() != null) {
+                                    Intent intent = new Intent(PresentationList.this, ViewPresentation.class);
+                                    intent.putExtra("id", userId);
+                                    intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
+                                    findViewById(R.id.activity_presentation_list).setClickable(true);
+                                    findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                                    startActivity(intent);
+                                }
+                                else {
+                                    findViewById(R.id.activity_input_code).setClickable(true);
+                                    findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                                    Toast.makeText(PresentationList.this,"Prezentacija s navedenim pristupnim kodom više ne postoji!", Toast.LENGTH_LONG).show();
+                                }
                             }
                         },
                         new BiConsumer<Call<PresentationWithSurveys>, Throwable>() {

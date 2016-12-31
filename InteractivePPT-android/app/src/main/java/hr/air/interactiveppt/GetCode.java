@@ -67,12 +67,19 @@ public class GetCode extends AppCompatActivity {
                         new BiConsumer<Call<PresentationWithSurveys>, Response<PresentationWithSurveys>>() {
                             @Override
                             public void accept(Call<PresentationWithSurveys> call, Response<PresentationWithSurveys> response) {
-                                Intent intent=new Intent(GetCode.this, ViewPresentation.class);
-                                intent.putExtra("id", id);
-                                intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
-                                findViewById(R.id.activity_get_code).setClickable(true);
-                                findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                startActivity(intent);
+                                if (response.body() != null) {
+                                    Intent intent = new Intent(GetCode.this, ViewPresentation.class);
+                                    intent.putExtra("id", id);
+                                    intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
+                                    findViewById(R.id.activity_get_code).setClickable(true);
+                                    findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                                    startActivity(intent);
+                                }
+                                else {
+                                    findViewById(R.id.activity_input_code).setClickable(true);
+                                    findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                                    Toast.makeText(GetCode.this,"Prezentacija s navedenim pristupnim kodom ne postoji!", Toast.LENGTH_LONG).show();
+                                }
                             }
                         },
                         new BiConsumer<Call<PresentationWithSurveys>, Throwable>() {
@@ -80,7 +87,7 @@ public class GetCode extends AppCompatActivity {
                             public void accept(Call<PresentationWithSurveys> call, Throwable throwable) {
                                 findViewById(R.id.activity_get_code).setClickable(true);
                                 findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                Toast.makeText(GetCode.this,"Greška kod dobavljanja ankete", Toast.LENGTH_LONG).show();
+                                Toast.makeText(GetCode.this,"Greška kod dobavljanja prezentacije", Toast.LENGTH_LONG).show();
                             }
                         },
                         true,
