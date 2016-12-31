@@ -8,11 +8,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+
+import hr.air.interactiveppt.entities.PresentationWithSurveys;
+
 public class ViewPresentation extends AppCompatActivity {
 
     WebView wv;
     String doc;
-    String presentation = "";
+    PresentationWithSurveys presentation;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,19 +26,21 @@ public class ViewPresentation extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        presentation = intent.getStringExtra("code");
+        presentation = new Gson().fromJson(intent.getStringExtra("serialized_presentation"), PresentationWithSurveys.class);
+        userId = intent.getStringExtra("id");
+        final String pptPath = presentation.path;
 
-        doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/"+presentation+"&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
+        doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
 
 
         wv = (WebView)findViewById(R.id.webview);
-        InitPresentation.openPresentation(presentation,wv);
+        InitPresentation.openPresentation(pptPath, wv);
 
         Button button = (Button)findViewById(R.id.sinc);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InitPresentation.refrashPresentation(presentation);
+                InitPresentation.refrashPresentation(pptPath);
             }
         });
 

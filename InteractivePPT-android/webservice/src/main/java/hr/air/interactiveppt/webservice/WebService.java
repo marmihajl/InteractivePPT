@@ -1,5 +1,6 @@
 package hr.air.interactiveppt.webservice;
 
+import hr.air.interactiveppt.entities.PresentationWithSurveys;
 import hr.air.interactiveppt.entities.SurveyWithQuestions;
 import hr.air.interactiveppt.entities.ListOfPresentations;
 import okhttp3.MultipartBody;
@@ -54,7 +55,7 @@ public interface WebService {
 
     @FormUrlEncoded
     @POST("interactivePPT-server.php")
-    Call<String> getPresentation(
+    Call<PresentationWithSurveys> getPresentation(
             @Field("access_code") String accessCode,
             @Field("request_type") String requestType
     );

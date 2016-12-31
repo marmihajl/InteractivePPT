@@ -143,16 +143,15 @@ switch ($_POST['request_type']) {
         break;
 		
 	case 'get_presentation':
-        $code = $_POST['access_code'];
-        $command = "SELECT p.path FROM Presentation p WHERE p.access_code='$code' LIMIT 1;";
+        $accessCode = $_POST['access_code'];
+        $command = "SELECT presentation_details FROM getPresentationDetails WHERE access_code='$accessCode' LIMIT 1;";
         $recordSet = $dbHandler->query($command);
-        if ($recordSet) {		
+        if ($recordSet) {
 			echo $recordSet->fetch_row()[0];
             $recordSet->free();
-			return;
         }
-		else{
-			echo '';
+		else {
+			echo '{}';
 		}        
         break;
 	

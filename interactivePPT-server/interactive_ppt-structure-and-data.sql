@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 28, 2016 at 03:36 AM
+-- Generation Time: Dec 31, 2016 at 02:23 AM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -124,6 +124,16 @@ INSERT INTO `Answers` (`idAnswer`, `idUser`, `idQuestion`, `idOption`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `getPresentationDetails`
+--
+CREATE TABLE `getPresentationDetails` (
+`access_code` varchar(10)
+,`presentation_details` text
+);
+
+-- --------------------------------------------------------
+
+--
 -- Stand-in structure for view `getQuestionDetails`
 --
 CREATE TABLE `getQuestionDetails` (
@@ -156,6 +166,25 @@ INSERT INTO `Log` (`Users_idUser`, `action`, `datetime`) VALUES
 (1, 1, '2016-11-10 03:52:19'),
 (1, 1, '2016-11-10 03:52:33'),
 (1, 1, '2016-11-10 03:53:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Notification`
+--
+
+CREATE TABLE `Notification` (
+  `presentationID` int(11) NOT NULL,
+  `userToken` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Notification`
+--
+
+INSERT INTO `Notification` (`presentationID`, `userToken`) VALUES
+(10, 'eaYc7g3-0Rc:APA91bGCeHzXzscjHdJC6Pi9iJ19uUIt7uJNevlZwzf9UVLPelGqOHqRFaKSHEnFODIQ8C-h6clEPJI0qbhOVrIcfvun22RweWdxugFHdW8zTJlxEpYKhHeX4edebLhIBiJfVVC3_ZNo'),
+(10, 'eaYc7g3-0Rc:APA91bGCeHzXzscjHdJC6Pi9iJ19uUIt7uJNevlZwzf9UVLPelGqOHqRFaKSHEnFODIQ8C-h6clEPJI0qbhOVrIcfvun22RweWdxugFHdW8zTJlxEpYKhHeX4edebLhIBiJfVVC3_ZNo');
 
 -- --------------------------------------------------------
 
@@ -264,10 +293,11 @@ CREATE TABLE `Presentation` (
 --
 
 INSERT INTO `Presentation` (`id`, `path`, `access_code`, `author`) VALUES
-(3, 'ppt/test.pptx', 'd9b4vs69v2', 2),
+(3, 'nepoznato', 'd9b4vs69v2', 2),
 (4, 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 'rpk_anketa', 1),
 (5, 'ppt/Proizvodnja vina.pptx', '7dsR6n2n', 1),
-(7, 'ppt/Varijable i pokazivači.pptx', 'm45k0fz42t', 1);
+(7, 'ppt/Varijable i pokazivači.pptx', 'm45k0fz42t', 1),
+(10, 'ppt/test.pptx', 'j173hbvuos', 2);
 
 -- --------------------------------------------------------
 
@@ -472,8 +502,8 @@ CREATE TABLE `Subscription` (
 --
 
 INSERT INTO `Subscription` (`idUser`, `idPresentation`) VALUES
-(1, 3),
-(3, 5);
+(3, 5),
+(1, 10);
 
 -- --------------------------------------------------------
 
@@ -520,19 +550,29 @@ CREATE TABLE `Users` (
   `idUser` int(11) NOT NULL,
   `name` varchar(90) CHARACTER SET utf8 NOT NULL,
   `app_uid` varchar(45) CHARACTER SET utf8 NOT NULL,
-  `Role_idRole` int(11) NOT NULL
+  `Role_idRole` int(11) NOT NULL,
+  `token` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Users`
 --
 
-INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`) VALUES
-(1, 'Petar Šestak', '1431307750213523', 1),
-(2, 'Marin Mihajlovic', '10210532062074946', 2),
-(3, 'Mario Šelek', 'kontakt', 3),
-(8, 'Marinela Levak', '1336022606431703', 3),
-(10, 'Mario Šelek', '1256649427742897', 3);
+INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`, `token`) VALUES
+(1, 'Petar Šestak', '1431307750213523', 1, ''),
+(2, 'Marin Mihajlovic', '10210532062074946', 2, 'eaYc7g3-0Rc:APA91bGCeHzXzscjHdJC6Pi9iJ19uUIt7uJNevlZwzf9UVLPelGqOHqRFaKSHEnFODIQ8C-h6clEPJI0qbhOVrIcfvun22RweWdxugFHdW8zTJlxEpYKhHeX4edebLhIBiJfVVC3_ZNo'),
+(3, 'Mario Šelek', 'kontakt', 3, ''),
+(8, 'Marinela Levak', '1336022606431703', 3, ''),
+(10, 'Mario Šelek', '1256649427742897', 3, '');
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `getPresentationDetails`
+--
+DROP TABLE IF EXISTS `getPresentationDetails`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `getPresentationDetails`  AS  select `p`.`access_code` AS `access_code`,concat('{"path":"',`p`.`path`,'","author_name":"',`u`.`name`,'","surveys":[',ifnull(group_concat(concat('{"id":',`s`.`idSurvey`,',"name":"',`s`.`name`,'"}') separator ','),''),']}') AS `presentation_details` from ((`Presentation` `p` left join `Users` `u` on((`p`.`author` = `u`.`idUser`))) left join `Survey` `s` on((`p`.`access_code` = `s`.`access_code`))) group by `p`.`id` order by `p`.`access_code` ;
 
 -- --------------------------------------------------------
 
@@ -646,7 +686,7 @@ ALTER TABLE `Options`
 -- AUTO_INCREMENT for table `Presentation`
 --
 ALTER TABLE `Presentation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `Questions`
 --

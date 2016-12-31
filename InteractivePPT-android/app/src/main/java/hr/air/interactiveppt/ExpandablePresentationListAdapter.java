@@ -1,20 +1,18 @@
 package hr.air.interactiveppt;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.List;
 import java.util.function.Consumer;
 
 import hr.air.interactiveppt.entities.Presentation;
+import hr.air.interactiveppt.entities.PresentationWithSurveys;
 
 /**
  * Created by zeko868 on 28.12.2016..
