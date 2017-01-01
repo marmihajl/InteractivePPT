@@ -7,10 +7,18 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.function.BiConsumer;
+
 import hr.air.interactiveppt.entities.PresentationWithSurveys;
+import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.ServiceGenerator;
+import hr.air.interactiveppt.webservice.WebService;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ViewPresentation extends AppCompatActivity {
 
@@ -45,6 +53,29 @@ public class ViewPresentation extends AppCompatActivity {
         });
 
 
+        CommunicationHandler.SendDataAndProcessResponse(
+                ServiceGenerator.createService(WebService.class).saveNotification(
+                        "save_notification",
+                        pptPath,
+                        userId
+                ),
+                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                    @Override
+                    public void accept(Call<Boolean> call, Response<Boolean> response) {
+                    }
+                },
+                new BiConsumer<Call<Boolean>, Throwable>() {
+                    @Override
+                    public void accept(Call<Boolean> call, Throwable throwable) {
+                        Toast.makeText(ViewPresentation.this,
+                                "Neuspjeh kod pokušaja pohrane šifre za notificiranje!",
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                },
+                false,
+                getBaseContext()
+        );
 
 
     }
