@@ -70,7 +70,7 @@ public interface WebService {
 
     @FormUrlEncoded
     @POST("interactivePPT-server.php")
-    Call<Boolean> saveNotification(
+    Call<Boolean> saveSubscription(
             @Field("request_type") String requestType,
             @Field("path") String path,
             @Field("id") String id

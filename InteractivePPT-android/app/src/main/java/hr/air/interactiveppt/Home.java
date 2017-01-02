@@ -1,6 +1,7 @@
 package hr.air.interactiveppt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,6 +46,9 @@ public class Home extends AppCompatActivity {
 
         String id = intent.getStringExtra("id");
         String fullName = intent.getStringExtra("fullName");
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit().putString("USER_ID",id).apply();
 
         user = new User(fullName,id);
 

@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import java.util.function.BiConsumer;
 
 import hr.air.interactiveppt.entities.PresentationWithSurveys;
+import hr.air.interactiveppt.entities.SurveyWithQuestions;
 import hr.air.interactiveppt.webservice.CommunicationHandler;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
@@ -26,36 +27,74 @@ public class ViewPresentation extends AppCompatActivity {
     String doc;
     PresentationWithSurveys presentation;
     String userId;
+    String pptPath;
+    String test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_presentation);
 
-
         Intent intent = getIntent();
-        presentation = new Gson().fromJson(intent.getStringExtra("serialized_presentation"), PresentationWithSurveys.class);
-        userId = intent.getStringExtra("id");
-        final String pptPath = presentation.path;
 
-        doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
+        String code = intent.getStringExtra("code");
+
+        if(code == null){
+            presentation = new Gson().fromJson(intent.getStringExtra("serialized_presentation"), PresentationWithSurveys.class);
+
+            userId = intent.getStringExtra("id");
+            pptPath = presentation.path;
+
+            doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
+
+            wv = (WebView)findViewById(R.id.webview);
+            InitPresentation.openPresentation(pptPath, wv);
+
+            Button button = (Button)findViewById(R.id.sinc);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    InitPresentation.refrashPresentation(pptPath);
+                }
+            });
+        }else{
+            userId = intent.getStringExtra("id");
+            CommunicationHandler.SendDataAndProcessResponse(ServiceGenerator.createService(WebService.class)
+                            .getPresentation(code, "get_presentation_from_path"),
+                    new BiConsumer<Call<PresentationWithSurveys>, Response<PresentationWithSurveys>>() {
+                        @Override
+                        public void accept(Call<PresentationWithSurveys> call, Response<PresentationWithSurveys> response) {
+                            doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
+
+                            wv = (WebView)findViewById(R.id.webview);
+                            InitPresentation.openPresentation(pptPath, wv);
+
+                            Button button = (Button)findViewById(R.id.sinc);
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    InitPresentation.refrashPresentation(pptPath);
+                                }
+                            });
+                        }
+                    },
+                    new BiConsumer<Call<PresentationWithSurveys>, Throwable>() {
+                        @Override
+                        public void accept(Call<PresentationWithSurveys> call, Throwable throwable) {
+
+                        }
+                    },
+                    true,
+                    getBaseContext()
+            );
+        }
 
 
-        wv = (WebView)findViewById(R.id.webview);
-        InitPresentation.openPresentation(pptPath, wv);
-
-        Button button = (Button)findViewById(R.id.sinc);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InitPresentation.refrashPresentation(pptPath);
-            }
-        });
 
 
         CommunicationHandler.SendDataAndProcessResponse(
-                ServiceGenerator.createService(WebService.class).saveNotification(
-                        "save_notification",
+                ServiceGenerator.createService(WebService.class).saveSubscription(
+                        "save_subscription",
                         pptPath,
                         userId
                 ),
