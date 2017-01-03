@@ -217,5 +217,28 @@ namespace InteractivePPT
 
             FileClass.uploadFile(path);
         }
+
+        private void Presentation_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            string name = "ppt/" + path.Substring(path.LastIndexOf('\\') + 1);
+            using (WebClient client = new WebClient())
+            {
+                try
+                {
+                    byte[] response =
+                    client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                    {
+                       { "request_type", "update_subscription" },
+                       { "path", name }
+                    });
+                }
+                catch
+                {
+                    MessageBox.Show("Communication with server-side of this application could not be established");
+                    return;
+                }
+
+            }
+        }
     }
 }

@@ -242,7 +242,7 @@ switch ($_POST['request_type']) {
 		
 		break;
 		
-	case 'save_notification':
+	case 'save_subscription':
 	
 		$id = $_POST['id'];
 		$path = $_POST['path'];
@@ -252,17 +252,28 @@ switch ($_POST['request_type']) {
 		$row = $result->fetch_assoc();
 		$presentationID = (int)$row['id'];
 		
-		$command = "SELECT token FROM Users WHERE app_uid = '$id' LIMIT 1;";	
+		$command = "SELECT idUser FROM Users WHERE app_uid = '$id' LIMIT 1;";	
 		$result = $dbHandler->query($command);
 		$row = $result->fetch_assoc();
-		$token = $row['token'];
+		$id2 = (int)$row['idUser'];
 		
-		$command = "INSERT INTO Notification VALUES($presentationID,'$token');";	
+		$command = "INSERT INTO Subscription VALUES($id2,$presentationID, default);";	
 		$dbHandler->query($command);
 		
 		echo 'true';
 		
 		break;
+		
+	case 'update_subscription':
+	
+	$path = $_POST['path'];
+	
+	$command = "UPDATE Subscription SET active = 'no' WHERE idPresentation = (SELECT id FROM Presentation WHERE path = '$path');";
+	$dbHandler->query($command);
+	
+	echo 'true';
+	
+	break;
 }
 $dbHandler->close();
 

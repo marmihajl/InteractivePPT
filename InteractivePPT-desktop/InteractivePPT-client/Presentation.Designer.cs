@@ -132,6 +132,7 @@
             this.Controls.Add(this.comboBox1);
             this.Name = "Presentation";
             this.Text = "Presentation";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Presentation_FormClosing);
             this.Load += new System.EventHandler(this.Presentation_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

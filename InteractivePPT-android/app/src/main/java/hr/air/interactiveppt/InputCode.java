@@ -27,6 +27,8 @@ public class InputCode extends AppCompatActivity {
     @BindView(R.id.posaljiSifruButton)Button button;
     String id;
 
+    String text = "open";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,7 @@ public class InputCode extends AppCompatActivity {
                         if (response.body() != null) {
                             Intent intent = new Intent(InputCode.this, ViewPresentation.class);
                             intent.putExtra("id", id);
+                            intent.putExtra("manual_open", text);
                             intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
                             findViewById(R.id.activity_input_code).setClickable(true);
                             findViewById(R.id.loading_panel).setVisibility(View.GONE);

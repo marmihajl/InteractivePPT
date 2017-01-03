@@ -31,6 +31,7 @@ public class GetCode extends AppCompatActivity {
     Button qrButton;
 
     String id;
+    String text = "open";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class GetCode extends AppCompatActivity {
                                 if (response.body() != null) {
                                     Intent intent = new Intent(GetCode.this, ViewPresentation.class);
                                     intent.putExtra("id", id);
+                                    intent.putExtra("manual_open", text);
                                     intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
                                     findViewById(R.id.activity_get_code).setClickable(true);
                                     findViewById(R.id.loading_panel).setVisibility(View.GONE);

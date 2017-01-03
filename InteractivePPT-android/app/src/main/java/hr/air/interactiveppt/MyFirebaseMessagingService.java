@@ -32,6 +32,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "INTERACTIVE";
 
+    String text = "close";
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         sendNotification(remoteMessage.getData().get("message"));
@@ -42,6 +44,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(this, ViewPresentation.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("id", id);
+        intent.putExtra("manual_open", text);
         intent.putExtra("serialized_presentation", messageBody);
         startActivity(intent);
 

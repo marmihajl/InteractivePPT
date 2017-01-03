@@ -28,7 +28,7 @@ public class ViewPresentation extends AppCompatActivity {
     PresentationWithSurveys presentation;
     String userId;
     String pptPath;
-    String test;
+    String manual = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,8 @@ public class ViewPresentation extends AppCompatActivity {
         setContentView(R.layout.activity_view_presentation);
 
         Intent intent = getIntent();
+
+        manual = getIntent().getStringExtra("manual_open");
 
         presentation = new Gson().fromJson(intent.getStringExtra("serialized_presentation"), PresentationWithSurveys.class);
 
@@ -55,30 +57,31 @@ public class ViewPresentation extends AppCompatActivity {
             }
         });
 
-        CommunicationHandler.SendDataAndProcessResponse(
-                ServiceGenerator.createService(WebService.class).saveSubscription(
-                        "save_subscription",
-                        pptPath,
-                        userId
-                ),
-                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
-                    @Override
-                    public void accept(Call<Boolean> call, Response<Boolean> response) {
-                    }
-                },
-                new BiConsumer<Call<Boolean>, Throwable>() {
-                    @Override
-                    public void accept(Call<Boolean> call, Throwable throwable) {
-                        Toast.makeText(ViewPresentation.this,
-                                "Neuspjeh kod pokušaja pohrane šifre za notificiranje!",
-                                Toast.LENGTH_LONG
-                        ).show();
-                    }
-                },
-                false,
-                getBaseContext()
-        );
-
+        if(manual.equals("open")){
+            CommunicationHandler.SendDataAndProcessResponse(
+                    ServiceGenerator.createService(WebService.class).saveSubscription(
+                            "save_subscription",
+                            pptPath,
+                            userId
+                    ),
+                    new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                        @Override
+                        public void accept(Call<Boolean> call, Response<Boolean> response) {
+                        }
+                    },
+                    new BiConsumer<Call<Boolean>, Throwable>() {
+                        @Override
+                        public void accept(Call<Boolean> call, Throwable throwable) {
+                            Toast.makeText(ViewPresentation.this,
+                                    "Neuspjeh kod pokušaja pohrane šifre za notificiranje!",
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
+                    },
+                    false,
+                    getBaseContext()
+            );
+        }
 
     }
 }
