@@ -37,60 +37,23 @@ public class ViewPresentation extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        String code = intent.getStringExtra("code");
+        presentation = new Gson().fromJson(intent.getStringExtra("serialized_presentation"), PresentationWithSurveys.class);
 
-        if(code == null){
-            presentation = new Gson().fromJson(intent.getStringExtra("serialized_presentation"), PresentationWithSurveys.class);
+        userId = intent.getStringExtra("id");
+        pptPath = presentation.path;
 
-            userId = intent.getStringExtra("id");
-            pptPath = presentation.path;
+        doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
 
-            doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
+        wv = (WebView)findViewById(R.id.webview);
+        InitPresentation.openPresentation(pptPath, wv);
 
-            wv = (WebView)findViewById(R.id.webview);
-            InitPresentation.openPresentation(pptPath, wv);
-
-            Button button = (Button)findViewById(R.id.sinc);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    InitPresentation.refrashPresentation(pptPath);
-                }
-            });
-        }else{
-            userId = intent.getStringExtra("id");
-            CommunicationHandler.SendDataAndProcessResponse(ServiceGenerator.createService(WebService.class)
-                            .getPresentation(code, "get_presentation_from_path"),
-                    new BiConsumer<Call<PresentationWithSurveys>, Response<PresentationWithSurveys>>() {
-                        @Override
-                        public void accept(Call<PresentationWithSurveys> call, Response<PresentationWithSurveys> response) {
-                            doc="<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
-
-                            wv = (WebView)findViewById(R.id.webview);
-                            InitPresentation.openPresentation(pptPath, wv);
-
-                            Button button = (Button)findViewById(R.id.sinc);
-                            button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    InitPresentation.refrashPresentation(pptPath);
-                                }
-                            });
-                        }
-                    },
-                    new BiConsumer<Call<PresentationWithSurveys>, Throwable>() {
-                        @Override
-                        public void accept(Call<PresentationWithSurveys> call, Throwable throwable) {
-
-                        }
-                    },
-                    true,
-                    getBaseContext()
-            );
-        }
-
-
-
+        Button button = (Button)findViewById(R.id.sinc);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InitPresentation.refrashPresentation(pptPath);
+            }
+        });
 
         CommunicationHandler.SendDataAndProcessResponse(
                 ServiceGenerator.createService(WebService.class).saveSubscription(

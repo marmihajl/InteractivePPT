@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 import java.util.function.BiConsumer;
 
+import hr.air.interactiveppt.entities.Presentation;
 import hr.air.interactiveppt.entities.PresentationWithSurveys;
 import hr.air.interactiveppt.webservice.CommunicationHandler;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
@@ -33,33 +34,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-        }
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-        }
         sendNotification(remoteMessage.getData().get("message"));
     }
 
     public void sendNotification(String messageBody){
+        String id = PreferenceManager.getDefaultSharedPreferences(this).getString("USER_ID","");
         Intent intent = new Intent(this, ViewPresentation.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        String id = PreferenceManager.getDefaultSharedPreferences(this).getString("USER_ID","");
-        intent.putExtra("id",id);
-        intent.putExtra("code",messageBody);
+        intent.putExtra("id", id);
+        intent.putExtra("serialized_presentation", messageBody);
         startActivity(intent);
-
-        //intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
-
-        /*Intent intent = new Intent(this, ViewPresentation.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("code",messageBody);
-        startActivity(intent);*/
 
     }
 }
