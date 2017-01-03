@@ -33,6 +33,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "INTERACTIVE";
 
     String text = "close";
+    String id;
+    Intent intent;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -40,13 +42,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     public void sendNotification(String messageBody){
-        String id = PreferenceManager.getDefaultSharedPreferences(this).getString("USER_ID","");
-        Intent intent = new Intent(this, ViewPresentation.class);
+        intent = new Intent(this, ViewPresentation.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("id", id);
         intent.putExtra("manual_open", text);
         intent.putExtra("serialized_presentation", messageBody);
-        startActivity(intent);
 
+        id = PreferenceManager.getDefaultSharedPreferences(this).getString("USER_ID","");
+        PresentationWithSurveys pws = new Gson().fromJson(messageBody,PresentationWithSurveys.class);
+        CommunicationHandler.SendDataAndProcessResponse(
+                ServiceGenerator.createService(WebService.class).checkStatus(
+                        "check_status",
+                        id,
+                        pws.path
+                ),
+                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                    @Override
+                    public void accept(Call<Boolean> call, Response<Boolean> response) {
+                            startActivity(intent);
+                    }
+                },
+                new BiConsumer<Call<Boolean>, Throwable>() {
+                    @Override
+                    public void accept(Call<Boolean> call, Throwable throwable) {
+
+                    }
+                },
+                false,
+                getBaseContext()
+        );
     }
 }

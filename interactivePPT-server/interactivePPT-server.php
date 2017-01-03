@@ -256,9 +256,14 @@ switch ($_POST['request_type']) {
 		$result = $dbHandler->query($command);
 		$row = $result->fetch_assoc();
 		$id2 = (int)$row['idUser'];
-		
-		$command = "INSERT INTO Subscription VALUES($id2,$presentationID, default);";	
-		$dbHandler->query($command);
+		$command = "SELECT * FROM Subscription WHERE idUser = $id2 AND idPresentation = $presentationID;";
+		if($dbHandler->query($command)->num_rows === 0){
+			$command = "INSERT INTO Subscription VALUES($id2,$presentationID, default);";	
+			$dbHandler->query($command);
+		}else{
+			$command = "UPDATE Subscription SET active = 'yes' WHERE idUser = $id2 AND idPresentation = $presentationID;";	
+			$dbHandler->query($command);
+		}
 		
 		echo 'true';
 		
@@ -272,6 +277,20 @@ switch ($_POST['request_type']) {
 	$dbHandler->query($command);
 	
 	echo 'true';
+	
+	break;
+	
+	case 'check_status':
+	
+		$id = $_POST['id'];
+		$path = $_POST['path'];
+		
+		$command = "SELECT active FROM Subscription WHERE idUser = (SELECT idUser FROM Users WHERE app_uid = '$id') AND idPresentation = (SELECT id FROM Presentation WHERE path = '$path');";
+		$result = $dbHandler->query($command)->fetch_assoc()['active'];
+		
+		if($result === "yes")
+		{echo 'yes';}
+		else{echo 'no';}
 	
 	break;
 }
