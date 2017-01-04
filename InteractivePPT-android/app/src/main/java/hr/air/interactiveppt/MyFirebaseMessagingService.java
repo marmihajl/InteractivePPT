@@ -93,12 +93,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0,notificationBuilder.build());
-        //startActivity(intent);
     }
 
     public void sendNotification(){
 
-        intent = new Intent(this, Home.class);
+        intent = new Intent(this, PresentationList.class);
         id = PreferenceManager.getDefaultSharedPreferences(this).getString("USER_ID","");
         intent.putExtra("id", id);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);

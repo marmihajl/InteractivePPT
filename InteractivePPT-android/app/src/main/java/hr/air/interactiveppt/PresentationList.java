@@ -28,7 +28,7 @@ public class PresentationList extends AppCompatActivity {
     private ExpandableListView myPptsLV;
     private ExpandableListView subbedPptsLV;
     private String userId;
-    private String text = "open";
+    private String text = "close";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
