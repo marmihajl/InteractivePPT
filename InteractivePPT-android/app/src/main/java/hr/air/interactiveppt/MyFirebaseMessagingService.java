@@ -84,7 +84,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("id", id);
         intent.putExtra("manual_open", text);
         intent.putExtra("serialized_presentation", messageBody);
-        startActivity(intent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_file).setContentTitle("NOVA VERZIJA!!VAŽNO!!")
+                .setContentText("Na serveru se nalazi nove prezentacija:"+pws.path)
+                .setAutoCancel(true).setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0,notificationBuilder.build());
+        //startActivity(intent);
     }
 
     public void sendNotification(){
