@@ -28,6 +28,7 @@ public class PresentationList extends AppCompatActivity {
     private ExpandableListView myPptsLV;
     private ExpandableListView subbedPptsLV;
     private String userId;
+    private String text = "open";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class PresentationList extends AppCompatActivity {
                                 if (response.body() != null) {
                                     Intent intent = new Intent(PresentationList.this, ViewPresentation.class);
                                     intent.putExtra("id", userId);
+                                    intent.putExtra("manual_open", text);
                                     intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
                                     findViewById(R.id.activity_presentation_list).setClickable(true);
                                     findViewById(R.id.loading_panel).setVisibility(View.GONE);
