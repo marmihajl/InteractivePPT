@@ -1,10 +1,15 @@
 package hr.air.interactiveppt;
 
 import android.app.ActivityManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -36,20 +41,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     String id;
     Intent intent;
 
+    PresentationWithSurveys pws;
+    boolean check;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        sendNotification(remoteMessage.getData().get("message"));
-    }
-
-    public void sendNotification(String messageBody){
-        intent = new Intent(this, ViewPresentation.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("id", id);
-        intent.putExtra("manual_open", text);
-        intent.putExtra("serialized_presentation", messageBody);
-
+        pws = new Gson().fromJson(remoteMessage.getData().get("message"),PresentationWithSurveys.class);
         id = PreferenceManager.getDefaultSharedPreferences(this).getString("USER_ID","");
-        PresentationWithSurveys pws = new Gson().fromJson(messageBody,PresentationWithSurveys.class);
         CommunicationHandler.SendDataAndProcessResponse(
                 ServiceGenerator.createService(WebService.class).checkStatus(
                         "check_status",
@@ -59,7 +57,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 new BiConsumer<Call<Boolean>, Response<Boolean>>() {
                     @Override
                     public void accept(Call<Boolean> call, Response<Boolean> response) {
-                            startActivity(intent);
+                        check = response.body();
                     }
                 },
                 new BiConsumer<Call<Boolean>, Throwable>() {
@@ -71,5 +69,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 false,
                 getBaseContext()
         );
+        if(check){
+            openPresentation(remoteMessage.getData().get("message"));
+        }else {
+            sendNotification();
+        }
+
+    }
+
+    public void  openPresentation(String messageBody){
+        intent = new Intent(this, ViewPresentation.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        id = PreferenceManager.getDefaultSharedPreferences(this).getString("USER_ID","");
+        intent.putExtra("id", id);
+        intent.putExtra("manual_open", text);
+        intent.putExtra("serialized_presentation", messageBody);
+        startActivity(intent);
+    }
+
+    public void sendNotification(){
+
+        intent = new Intent(this, Home.class);
+        id = PreferenceManager.getDefaultSharedPreferences(this).getString("USER_ID","");
+        intent.putExtra("id", id);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_file).setContentTitle("Nova prezentacija")
+                .setContentText("Na serveru se nalazi nove prezentacija:"+pws.path)
+                .setAutoCancel(true).setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0,notificationBuilder.build());
+
     }
 }
