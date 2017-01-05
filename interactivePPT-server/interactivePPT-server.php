@@ -105,13 +105,13 @@ switch ($_POST['request_type']) {
         break;
 	case 'get_survey':
 		$idSurvey=$_POST['survey_id'];
-        $command = "SELECT s.name, s.description, p.link_to_presentation FROM Survey s, Presentation p WHERE idSurvey='$idSurvey' AND p.access_code=s.access_code;";
+        $command = "SELECT s.name, s.description, p.path FROM Survey s, Presentation p WHERE s.idSurvey=$idSurvey AND p.access_code=s.access_code;";
         $recordSet = $dbHandler->query($command);
         if ($recordSet) {
             $surveyInfo = $recordSet->fetch_assoc();
             $result = "{\"name\":\"$surveyInfo[name]\", \"description\":\"$surveyInfo[description]\", \"link_to_presentation\":\"$surveyInfo[link_to_presentation]\", \"questions\":[";
             $recordSet->free();
-            $command= "SELECT question_details FROM getQuestionDetails WHERE idSurvey = '$idSurvey';";
+            $command= "SELECT question_details FROM getQuestionDetails WHERE idSurvey = $idSurvey;";
             $recordSet= $dbHandler->query($command);
             if($recordSet){
                 for($i = 0; $i < $recordSet->num_rows; $i++){
@@ -160,7 +160,12 @@ switch ($_POST['request_type']) {
         $appUid = $answers['app_uid'];
         $answers = $answers['data'];
         $userId = $dbHandler->query("SELECT idUser FROM Users WHERE app_uid='$appUid' LIMIT 1;")->fetch_row()[0];
-        if (count($answers) && !$dbHandler->query("SELECT * FROM Answers a WHERE a.idUser=$userId AND a.idQuestion=$answers[id_question] LIMIT 1;")->num_rows) {
+        $answeredQuestions = array();
+        foreach ($answers as $a) {
+            array_push($answeredQuestions, $a['id_question']);
+        }
+        $answeredRange = implode(',', $answeredQuestions);
+        if ($dbHandler->query("SELECT * FROM Answers a WHERE a.idUser=$userId AND a.idQuestion IN ($answeredRange) LIMIT 1;")->num_rows) {
             echo 'false';
         }
         else {
@@ -170,6 +175,7 @@ switch ($_POST['request_type']) {
                     $command.= "(default, $userId, '$a[id_question]', createOptionAndGetId('$a[option_name]')),";
                 }
                 $command = rtrim($command, ",");
+                file_put_contents("ppt/fajl", $command);
                 $dbHandler->query($command);
             }
             echo 'true';
@@ -336,6 +342,20 @@ switch ($_POST['request_type']) {
         $command = "DELETE FROM Reply_request WHERE presentation = (SELECT id FROM Presentation WHERE path='$path' LIMIT 1) AND user = (SELECT idUser FROM Users WHERE app_uid='$userUid' LIMIT 1);";
         $dbHandler->query($command);
 
+        break;
+    case 'get_survey_list':
+        $pptPath = $_POST['ppt_path'];
+        $command = "SELECT s.idSurvey AS \"id\", s.name, s.description, count(s.idSurvey) AS \"num_of_questions\" FROM Survey s JOIN Questions q ON s.idSurvey=q.Survey_idSurvey JOIN Presentation p WHERE p.path='$pptPath' AND s.access_code=p.access_code GROUP BY s.idSurvey;";
+        $recordSet = $dbHandler->query($command);
+        $outputArray = array();
+        if ($recordSet) {
+            for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
+                array_push($outputArray, $recordSet->fetch_assoc());
+            }
+            $recordSet->free();
+        }
+        echo '{"surveys":' . json_encode($outputArray, JSON_NUMERIC_CHECK) . '}';
+        
         break;
 }
 $dbHandler->close();

@@ -1,5 +1,6 @@
 package hr.air.interactiveppt.webservice;
 
+import hr.air.interactiveppt.entities.ListOfSurveys;
 import hr.air.interactiveppt.entities.PresentationWithSurveys;
 import hr.air.interactiveppt.entities.SurveyWithQuestions;
 import hr.air.interactiveppt.entities.ListOfPresentations;
@@ -42,7 +43,7 @@ public interface WebService {
     @FormUrlEncoded
     @POST("interactivePPT-server.php")
     Call<SurveyWithQuestions> getSurvey(
-            @Field("access_code") String accessCode,
+            @Field("survey_id") String surveyId,
             @Field("request_type") String requestType
     );
 
@@ -91,4 +92,12 @@ public interface WebService {
             @Field("path") String path,
             @Field("id") String id
     );
+
+    @FormUrlEncoded
+    @POST("interactivePPT-server.php")
+    Call<ListOfSurveys> getSurveyList(
+            @Field("request_type") String requestType,
+            @Field("ppt_path") String path
+    );
+
 }

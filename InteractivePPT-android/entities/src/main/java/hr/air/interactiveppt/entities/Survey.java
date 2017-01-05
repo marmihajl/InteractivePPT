@@ -13,4 +13,10 @@ public class Survey {
 
     @SerializedName("name")
     public String name;
+
+    @SerializedName("description")
+    public String description;
+
+    @SerializedName("num_of_questions")
+    public int numOfQuestions;
 }

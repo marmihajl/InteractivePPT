@@ -9,7 +9,7 @@
     <string name="survey_title_label">Naslov</string>
     <string name="survey_description_label">Opis</string>
     <string name="survey_questions_label">Pitanja</string>
-    <string name="my_surveys_button_caption">Moje\nankete</string>
+    <string name="my_surveys_button_caption">Moje\nprezentacije</string>
     <string name="create_survey_button_caption">Nova\nanketa</string>
     <string name="load_survey_button_caption">Učitaj\nprezentaciju</string>
     <string name="survey_code">Kod ankete</string>

@@ -41,6 +41,7 @@
         <activity android:name=".GetSurvey" />
         <activity android:name=".ViewPresentation" />
         <activity android:name=".PresentationList"></activity>
+        <activity android:name=".SurveyList"></activity>
         <service
             android:name=".MyFirebaseInstanceIDService">
             <intent-filter>

@@ -40,10 +40,7 @@ import retrofit2.Response;
 
 public class GetSurvey extends AppCompatActivity{
 
-    static public String requestType="get_survey";
-    public String access_code="";
-    ArrayList<Answer> answers= new ArrayList<Answer>();
-    public int idQuestion;
+    private int idQuestion;
     String idUser;
     LinearLayout lL;
 
@@ -52,32 +49,10 @@ public class GetSurvey extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_survey);
         idUser = getIntent().getStringExtra("id");
-
-        access_code= getIntent().getExtras().getString("message");
-
-        CommunicationHandler.SendDataAndProcessResponse(ServiceGenerator.createService(WebService.class)
-                        .getSurvey(access_code, requestType),
-                new BiConsumer<Call<SurveyWithQuestions>, Response<SurveyWithQuestions>>() {
-                    @Override
-                    public void accept(Call<SurveyWithQuestions> call, Response<SurveyWithQuestions> response) {
-                        displaySurvey(response.body());
-                        //Toast.makeText(GetSurvey.this, "Anketa uspješno dobavljena", Toast.LENGTH_LONG).show();
-                        //findViewById(R.id.activity_get_survey).setClickable(true);
-                        //findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                    }
-                },
-                new BiConsumer<Call<SurveyWithQuestions>, Throwable>() {
-                    @Override
-                    public void accept(Call<SurveyWithQuestions> call, Throwable throwable) {
-                        Toast.makeText(GetSurvey.this,"Greška kod dobavljanja ankete", Toast.LENGTH_LONG).show();
-                        findViewById(R.id.activity_get_survey).setClickable(true);
-                        //findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                    }
-                },
-                true,
-                getBaseContext()
-        );
-    }//end onCreate
+        String serializedSurveyWithQuestions = getIntent().getStringExtra("full_survey");
+        SurveyWithQuestions survey = new Gson().fromJson(serializedSurveyWithQuestions, SurveyWithQuestions.class);
+        displaySurvey(survey);
+}//end onCreate
 
     public void displaySurvey(SurveyWithQuestions object){
 
@@ -156,6 +131,7 @@ public class GetSurvey extends AppCompatActivity{
                     break;
                 case 3:
                     EditText editText= new EditText(this);
+                    editText.setId(idQuestion);
                     editText.setSingleLine(false);
                     editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     editText.setLines(5);

@@ -34,6 +34,7 @@ public class PresentationList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presentation_list);
+        findViewById(R.id.activity_presentation_list).setClickable(false);
         String requestType = "get_presentation_list";
         userId = getIntent().getStringExtra("id");
 
@@ -45,8 +46,9 @@ public class PresentationList extends AppCompatActivity {
                 new BiConsumer<Call<ListOfPresentations>, Response<ListOfPresentations>>() {
                     @Override
                     public void accept(Call<ListOfPresentations> call, Response<ListOfPresentations> response) {
-                        displayPresentation(response.body());
+                        displayPresentations(response.body());
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                        findViewById(R.id.activity_presentation_list).setClickable(true);
                     }
                 },
                 new BiConsumer<Call<ListOfPresentations>, Throwable>() {
@@ -54,15 +56,15 @@ public class PresentationList extends AppCompatActivity {
                     public void accept(Call<ListOfPresentations> call, Throwable throwable) {
                         Toast.makeText(PresentationList.this,"Greška kod dobavljanja liste prezentacija", Toast.LENGTH_LONG).show();
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                        findViewById(R.id.activity_presentation_list).setClickable(true);
                     }
                 },
                 true,
                 getBaseContext()
         );
-        findViewById(R.id.loading_panel).setVisibility(View.GONE);
     }
 
-    private void displayPresentation(ListOfPresentations presentations) {
+    private void displayPresentations(ListOfPresentations presentations) {
 
         ExpandablePresentationListAdapter adapter = null;
 

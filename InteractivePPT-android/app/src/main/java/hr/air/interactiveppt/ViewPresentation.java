@@ -49,8 +49,8 @@ public class ViewPresentation extends AppCompatActivity {
         wv = (WebView)findViewById(R.id.webview);
         InitPresentation.openPresentation(pptPath, wv);
 
-        Button button = (Button)findViewById(R.id.requestReply);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button requestReplyButton = (Button)findViewById(R.id.requestReply);
+        requestReplyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommunicationHandler.SendDataAndProcessResponse(
@@ -90,6 +90,16 @@ public class ViewPresentation extends AppCompatActivity {
                 );
             }
         });
+
+        Button openSurveyListButton = (Button)findViewById(R.id.openSurvey);
+        openSurveyListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewPresentation.this, SurveyList.class);
+                intent.putExtra("id", userId);
+                intent.putExtra("ppt_path", presentation.path);
+                startActivity(intent);
+            }});
 
         if(manual.equals("open")){
             CommunicationHandler.SendDataAndProcessResponse(
