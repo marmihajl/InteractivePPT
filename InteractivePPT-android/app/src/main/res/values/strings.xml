@@ -45,6 +45,6 @@
     <string name="logout_button_content">Odjavi se s trenutnog računa</string>
     <string name="reset_survey">Odbaci</string>
     <string name="create_survey">Kreiraj</string>
-    <string name="openSurvey">Otvori prezentaciju</string>
-    <string name="sinc">Sinkroniziraj</string>
+    <string name="openSurvey">Otvori anketu</string>
+    <string name="requestReply">Zatraži repliku</string>
 </resources>

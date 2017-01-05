@@ -83,4 +83,12 @@ public interface WebService {
             @Field("id") String id,
             @Field("path") String path
     );
+
+    @FormUrlEncoded
+    @POST("interactivePPT-server.php")
+    Call<Boolean> saveReplyRequest(
+            @Field("request_type") String requestType,
+            @Field("path") String path,
+            @Field("id") String id
+    );
 }

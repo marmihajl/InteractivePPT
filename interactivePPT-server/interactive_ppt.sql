@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 31, 2016 at 02:23 AM
+-- Generation Time: Jan 05, 2017 at 06:03 PM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -170,25 +170,6 @@ INSERT INTO `Log` (`Users_idUser`, `action`, `datetime`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Notification`
---
-
-CREATE TABLE `Notification` (
-  `presentationID` int(11) NOT NULL,
-  `userToken` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `Notification`
---
-
-INSERT INTO `Notification` (`presentationID`, `userToken`) VALUES
-(10, 'eaYc7g3-0Rc:APA91bGCeHzXzscjHdJC6Pi9iJ19uUIt7uJNevlZwzf9UVLPelGqOHqRFaKSHEnFODIQ8C-h6clEPJI0qbhOVrIcfvun22RweWdxugFHdW8zTJlxEpYKhHeX4edebLhIBiJfVVC3_ZNo'),
-(10, 'eaYc7g3-0Rc:APA91bGCeHzXzscjHdJC6Pi9iJ19uUIt7uJNevlZwzf9UVLPelGqOHqRFaKSHEnFODIQ8C-h6clEPJI0qbhOVrIcfvun22RweWdxugFHdW8zTJlxEpYKhHeX4edebLhIBiJfVVC3_ZNo');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `Options`
 --
 
@@ -293,7 +274,7 @@ CREATE TABLE `Presentation` (
 --
 
 INSERT INTO `Presentation` (`id`, `path`, `access_code`, `author`) VALUES
-(3, 'nepoznato', 'd9b4vs69v2', 2),
+(3, 'ppt/nepoznato.ppt', 'd9b4vs69v2', 2),
 (4, 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 'rpk_anketa', 1),
 (5, 'ppt/Proizvodnja vina.pptx', '7dsR6n2n', 1),
 (7, 'ppt/Varijable i pokazivači.pptx', 'm45k0fz42t', 1),
@@ -468,6 +449,25 @@ INSERT INTO `Question_type` (`idQuestion_type`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Reply_request`
+--
+
+CREATE TABLE `Reply_request` (
+  `user` int(11) NOT NULL,
+  `presentation` int(11) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Reply_request`
+--
+
+INSERT INTO `Reply_request` (`user`, `presentation`, `time`) VALUES
+(1, 3, '2017-01-05 18:02:57');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Role`
 --
 
@@ -494,16 +494,20 @@ INSERT INTO `Role` (`idRole`, `name`, `description`) VALUES
 
 CREATE TABLE `Subscription` (
   `idUser` int(11) NOT NULL,
-  `idPresentation` int(11) NOT NULL
+  `idPresentation` int(11) NOT NULL,
+  `active` varchar(3) NOT NULL DEFAULT 'yes'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Subscription`
 --
 
-INSERT INTO `Subscription` (`idUser`, `idPresentation`) VALUES
-(3, 5),
-(1, 10);
+INSERT INTO `Subscription` (`idUser`, `idPresentation`, `active`) VALUES
+(1, 3, 'yes'),
+(1, 5, 'yes'),
+(1, 7, 'yes'),
+(1, 10, 'no'),
+(2, 10, 'no');
 
 -- --------------------------------------------------------
 
@@ -559,9 +563,8 @@ CREATE TABLE `Users` (
 --
 
 INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`, `token`) VALUES
-(1, 'Petar Šestak', '1431307750213523', 1, ''),
-(2, 'Marin Mihajlovic', '10210532062074946', 2, 'eaYc7g3-0Rc:APA91bGCeHzXzscjHdJC6Pi9iJ19uUIt7uJNevlZwzf9UVLPelGqOHqRFaKSHEnFODIQ8C-h6clEPJI0qbhOVrIcfvun22RweWdxugFHdW8zTJlxEpYKhHeX4edebLhIBiJfVVC3_ZNo'),
-(3, 'Mario Šelek', 'kontakt', 3, ''),
+(1, 'Petar Šestak', '1431307750213523', 1, 'dC_GHLr77eY:APA91bFQJYkMq2KCzhTqrC-HwVzRESoFEPtVNDoHOj-Y5xl3OZU5ZyBeiI-G6bj7NjaUVzjo-uX-32JkyNptTQEVlBvMIif-5vVvGnZP7cD2F-yY4h1ommjnG3Oh4B8sHxZa3Ne-r-7m'),
+(2, 'Marin Mihajlovic', '10210532062074946', 2, 'fZCeNJW8-cs:APA91bFiNpcI8d9GP6nMK37FjN0uoFi4_KUPnDD0-gV2QpHjjm6ITVOMuRopW0ZISPkXmHreV2PBi52yK4NbDPhHF600QF3YpJ_6ji8zjABCn2-uFdaMz6v7s7ysV2HtKI-SLNFuRt2S'),
 (8, 'Marinela Levak', '1336022606431703', 3, ''),
 (10, 'Mario Šelek', '1256649427742897', 3, '');
 
@@ -640,6 +643,13 @@ ALTER TABLE `Question_type`
   ADD PRIMARY KEY (`idQuestion_type`);
 
 --
+-- Indexes for table `Reply_request`
+--
+ALTER TABLE `Reply_request`
+  ADD PRIMARY KEY (`user`,`presentation`),
+  ADD KEY `presentation` (`presentation`);
+
+--
 -- Indexes for table `Role`
 --
 ALTER TABLE `Role`
@@ -686,7 +696,7 @@ ALTER TABLE `Options`
 -- AUTO_INCREMENT for table `Presentation`
 --
 ALTER TABLE `Presentation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `Questions`
 --
@@ -749,6 +759,13 @@ ALTER TABLE `Questions`
 ALTER TABLE `Question_options`
   ADD CONSTRAINT `fk_Options_has_Questions_Options1` FOREIGN KEY (`idOptions`) REFERENCES `Options` (`idOptions`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_Options_has_Questions_Questions1` FOREIGN KEY (`idQuestions`) REFERENCES `Questions` (`idQuestions`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Reply_request`
+--
+ALTER TABLE `Reply_request`
+  ADD CONSTRAINT `Reply_request_ibfk_1` FOREIGN KEY (`user`) REFERENCES `Users` (`idUser`),
+  ADD CONSTRAINT `Reply_request_ibfk_2` FOREIGN KEY (`presentation`) REFERENCES `Presentation` (`id`);
 
 --
 -- Constraints for table `Subscription`

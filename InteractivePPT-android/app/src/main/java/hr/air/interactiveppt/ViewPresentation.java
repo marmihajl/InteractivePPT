@@ -49,11 +49,45 @@ public class ViewPresentation extends AppCompatActivity {
         wv = (WebView)findViewById(R.id.webview);
         InitPresentation.openPresentation(pptPath, wv);
 
-        Button button = (Button)findViewById(R.id.sinc);
+        Button button = (Button)findViewById(R.id.requestReply);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InitPresentation.refrashPresentation(pptPath);
+                CommunicationHandler.SendDataAndProcessResponse(
+                        ServiceGenerator.createService(WebService.class).saveReplyRequest(
+                                "save_interested_user",
+                                pptPath,
+                                userId
+                        ),
+                        new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                            @Override
+                            public void accept(Call<Boolean> call, Response<Boolean> response) {
+                                if (response.body()) {
+                                    Toast.makeText(ViewPresentation.this,
+                                            "Uspješno ste poslali zahtjev za repliciranjem!",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
+                                else {
+                                    Toast.makeText(ViewPresentation.this,
+                                            "Molimo Vas za strpljenje! Vaš prethodno poslani zahtjev za repliciranjem još uvijek čeka da bude pogledan od prezentatora",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
+                            }
+                        },
+                        new BiConsumer<Call<Boolean>, Throwable>() {
+                            @Override
+                            public void accept(Call<Boolean> call, Throwable throwable) {
+                                Toast.makeText(ViewPresentation.this,
+                                        "Neuspjeh kod slanja zahtjeva za repliciranjem! Pokušajte kasnije..",
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                        },
+                        false,
+                        getBaseContext()
+                );
             }
         });
 

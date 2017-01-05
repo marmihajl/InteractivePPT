@@ -260,7 +260,8 @@ switch ($_POST['request_type']) {
 		if($dbHandler->query($command)->num_rows === 0){
 			$command = "INSERT INTO Subscription VALUES($id2,$presentationID, default);";	
 			$dbHandler->query($command);
-		}else{
+		}
+        else {
 			$command = "UPDATE Subscription SET active = 'yes' WHERE idUser = $id2 AND idPresentation = $presentationID;";	
 			$dbHandler->query($command);
 		}
@@ -271,14 +272,14 @@ switch ($_POST['request_type']) {
 		
 	case 'update_subscription':
 	
-	$path = $_POST['path'];
-	
-	$command = "UPDATE Subscription SET active = 'no' WHERE idPresentation = (SELECT id FROM Presentation WHERE path = '$path');";
-	$dbHandler->query($command);
-	
-	echo 'true';
-	
-	break;
+        $path = $_POST['path'];
+        
+        $command = "UPDATE Subscription SET active = 'no' WHERE idPresentation = (SELECT id FROM Presentation WHERE path = '$path');";
+        $dbHandler->query($command);
+        
+        echo 'true';
+        
+        break;
 	
 	case 'check_status':
 	
@@ -288,11 +289,37 @@ switch ($_POST['request_type']) {
 		$command = "SELECT active FROM Subscription WHERE idUser = (SELECT idUser FROM Users WHERE app_uid = '$id') AND idPresentation = (SELECT id FROM Presentation WHERE path = '$path');";
 		$result = $dbHandler->query($command)->fetch_assoc()['active'];
 		
-		if($result === "yes")
-		{echo 'yes';}
-		else{echo 'no';}
+		if($result === "yes") {
+            echo 'yes';
+        }
+		else {
+            echo 'no';
+        }
 	
-	break;
+    	break;
+
+    case 'save_interested_user':
+        $path = $_POST['path'];
+        $userUid = $_POST['id'];
+
+        $command = "INSERT INTO Reply_request VALUES ((SELECT idUser FROM Users WHERE app_uid = '$userUid'), (SELECT id FROM Presentation WHERE path = '$path'), CURRENT_TIMESTAMP());";
+        $result = $dbHandler->query($command);
+        if ($result) {
+            echo 'true';
+        }
+        else {
+            echo 'false';
+        }
+        break;
+
+    case 'get_interested_audience':
+        $path = $_POST['path'];
+        break;
+
+    case 'delete_user_replice':
+        $userUid = $_POST['app_uid'];
+        //$path = $_POST['path'];
+        break;
 }
 $dbHandler->close();
 
