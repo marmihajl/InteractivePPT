@@ -115,6 +115,7 @@
     <Compile Include="Survey.cs" />
     <Compile Include="SurveyList.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="Users.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

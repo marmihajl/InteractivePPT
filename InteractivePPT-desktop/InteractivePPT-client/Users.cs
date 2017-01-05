@@ -7,6 +7,6 @@ namespace InteractivePPT
 {
     public class Users
     {
-        List<User> data { get; set; }
+        public List<User> data { get; set; }
     }
 }
