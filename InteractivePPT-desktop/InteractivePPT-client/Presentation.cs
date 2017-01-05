@@ -24,16 +24,16 @@ namespace InteractivePPT
         AnswerList myAnswerList = null;
         int move = 1;
         Users users;
-
-        bool debug = true;
+        string userUid;
 
         Thread t;
 
-        public Presentation(string path, SurveyList surveyList)
+        public Presentation(string path, SurveyList surveyList, string userUid)
         {
             InitializeComponent();
             this.path = path;
             this.surveyList = surveyList;
+            this.userUid = userUid;
         }
         
 
@@ -224,7 +224,7 @@ namespace InteractivePPT
 
             }
 
-            FileClass.uploadFile(path);
+            FileClass.uploadFile(path, userUid);
         }
 
         private void Presentation_FormClosing(object sender, FormClosingEventArgs e)
@@ -274,25 +274,27 @@ namespace InteractivePPT
         {
             dgvReplice.Rows.Clear();
             dgvReplice.Refresh();
-            debug = true;
         }
 
         private void dgvReplice_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvReplice.InvokeRequired)
+            if (e.RowIndex != -1)
             {
-                dgvReplice.Invoke(new MethodInvoker(delegate
+                if (dgvReplice.InvokeRequired)
                 {
-                    removeAudience();
-                }));
-            }
-            else
-            {
-                removeAudience();
+                    dgvReplice.Invoke(new MethodInvoker(delegate
+                    {
+                        removeAudience(e.RowIndex);
+                    }));
+                }
+                else
+                {
+                    removeAudience(e.RowIndex);
+                }
             }
         }
 
-        public void removeAudience()
+        public void removeAudience(int selectedRow)
         {
             byte[] response;
             string name = "ppt/" + path.Substring(path.LastIndexOf('\\') + 1);
@@ -304,7 +306,7 @@ namespace InteractivePPT
                     client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                     {
                             { "request_type", "delete_audience" },
-                            { "app_uid", dgvReplice.Rows[this.dgvReplice.CurrentRow.Index].Cells[1].Value.ToString()},
+                            { "app_uid", dgvReplice.Rows[selectedRow].Cells[1].Value.ToString()},
                             { "path", name }
                     });
                 }
@@ -315,7 +317,7 @@ namespace InteractivePPT
                     return;
                 }
             }
-            dgvReplice.Rows.RemoveAt(this.dgvReplice.SelectedRows[0].Index);
+            dgvReplice.Rows.RemoveAt(selectedRow);
             dgvReplice.Refresh();
         }
 
@@ -354,6 +356,7 @@ namespace InteractivePPT
                 users = JsonConvert.DeserializeObject<Users>(serializedUsers);
             }
 
+            dgvReplice.Rows.Clear();
             foreach (User user in users.data)
             {
                 dgvReplice.Rows.Add(

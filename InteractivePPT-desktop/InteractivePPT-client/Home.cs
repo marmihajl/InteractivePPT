@@ -128,9 +128,9 @@ namespace InteractivePPT
             if (ofd.FileName != null)
             {
                 path = ofd.FileName;
-                FileClass.uploadFile(path);
+                FileClass.uploadFile(path, user.uid);
 
-                Presentation p = new Presentation(path, mySurveyList);
+                Presentation p = new Presentation(path, mySurveyList, user.uid);
                 p.Show();
 
             }

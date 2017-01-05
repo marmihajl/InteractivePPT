@@ -38,42 +38,46 @@
             this.label2 = new System.Windows.Forms.Label();
             this.dgvReplice = new System.Windows.Forms.DataGridView();
             this.User = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label3 = new System.Windows.Forms.Label();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvReplice)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(63, 17);
+            this.comboBox1.Location = new System.Drawing.Point(84, 21);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.Size = new System.Drawing.Size(160, 24);
             this.comboBox1.TabIndex = 1;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 20);
+            this.label1.Location = new System.Drawing.Point(17, 25);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 13);
+            this.label1.Size = new System.Drawing.Size(56, 17);
             this.label1.TabIndex = 2;
             this.label1.Text = "Anketa:";
             // 
             // questionList
             // 
             this.questionList.FormattingEnabled = true;
-            this.questionList.Location = new System.Drawing.Point(16, 55);
+            this.questionList.Location = new System.Drawing.Point(21, 68);
+            this.questionList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.questionList.Name = "questionList";
-            this.questionList.Size = new System.Drawing.Size(309, 199);
+            this.questionList.Size = new System.Drawing.Size(411, 242);
             this.questionList.TabIndex = 3;
             // 
             // btnAddGraph
             // 
-            this.btnAddGraph.Location = new System.Drawing.Point(109, 352);
+            this.btnAddGraph.Location = new System.Drawing.Point(145, 433);
+            this.btnAddGraph.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnAddGraph.Name = "btnAddGraph";
-            this.btnAddGraph.Size = new System.Drawing.Size(75, 23);
+            this.btnAddGraph.Size = new System.Drawing.Size(100, 28);
             this.btnAddGraph.TabIndex = 4;
             this.btnAddGraph.Text = "Dodaj graf";
             this.btnAddGraph.UseVisualStyleBackColor = true;
@@ -83,9 +87,10 @@
             // 
             this.radioLine.AutoSize = true;
             this.radioLine.Image = global::InteractivePPT.Properties.Resources.linechart;
-            this.radioLine.Location = new System.Drawing.Point(237, 271);
+            this.radioLine.Location = new System.Drawing.Point(316, 334);
+            this.radioLine.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radioLine.Name = "radioLine";
-            this.radioLine.Size = new System.Drawing.Size(57, 36);
+            this.radioLine.Size = new System.Drawing.Size(60, 36);
             this.radioLine.TabIndex = 7;
             this.radioLine.TabStop = true;
             this.radioLine.UseVisualStyleBackColor = true;
@@ -94,9 +99,10 @@
             // 
             this.radioPie.AutoSize = true;
             this.radioPie.Image = global::InteractivePPT.Properties.Resources.pie_chart__1_;
-            this.radioPie.Location = new System.Drawing.Point(158, 271);
+            this.radioPie.Location = new System.Drawing.Point(211, 334);
+            this.radioPie.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radioPie.Name = "radioPie";
-            this.radioPie.Size = new System.Drawing.Size(57, 36);
+            this.radioPie.Size = new System.Drawing.Size(60, 36);
             this.radioPie.TabIndex = 6;
             this.radioPie.TabStop = true;
             this.radioPie.UseVisualStyleBackColor = true;
@@ -105,9 +111,10 @@
             // 
             this.radioBar.AutoSize = true;
             this.radioBar.Image = global::InteractivePPT.Properties.Resources.barChart3;
-            this.radioBar.Location = new System.Drawing.Point(84, 271);
+            this.radioBar.Location = new System.Drawing.Point(112, 334);
+            this.radioBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radioBar.Name = "radioBar";
-            this.radioBar.Size = new System.Drawing.Size(57, 36);
+            this.radioBar.Size = new System.Drawing.Size(60, 36);
             this.radioBar.TabIndex = 5;
             this.radioBar.TabStop = true;
             this.radioBar.UseVisualStyleBackColor = true;
@@ -115,9 +122,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 283);
+            this.label2.Location = new System.Drawing.Point(16, 348);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(61, 13);
+            this.label2.Size = new System.Drawing.Size(82, 17);
             this.label2.TabIndex = 8;
             this.label2.Text = "Vrsta grafa:";
             // 
@@ -129,11 +137,13 @@
             this.dgvReplice.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.User,
             this.id});
-            this.dgvReplice.Location = new System.Drawing.Point(355, 55);
+            this.dgvReplice.Location = new System.Drawing.Point(473, 68);
+            this.dgvReplice.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvReplice.MultiSelect = false;
             this.dgvReplice.Name = "dgvReplice";
             this.dgvReplice.ReadOnly = true;
-            this.dgvReplice.Size = new System.Drawing.Size(251, 199);
+            this.dgvReplice.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvReplice.Size = new System.Drawing.Size(335, 245);
             this.dgvReplice.TabIndex = 9;
             this.dgvReplice.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvReplice_CellClick);
             // 
@@ -143,27 +153,28 @@
             this.User.Name = "User";
             this.User.ReadOnly = true;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(381, 36);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 13);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Replicions:";
-            // 
             // id
             // 
             this.id.HeaderText = "ID";
             this.id.Name = "id";
             this.id.ReadOnly = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(508, 44);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(77, 17);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Replicions:";
+            // 
             // Presentation
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.ClientSize = new System.Drawing.Size(604, 433);
+            this.ClientSize = new System.Drawing.Size(805, 533);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.dgvReplice);
             this.Controls.Add(this.label2);
@@ -174,6 +185,7 @@
             this.Controls.Add(this.questionList);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Presentation";
             this.Text = "Presentation";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Presentation_FormClosing);

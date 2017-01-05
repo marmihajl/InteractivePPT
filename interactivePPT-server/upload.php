@@ -79,7 +79,7 @@ function sendGCM($message, $id) {
         }
 		//sendGCM($ac,$recordSet);
 	}else{
-		$command = "INSERT INTO Presentation VALUES (default, '$uploadfile', '$accessCode',2);";
+		$command = "INSERT INTO Presentation VALUES (default, '$uploadfile', '$accessCode', (SELECT idUser FROM Users WHERE app_uid='$_POST[uid]'));";
 		$dbHandler->query($command);
 	}
 	

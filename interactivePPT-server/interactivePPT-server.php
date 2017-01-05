@@ -314,11 +314,28 @@ switch ($_POST['request_type']) {
 
     case 'get_interested_audience':
         $path = $_POST['path'];
+
+        $command = "SELECT app_uid AS \"uid\", name FROM Reply_request JOIN Users ON user=idUser WHERE presentation=(SELECT id FROM Presentation WHERE path='$path' LIMIT 1);";
+        $recordSet = $dbHandler->query($command);
+        $interestedUsers = array();
+
+        if ($recordSet) {
+            for ($i=0; $i<$recordSet->num_rows; $i++) {
+                array_push($interestedUsers, $recordSet->fetch_assoc());
+            }
+            $recordSet->free();
+        }
+        echo '{"data":' . json_encode($interestedUsers) . '}';
+
         break;
 
-    case 'delete_user_replice':
+    case 'delete_audience':
         $userUid = $_POST['app_uid'];
-        //$path = $_POST['path'];
+        $path = $_POST['path'];
+
+        $command = "DELETE FROM Reply_request WHERE presentation = (SELECT id FROM Presentation WHERE path='$path' LIMIT 1) AND user = (SELECT idUser FROM Users WHERE app_uid='$userUid' LIMIT 1);";
+        $dbHandler->query($command);
+
         break;
 }
 $dbHandler->close();
