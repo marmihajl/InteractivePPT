@@ -36,6 +36,11 @@
             this.radioPie = new System.Windows.Forms.RadioButton();
             this.radioBar = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
+            this.dgvReplice = new System.Windows.Forms.DataGridView();
+            this.User = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label3 = new System.Windows.Forms.Label();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReplice)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -116,12 +121,51 @@
             this.label2.TabIndex = 8;
             this.label2.Text = "Vrsta grafa:";
             // 
+            // dgvReplice
+            // 
+            this.dgvReplice.AllowUserToAddRows = false;
+            this.dgvReplice.AllowUserToDeleteRows = false;
+            this.dgvReplice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvReplice.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.User,
+            this.id});
+            this.dgvReplice.Location = new System.Drawing.Point(355, 55);
+            this.dgvReplice.MultiSelect = false;
+            this.dgvReplice.Name = "dgvReplice";
+            this.dgvReplice.ReadOnly = true;
+            this.dgvReplice.Size = new System.Drawing.Size(251, 199);
+            this.dgvReplice.TabIndex = 9;
+            this.dgvReplice.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvReplice_CellClick);
+            // 
+            // User
+            // 
+            this.User.HeaderText = "User";
+            this.User.Name = "User";
+            this.User.ReadOnly = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(381, 36);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Replicions:";
+            // 
+            // id
+            // 
+            this.id.HeaderText = "ID";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            // 
             // Presentation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.ClientSize = new System.Drawing.Size(371, 433);
+            this.ClientSize = new System.Drawing.Size(604, 433);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.dgvReplice);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.radioLine);
             this.Controls.Add(this.radioPie);
@@ -134,6 +178,7 @@
             this.Text = "Presentation";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Presentation_FormClosing);
             this.Load += new System.EventHandler(this.Presentation_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvReplice)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,5 +193,9 @@
         private System.Windows.Forms.RadioButton radioPie;
         private System.Windows.Forms.RadioButton radioLine;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridView dgvReplice;
+        private System.Windows.Forms.DataGridViewTextBoxColumn User;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id;
     }
 }

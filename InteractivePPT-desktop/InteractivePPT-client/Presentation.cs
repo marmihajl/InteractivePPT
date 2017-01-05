@@ -9,6 +9,7 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using EXCEL = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Diagnostics;
+using System.Threading;
 
 namespace InteractivePPT
 {
@@ -22,6 +23,11 @@ namespace InteractivePPT
         string serializedUserSurveys = null;
         AnswerList myAnswerList = null;
         int move = 1;
+        Users users;
+
+        bool debug = true;
+
+        Thread t;
 
         public Presentation(string path, SurveyList surveyList)
         {
@@ -47,6 +53,9 @@ namespace InteractivePPT
             comboBox1.DisplayMember = "name";
             comboBox1.ValueMember = "id";
             comboBox1.SelectedIndex = -1;
+
+            t = new Thread(refreshDGV);
+            t.Start();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -238,6 +247,117 @@ namespace InteractivePPT
                     return;
                 }
 
+            }
+
+            t.Abort();
+        }
+
+        public void refreshDGV()
+        {
+            if (dgvReplice.InvokeRequired)
+            {
+                dgvReplice.Invoke(new MethodInvoker(delegate
+                {
+                    refreshAudience();
+                }));
+            }
+            else
+            {
+                refreshAudience();
+            }
+                
+            Thread.Sleep(5000);
+            refreshDGV();
+        }
+
+        public void action()
+        {
+            dgvReplice.Rows.Clear();
+            dgvReplice.Refresh();
+            debug = true;
+        }
+
+        private void dgvReplice_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dgvReplice.InvokeRequired)
+            {
+                dgvReplice.Invoke(new MethodInvoker(delegate
+                {
+                    removeAudience();
+                }));
+            }
+            else
+            {
+                removeAudience();
+            }
+        }
+
+        public void removeAudience()
+        {
+            byte[] response;
+            using (WebClient client = new WebClient())
+            {
+                try
+                {
+                    response =
+                    client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                    {
+                            { "request_type", "delete_user_replice" },
+                            { "app_uid", dgvReplice.Rows[this.dgvReplice.CurrentRow.Index].Cells[1].Value.ToString()}
+                    });
+                }
+                catch
+                {
+                    MessageBox.Show("Communication with server-side of this application could not be established! Application will now shut down..");
+                    Application.Exit();
+                    return;
+                }
+            }
+            dgvReplice.Rows.RemoveAt(this.dgvReplice.SelectedRows[0].Index);
+            dgvReplice.Refresh();
+        }
+
+        public void refreshAudience()
+        {
+            byte[] response;
+            string name = "ppt/" + path.Substring(path.LastIndexOf('\\') + 1);
+
+            using (WebClient client = new WebClient())
+            {
+                try
+                {
+                    response =
+                    client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                    {
+                               { "request_type", "get_interested_audience" },
+                               { "path", name }
+                    });
+
+                }
+                catch
+                {
+                    MessageBox.Show("Communication with server-side of this application could not be established! Application will now shut down..");
+                    Application.Exit();
+                    return;
+                }
+            }
+               
+
+            string serializedUsers = System.Text.Encoding.UTF8.GetString(response);
+
+            
+
+            if (serializedUsers != null)
+            {
+                users = JsonConvert.DeserializeObject<Users>(serializedUsers);
+            }
+
+            foreach (User user in users.data)
+            {
+                dgvReplice.Rows.Add(
+                    user.name,
+                    user.uid
+                );
             }
         }
     }
