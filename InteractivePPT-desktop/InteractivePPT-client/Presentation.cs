@@ -295,6 +295,7 @@ namespace InteractivePPT
         public void removeAudience()
         {
             byte[] response;
+            string name = "ppt/" + path.Substring(path.LastIndexOf('\\') + 1);
             using (WebClient client = new WebClient())
             {
                 try
@@ -302,8 +303,9 @@ namespace InteractivePPT
                     response =
                     client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                     {
-                            { "request_type", "delete_user_replice" },
-                            { "app_uid", dgvReplice.Rows[this.dgvReplice.CurrentRow.Index].Cells[1].Value.ToString()}
+                            { "request_type", "delete_audience" },
+                            { "app_uid", dgvReplice.Rows[this.dgvReplice.CurrentRow.Index].Cells[1].Value.ToString()},
+                            { "path", name }
                     });
                 }
                 catch
