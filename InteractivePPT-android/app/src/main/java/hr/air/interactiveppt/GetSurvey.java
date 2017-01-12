@@ -8,7 +8,6 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,16 +22,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
 
 import hr.air.interactiveppt.entities.Answer;
 import hr.air.interactiveppt.entities.ListOfAnswers;
 import hr.air.interactiveppt.entities.SurveyWithQuestions;
-import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by Smrad on 2.12.2016..
@@ -224,38 +220,36 @@ public class GetSurvey extends AppCompatActivity{
     private void sendAnswersToServer(ListOfAnswers answers){
         String request= "submit_answers";
 
-        CommunicationHandler.SendDataAndProcessResponse(ServiceGenerator.createService(WebService.class)
+        new SendDataAndProcessResponseTask(ServiceGenerator.createService(WebService.class)
                         .sendAnswers(
                                 new Gson().toJson(answers), // i've no f***ing idea why the heck i have to serialize it manually
                                 request),
-                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                new SendDataAndProcessResponseTask.PostActions() {
+
                     @Override
-                    public void accept(Call<Boolean> answerCall, Response<Boolean> answerResponse) {
-                        if (answerResponse.body()) {
+                    public void onSuccess(Object genericResponse) {
+                        boolean response = (boolean) genericResponse;
+                        if (response) {
                             Toast.makeText(GetSurvey.this,
                                     "Odgovori uspješno poslani!",
                                     Toast.LENGTH_LONG
                             ).show();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(GetSurvey.this,
                                     "Već ste prethodno predali odgovore na ovu anketu!",
                                     Toast.LENGTH_LONG
                             ).show();
                         }
                     }
-                },
-                new BiConsumer<Call<Boolean>, Throwable>() {
+
                     @Override
-                    public void accept(Call<Boolean> answerCall, Throwable throwable) {
+                    public void onFailure() {
                         Toast.makeText(GetSurvey.this,
                                 "Greška prilikom slanja odgovora",
                                 Toast.LENGTH_LONG
                         ).show();
                     }
-                },
-                true,
-                getBaseContext()
+                }
         );
     }
 }//end class

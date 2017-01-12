@@ -2,15 +2,12 @@ package hr.air.interactiveppt;
 
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,21 +22,16 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.function.BiConsumer;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 import hr.air.interactiveppt.entities.User;
-import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
-import retrofit2.Call;
-import retrofit2.Response;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
@@ -162,31 +154,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registerUserIntoWebservice(User u) {
-        CommunicationHandler.SendDataAndProcessResponse(
+        new SendDataAndProcessResponseTask(
                 ServiceGenerator.createService(WebService.class).registerUser(
                         "register_user",
                         u.id,
                         u.fullName
                 ),
-                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                new SendDataAndProcessResponseTask.PostActions() {
                     @Override
-                    public void accept(Call<Boolean> call, Response<Boolean> response) {
+                    public void onSuccess(Object response) {
                         toggleVisibilityAtLoading(false);
                         openHome();
                     }
-                },
-                new BiConsumer<Call<Boolean>, Throwable>() {
+
                     @Override
-                    public void accept(Call<Boolean> sCall, Throwable throwable) {
+                    public void onFailure() {
                         Toast.makeText(MainActivity.this,
                                 "Neuspjeh kod registracije u sustav! Provjerite vezu s Internetom",
                                 Toast.LENGTH_LONG
                         ).show();
                         toggleVisibilityAtLoading(true);
                     }
-                },
-                false,
-                getBaseContext()
+                }
         );
         toggleVisibilityAtLoading(true);
     }

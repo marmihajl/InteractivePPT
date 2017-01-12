@@ -1,32 +1,22 @@
 package hr.air.interactiveppt;
 
-import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 
-import java.util.function.BiConsumer;
-
-import hr.air.interactiveppt.entities.Presentation;
 import hr.air.interactiveppt.entities.PresentationWithSurveys;
-import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by marin on 29.12.2016..
@@ -48,26 +38,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         pws = new Gson().fromJson(remoteMessage.getData().get("message"),PresentationWithSurveys.class);
         id = PreferenceManager.getDefaultSharedPreferences(this).getString("USER_ID","");
-        CommunicationHandler.SendDataAndProcessResponse(
+        new SendDataAndProcessResponseTask(
                 ServiceGenerator.createService(WebService.class).checkStatus(
                         "check_status",
                         id,
                         pws.path
                 ),
-                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                new SendDataAndProcessResponseTask.PostActions() {
                     @Override
-                    public void accept(Call<Boolean> call, Response<Boolean> response) {
-                        check = response.body();
+                    public void onSuccess(Object response) {
+                        check = (boolean) response;
                     }
-                },
-                new BiConsumer<Call<Boolean>, Throwable>() {
+
                     @Override
-                    public void accept(Call<Boolean> call, Throwable throwable) {
+                    public void onFailure() {
 
                     }
-                },
-                false,
-                getBaseContext()
+                }
         );
         if(check){
             openPresentation(remoteMessage.getData().get("message"));

@@ -23,7 +23,6 @@ import com.ipaulpro.afilechooser.utils.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,14 +30,12 @@ import butterknife.OnClick;
 import hr.air.interactiveppt.entities.Option;
 import hr.air.interactiveppt.entities.Question;
 import hr.air.interactiveppt.entities.SurveyWithQuestions;
-import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class CreateSurvey extends AppCompatActivity {
 
@@ -235,14 +232,14 @@ public class CreateSurvey extends AppCompatActivity {
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), serializedSurveyWithRequestType);
 
-        CommunicationHandler.SendDataAndProcessResponse(
+        new SendDataAndProcessResponseTask(
                 ServiceGenerator.createService(WebService.class).createSurvey(
                         pptAsMessagePart,
                         surveyDetailsAsMessagePart
                 ),
-                new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                new SendDataAndProcessResponseTask.PostActions() {
                     @Override
-                    public void accept(Call<Boolean> call, Response<Boolean> response) {
+                    public void onSuccess(Object genericResponse) {
                         Toast.makeText(CreateSurvey.this,
                                 "Anketa je uspješno kreirana!",
                                 Toast.LENGTH_LONG
@@ -250,10 +247,9 @@ public class CreateSurvey extends AppCompatActivity {
                         findViewById(R.id.activity_create_survey).setClickable(true);
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
                     }
-                },
-                new BiConsumer<Call<Boolean>, Throwable>() {
+
                     @Override
-                    public void accept(Call<Boolean> sCall, Throwable throwable) {
+                    public void onFailure() {
                         Toast.makeText(CreateSurvey.this,
                                 "Neuspjeh kod slanja ankete! Provjerite vezu s Internetom",
                                 Toast.LENGTH_LONG
@@ -261,9 +257,7 @@ public class CreateSurvey extends AppCompatActivity {
                         findViewById(R.id.activity_create_survey).setClickable(true);
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
                     }
-                },
-                true,
-                getBaseContext()
+                }
         );
 
 

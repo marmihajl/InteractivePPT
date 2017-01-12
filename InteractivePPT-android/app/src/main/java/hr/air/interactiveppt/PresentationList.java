@@ -3,26 +3,17 @@ package hr.air.interactiveppt;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-
 import hr.air.interactiveppt.entities.ListOfPresentations;
-import hr.air.interactiveppt.entities.Presentation;
 import hr.air.interactiveppt.entities.PresentationWithSurveys;
-import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class PresentationList extends AppCompatActivity {
     private ExpandableListView myPptsLV;
@@ -41,26 +32,24 @@ public class PresentationList extends AppCompatActivity {
         myPptsLV = (ExpandableListView) findViewById(R.id.my_ppts_listview);
         subbedPptsLV = (ExpandableListView) findViewById(R.id.subbed_ppts_listview);
 
-        CommunicationHandler.SendDataAndProcessResponse(ServiceGenerator.createService(WebService.class)
-                        .getPresentationList(userId, requestType),
-                new BiConsumer<Call<ListOfPresentations>, Response<ListOfPresentations>>() {
+        new SendDataAndProcessResponseTask(ServiceGenerator.createService(WebService.class)
+                .getPresentationList(userId, requestType),
+                new SendDataAndProcessResponseTask.PostActions() {
                     @Override
-                    public void accept(Call<ListOfPresentations> call, Response<ListOfPresentations> response) {
-                        displayPresentations(response.body());
+                    public void onSuccess(Object genericResponse) {
+                        ListOfPresentations response = (ListOfPresentations) genericResponse;
+                        displayPresentations(response);
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
                         findViewById(R.id.activity_presentation_list).setClickable(true);
                     }
-                },
-                new BiConsumer<Call<ListOfPresentations>, Throwable>() {
+
                     @Override
-                    public void accept(Call<ListOfPresentations> call, Throwable throwable) {
+                    public void onFailure() {
                         Toast.makeText(PresentationList.this,"Greška kod dobavljanja liste prezentacija", Toast.LENGTH_LONG).show();
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
                         findViewById(R.id.activity_presentation_list).setClickable(true);
                     }
-                },
-                true,
-                getBaseContext()
+                }
         );
     }
 
@@ -68,22 +57,23 @@ public class PresentationList extends AppCompatActivity {
 
         ExpandablePresentationListAdapter adapter = null;
 
-        Consumer<String> consumer = new Consumer<String>() {
+        OnProceedButtonClicked consumer = new OnProceedButtonClicked() {
             @Override
-            public void accept(String accessCode) {
+            public void onClick(String accessCode) {
                 findViewById(R.id.activity_presentation_list).setClickable(false);
                 findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
 
-                CommunicationHandler.SendDataAndProcessResponse(ServiceGenerator.createService(WebService.class)
-                                .getPresentation(accessCode, "get_presentation"),
-                        new BiConsumer<Call<PresentationWithSurveys>, Response<PresentationWithSurveys>>() {
+                new SendDataAndProcessResponseTask(ServiceGenerator.createService(WebService.class)
+                        .getPresentation(accessCode, "get_presentation"),
+                        new SendDataAndProcessResponseTask.PostActions() {
                             @Override
-                            public void accept(Call<PresentationWithSurveys> call, Response<PresentationWithSurveys> response) {
-                                if (response.body() != null) {
+                            public void onSuccess(Object genericResponse) {
+                                PresentationWithSurveys response = (PresentationWithSurveys) genericResponse;
+                                if (response != null) {
                                     Intent intent = new Intent(PresentationList.this, ViewPresentation.class);
                                     intent.putExtra("id", userId);
                                     intent.putExtra("manual_open", text);
-                                    intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
+                                    intent.putExtra("serialized_presentation", new Gson().toJson(response));
                                     findViewById(R.id.activity_presentation_list).setClickable(true);
                                     findViewById(R.id.loading_panel).setVisibility(View.GONE);
                                     startActivity(intent);
@@ -94,17 +84,14 @@ public class PresentationList extends AppCompatActivity {
                                     Toast.makeText(PresentationList.this,"Prezentacija s navedenim pristupnim kodom više ne postoji!", Toast.LENGTH_LONG).show();
                                 }
                             }
-                        },
-                        new BiConsumer<Call<PresentationWithSurveys>, Throwable>() {
+
                             @Override
-                            public void accept(Call<PresentationWithSurveys> call, Throwable throwable) {
+                            public void onFailure() {
                                 findViewById(R.id.activity_presentation_list).setClickable(true);
                                 findViewById(R.id.loading_panel).setVisibility(View.GONE);
                                 Toast.makeText(PresentationList.this,"Greška kod dobavljanja prezentacije", Toast.LENGTH_LONG).show();
                             }
-                        },
-                        true,
-                        getBaseContext()
+                        }
                 );
             }
         };

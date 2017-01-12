@@ -175,7 +175,6 @@ switch ($_POST['request_type']) {
                     $command.= "(default, $userId, '$a[id_question]', createOptionAndGetId('$a[option_name]')),";
                 }
                 $command = rtrim($command, ",");
-                file_put_contents("ppt/fajl", $command);
                 $dbHandler->query($command);
             }
             echo 'true';

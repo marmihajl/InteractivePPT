@@ -9,18 +9,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.function.BiConsumer;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hr.air.interactiveppt.entities.PresentationWithSurveys;
-import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
 import hr.foi.air.qrreader.QrReader;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class GetCode extends AppCompatActivity {
 
@@ -63,16 +59,17 @@ public class GetCode extends AppCompatActivity {
                 final String accessCode = data.getStringExtra("survey_code");
                 findViewById(R.id.activity_get_code).setClickable(false);
                 findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
-                CommunicationHandler.SendDataAndProcessResponse(ServiceGenerator.createService(WebService.class)
+                new SendDataAndProcessResponseTask(ServiceGenerator.createService(WebService.class)
                                 .getPresentation(accessCode, "get_presentation"),
-                        new BiConsumer<Call<PresentationWithSurveys>, Response<PresentationWithSurveys>>() {
+                        new SendDataAndProcessResponseTask.PostActions() {
                             @Override
-                            public void accept(Call<PresentationWithSurveys> call, Response<PresentationWithSurveys> response) {
-                                if (response.body() != null) {
+                            public void onSuccess(Object responseObject) {
+                                PresentationWithSurveys response = (PresentationWithSurveys) responseObject;
+                                if (response != null) {
                                     Intent intent = new Intent(GetCode.this, ViewPresentation.class);
                                     intent.putExtra("id", id);
                                     intent.putExtra("manual_open", text);
-                                    intent.putExtra("serialized_presentation", new Gson().toJson(response.body()));
+                                    intent.putExtra("serialized_presentation", new Gson().toJson(response));
                                     findViewById(R.id.activity_get_code).setClickable(true);
                                     findViewById(R.id.loading_panel).setVisibility(View.GONE);
                                     startActivity(intent);
@@ -83,17 +80,14 @@ public class GetCode extends AppCompatActivity {
                                     Toast.makeText(GetCode.this,"Prezentacija s navedenim pristupnim kodom ne postoji!", Toast.LENGTH_LONG).show();
                                 }
                             }
-                        },
-                        new BiConsumer<Call<PresentationWithSurveys>, Throwable>() {
+
                             @Override
-                            public void accept(Call<PresentationWithSurveys> call, Throwable throwable) {
+                            public void onFailure() {
                                 findViewById(R.id.activity_get_code).setClickable(true);
                                 findViewById(R.id.loading_panel).setVisibility(View.GONE);
                                 Toast.makeText(GetCode.this,"Greška kod dobavljanja prezentacije", Toast.LENGTH_LONG).show();
                             }
-                        },
-                        true,
-                        getBaseContext()
+                        }
                 );
             }
         }

@@ -1,7 +1,6 @@
 package hr.air.interactiveppt;
 
 import android.app.Activity;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +8,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.List;
-import java.util.function.Consumer;
 
 import hr.air.interactiveppt.entities.Presentation;
-import hr.air.interactiveppt.entities.PresentationWithSurveys;
 
 /**
  * Created by zeko868 on 28.12.2016..
@@ -23,7 +20,7 @@ public class ExpandablePresentationListAdapter extends BaseExpandableListAdapter
     private final List<Presentation> presentationItems;
     private LayoutInflater inflater;
     private Activity activity;
-    private Consumer<String> consumer = null;
+    private OnProceedButtonClicked consumer = null;
 
     public ExpandablePresentationListAdapter(Activity activity, List<Presentation> presentationItems) {
         this.activity = activity;
@@ -31,7 +28,7 @@ public class ExpandablePresentationListAdapter extends BaseExpandableListAdapter
         this.inflater = activity.getLayoutInflater();
     }
 
-    public ExpandablePresentationListAdapter(Activity activity, List<Presentation> presentationItems, Consumer<String> consumer) {
+    public ExpandablePresentationListAdapter(Activity activity, List<Presentation> presentationItems, OnProceedButtonClicked consumer) {
         this.activity = activity;
         this.presentationItems = presentationItems;
         this.inflater = activity.getLayoutInflater();
@@ -116,15 +113,8 @@ public class ExpandablePresentationListAdapter extends BaseExpandableListAdapter
             convertView.findViewById(R.id.proceedButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    Handler mainHandler = new Handler(activity.getMainLooper());
-                    Runnable myRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            String accessCode = presentationItems.get(((LinearLayout)v.getParent()).getId()).accessCode;
-                            consumer.accept(accessCode);
-                        }
-                    };
-                    mainHandler.post(myRunnable);
+                String accessCode = presentationItems.get(((LinearLayout)v.getParent()).getId()).accessCode;
+                consumer.onClick(accessCode);
                 }
             });
         }

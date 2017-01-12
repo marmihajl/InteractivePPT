@@ -11,17 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.function.BiConsumer;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hr.air.interactiveppt.entities.User;
-import hr.air.interactiveppt.webservice.CommunicationHandler;
+import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class Home extends AppCompatActivity {
     User user;
@@ -68,28 +64,26 @@ public class Home extends AppCompatActivity {
         });
 
         if(token != ""){
-            CommunicationHandler.SendDataAndProcessResponse(
+            new SendDataAndProcessResponseTask(
                     ServiceGenerator.createService(WebService.class).saveToken(
                             "save_token",
                             token,
                             user.id
                     ),
-                    new BiConsumer<Call<Boolean>, Response<Boolean>>() {
+                    new SendDataAndProcessResponseTask.PostActions() {
                         @Override
-                        public void accept(Call<Boolean> call, Response<Boolean> response) {
+                        public void onSuccess(Object response) {
+
                         }
-                    },
-                    new BiConsumer<Call<Boolean>, Throwable>() {
+
                         @Override
-                        public void accept(Call<Boolean> sCall, Throwable throwable) {
+                        public void onFailure() {
                             Toast.makeText(Home.this,
                                     "Neuspjeh unos tokena u bazu!",
                                     Toast.LENGTH_LONG
                             ).show();
                         }
-                    },
-                    false,
-                    getBaseContext()
+                    }
             );
         }
 
@@ -104,9 +98,6 @@ public class Home extends AppCompatActivity {
 
     @OnClick(R.id.button_load_survey)
     public void loadSurveyClick(View view){
-        /*Intent intent = new Intent(this, GetCode.class);
-        intent.putExtra("id",user.getId());
-        startActivity(intent);*/
         Intent intent = new Intent(this, GetCode.class);
         intent.putExtra("id",user.getId());
         startActivity(intent);

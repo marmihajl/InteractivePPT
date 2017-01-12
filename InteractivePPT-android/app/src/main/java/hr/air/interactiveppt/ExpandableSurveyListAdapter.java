@@ -1,7 +1,6 @@
 package hr.air.interactiveppt;
 
 import android.app.Activity;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import hr.air.interactiveppt.entities.Survey;
 
@@ -23,7 +21,7 @@ public class ExpandableSurveyListAdapter extends BaseExpandableListAdapter {
     private final List<Survey> surveyItems;
     private LayoutInflater inflater;
     private Activity activity;
-    private Consumer<String> consumer = null;
+    private OnProceedButtonClicked consumer = null;
 
     public ExpandableSurveyListAdapter(Activity activity, List<Survey> surveyItems) {
         this.activity = activity;
@@ -31,7 +29,7 @@ public class ExpandableSurveyListAdapter extends BaseExpandableListAdapter {
         this.inflater = activity.getLayoutInflater();
     }
 
-    public ExpandableSurveyListAdapter(Activity activity, List<Survey> surveyItems, Consumer<String> consumer) {
+    public ExpandableSurveyListAdapter(Activity activity, List<Survey> surveyItems, OnProceedButtonClicked consumer) {
         this.activity = activity;
         this.surveyItems = surveyItems;
         this.inflater = activity.getLayoutInflater();
@@ -114,15 +112,8 @@ public class ExpandableSurveyListAdapter extends BaseExpandableListAdapter {
             convertView.findViewById(R.id.proceedButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    Handler mainHandler = new Handler(activity.getMainLooper());
-                    Runnable myRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            String id = String.valueOf(((LinearLayout)v.getParent()).getId());
-                            consumer.accept(id);
-                        }
-                    };
-                    mainHandler.post(myRunnable);
+                    String id = String.valueOf(((LinearLayout)v.getParent()).getId());
+                    consumer.onClick(id);
                 }
             });
         }
