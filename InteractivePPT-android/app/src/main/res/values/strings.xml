@@ -3,7 +3,7 @@
     <string name="title">INTERACTIVE PRESENTATION</string>
     <string name="description">Welcome</string>
     <string name="app_id">370728603269382</string>
-    <string name="logout">Log out</string>
+    <string name="logout">Odjava</string>
     <string name="description_placeholder">Opis ankete i moguće upute...</string>
     <string name="title_placeholder">naslov ankete...</string>
     <string name="survey_title_label">Naslov</string>
@@ -47,4 +47,17 @@
     <string name="create_survey">Kreiraj</string>
     <string name="openSurvey">Otvori anketu</string>
     <string name="requestReply">Zatraži repliku</string>
+    <string name="user_fullname_placeholder">Ime korisnika</string>
+    <string name="myPresentationsHeader">Moje prezentacije</string>
+    <string name="subbedPresentationsHeader">Pretplaćene prezentacije</string>
+    <string name="availableSurveysHeader">Raspoložive ankete</string>
+    <string name="questionNamePlaceholder">Pitanje</string>
+    <string name="requiredQuestionLabel">Obvezno pitanje:</string>
+    <string name="addNewOptionSymbol">+</string>
+    <string name="removeLastOptionSymbol">-</string>
+    <string name="firstOptionNamePlaceholder">Odgovor 1</string>
+    <string name="secondsOptionNamePlaceholder">Odgovor 2</string>
+    <string name="numOfSurveysLabel">Broj anketa:</string>
+    <string name="accessCodeLabel">Pristupni kod:</string>
+    <string name="authorNameLabel">Autor:</string>
 </resources>

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,13 +24,13 @@ public class Home extends AppCompatActivity {
     User user;
 
     @BindView(R.id.button_my_surveys)
-    RelativeLayout mySurveysButton;
+    LinearLayout mySurveysButton;
 
     @BindView(R.id.button_create_survey)
-    RelativeLayout createSurveyButton;
+    LinearLayout createSurveyButton;
 
     @BindView(R.id.button_load_survey)
-    RelativeLayout loadSurveyButton;
+    LinearLayout loadSurveyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

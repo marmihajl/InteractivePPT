@@ -43,30 +43,36 @@
             android:inputType="textMultiLine"
             android:hint="@string/description_placeholder"/>
     </FrameLayout>
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/survey_attached_file"
         android:layout_below="@id/survey_description"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="wrap_content"    >
+
         <TextView
             android:text="@string/surveyAttachment"
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <Button
-            android:layout_marginTop="20dp"
-            android:layout_height="50dp"
-            android:layout_width="wrap_content"
-            android:text="@string/add_presentation_caption"
-            android:id="@+id/button_attach_presentation" />
-        <TextView
-            android:id="@+id/attached_file_name"
-            android:layout_marginTop="35dp"
+            android:layout_height="20dp"    />
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="viewEnd"
-            android:text="@string/no_any_file_attached_msg"   />
-    </FrameLayout>
+            android:orientation="horizontal"    >
+
+            <Button
+                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:text="@string/add_presentation_caption"
+                android:id="@+id/button_attach_presentation" />
+            <TextView
+                android:id="@+id/attached_file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_gravity="center"
+                android:text="@string/no_any_file_attached_msg"   />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"

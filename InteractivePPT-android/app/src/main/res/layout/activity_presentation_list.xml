@@ -23,7 +23,7 @@
                 android:id="@+id/my_ppts_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Moje prezentacije"
+                android:text="@string/myPresentationsHeader"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
             <ExpandableListView
@@ -44,7 +44,7 @@
                 android:id="@+id/subbed_ppts_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pretplaćene prezentacije"
+                android:text="@string/subbedPresentationsHeader"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
             <ExpandableListView

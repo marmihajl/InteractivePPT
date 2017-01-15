@@ -11,29 +11,28 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/com_facebook_button_like_background_color_selected"
     tools:context="hr.air.interactiveppt.GetCode">
-    <android.support.percent.PercentRelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/qrRead"
             android:text="@string/qr_read"
-            android:layout_marginBottom="15dp"
-            android:layout_above="@+id/upisiSifru"
-            android:layout_alignStart="@+id/upisiSifru"
-            android:layout_alignEnd="@+id/upisiSifru" />
-
+            android:layout_marginBottom="16dp"  />
         <Button
+            android:layout_weight="1"
             android:text="@string/input_code"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/upisiSifru"
-            android:layout_marginBottom="94dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
-    </android.support.percent.PercentRelativeLayout>
+            android:id="@+id/upisiSifru"    />
+    </LinearLayout>
 
     <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"

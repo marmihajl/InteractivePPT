@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorButtonCaption">#333333</color>
+    <color name="colorAddQuestionBackground">#44FF44</color>
 </resources>

@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.Map;
+
 import hr.air.interactiveppt.entities.PresentationWithSurveys;
 import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
@@ -113,12 +115,21 @@ public class ViewPresentation extends AppCompatActivity {
 
     }
 
-    private void openPresentation(WebView wv, String pptPath) {
-        String doc = "<iframe src='http://docs.google.com/viewer?url=http://46.101.68.86/"+ pptPath +"&embedded=true' width='100%' height='100%'  style='border: none;'></iframe>";
-        wv.setVisibility(WebView.VISIBLE);
-        wv.getSettings().setJavaScriptEnabled(true);
-        wv.getSettings().setAllowFileAccess(true);
-        wv.getSettings().setPluginState(WebSettings.PluginState.ON);
-        wv.loadData(doc, "text/html", "UTF-8");
+    private void openPresentation(final WebView wv, final String pptPath) {
+
+        int delayInMs = android.os.Build.VERSION.SDK_INT < 19 ? 2000 : 500;
+
+        wv.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                String uriToPpt = "http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true";
+                wv.loadUrl(uriToPpt);
+                wv.setVisibility(WebView.VISIBLE);
+                wv.getSettings().setJavaScriptEnabled(true);
+                wv.getSettings().setAllowFileAccess(true);
+                wv.getSettings().setPluginState(WebSettings.PluginState.ON);
+            }
+        }, delayInMs);
     }
 }

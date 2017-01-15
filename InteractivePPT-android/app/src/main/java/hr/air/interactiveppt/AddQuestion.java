@@ -2,8 +2,10 @@ package hr.air.interactiveppt;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -58,6 +61,9 @@ public class AddQuestion extends Dialog {
             @Override
             public void onClick(View v) {
                 EditText et = new EditText(getContext());
+                if (android.os.Build.VERSION.SDK_INT < 11) {    //because lower API versions do not support Alpha channels/transparency
+                    et.setBackgroundColor(activity.getResources().getColor(R.color.colorAddQuestionBackground));
+                }
                 et.setId(optionId++);
                 et.setHint("Odgovor "+(optionId+1));
                 optionList.addView(et);
