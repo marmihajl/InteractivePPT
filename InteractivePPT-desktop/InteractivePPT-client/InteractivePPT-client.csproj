@@ -114,6 +114,8 @@
     <Compile Include="QuestionList.cs" />
     <Compile Include="Survey.cs" />
     <Compile Include="SurveyList.cs" />
+    <Compile Include="TextItems.cs" />
+    <Compile Include="TextItemsList.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Users.cs" />
     <EmbeddedResource Include="Form1.resx">

@@ -24,6 +24,8 @@ namespace InteractivePPT
         int move = 1;
         Users users;
         string userUid;
+        TextItemsList textItem;
+        public static TextItemsList chooseItem = new TextItemsList();
 
         public Presentation(string path, SurveyList surveyList, string userUid)
         {
@@ -105,30 +107,61 @@ namespace InteractivePPT
                 {
                     Question q = (Question)questionList.Items[i];
                     id = q.idQuestions;
-                    using (WebClient client = new WebClient())
+                    if(q.Question_type_idQuestion_type != 3)
                     {
-                        try
+                        using (WebClient client = new WebClient())
                         {
-                            byte[] response =
-                            client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                            try
                             {
-                    { "request_type", "get_results" },
-                    { "id", id.ToString() }
-                            });
-                            serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Communication with server-side of this application could not be established");
-                            return;
-                        }
-                        if (serializedUserSurveys != null)
-                        {
-                            myAnswerList = JsonConvert.DeserializeObject<AnswerList>(serializedUserSurveys);
-                            addSlide(myAnswerList.results, q.name);
-                        }
+                                byte[] response =
+                                client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                                {
+                                    { "request_type", "get_results" },
+                                    { "id", id.ToString() }
+                                });
+                                serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Communication with server-side of this application could not be established");
+                                return;
+                            }
+                            if (serializedUserSurveys != null)
+                            {
+                                myAnswerList = JsonConvert.DeserializeObject<AnswerList>(serializedUserSurveys);
+                                addSlide(myAnswerList.results, q.name);
+                            }
 
+                        }
                     }
+                    else
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            try
+                            {
+                                byte[] response =
+                                client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                                {
+                                    { "request_type", "get_text_results" },
+                                    { "id", id.ToString() }
+                                });
+                                serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Communication with server-side of this application could not be established");
+                                return;
+                            }
+                            if (serializedUserSurveys != null)
+                            {
+                                textItem = JsonConvert.DeserializeObject<TextItemsList>(serializedUserSurveys);
+                                
+                            }
+
+                        }
+                    }
+                    
                 }
 
             }

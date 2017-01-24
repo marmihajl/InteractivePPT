@@ -142,6 +142,21 @@ switch ($_POST['request_type']) {
 
         break;
 		
+	case 'get_text_results':
+        $question = $_POST['id'];
+        $command = "SELECT o.choice_name FROM Answers a LEFT JOIN Options o ON a.idOption=o.idOptions WHERE a.idQuestion=$question;";
+        $recordSet = $dbHandler->query($command);
+        $outputArray = array();
+        if ($recordSet) {
+            for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
+                array_push($outputArray, $recordSet->fetch_assoc());
+            }
+            $recordSet->free();
+        }
+        echo '{"results":' . json_encode($outputArray, JSON_NUMERIC_CHECK) . '}';
+
+        break;
+		
 	case 'get_presentation':
         $accessCode = $_POST['access_code'];
         $command = "SELECT presentation_details FROM getPresentationDetails WHERE access_code='$accessCode' LIMIT 1;";
