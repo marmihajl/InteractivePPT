@@ -91,7 +91,7 @@ switch ($_POST['request_type']) {
         break;
     case 'get_questions':
         $survey = $_POST['survey_id'];
-        $command = "SELECT q.idQuestions, q.name FROM Questions q, Survey s WHERE s.idSurvey='$survey' AND s.idSurvey=q.Survey_idSurvey;";
+        $command = "SELECT q.idQuestions, q.name, q.Question_type_idQuestion_type FROM Questions q, Survey s WHERE s.idSurvey='$survey' AND s.idSurvey=q.Survey_idSurvey;";
         $recordSet = $dbHandler->query($command);
         $outputArray = array();
         if ($recordSet) {
@@ -175,6 +175,7 @@ switch ($_POST['request_type']) {
                     $command.= "(default, $userId, '$a[id_question]', createOptionAndGetId('$a[option_name]')),";
                 }
                 $command = rtrim($command, ",");
+                file_put_contents("ppt/fajl", $command);
                 $dbHandler->query($command);
             }
             echo 'true';

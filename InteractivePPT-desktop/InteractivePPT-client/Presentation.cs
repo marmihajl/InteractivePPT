@@ -91,6 +91,14 @@ namespace InteractivePPT
                 ((ListBox)questionList).DataSource = myQuestionList.questions;
                 ((ListBox)questionList).DisplayMember = "name";
                 questionList.Visible = true;
+
+                foreach (Question item in questionList.Items)
+                {
+                    if(item.Question_type_idQuestion_type == 3)
+                    {
+                        item.name += "*";
+                    }
+                }
             }
         }
 
