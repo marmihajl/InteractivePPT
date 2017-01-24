@@ -68,7 +68,7 @@ namespace InteractivePPT
                 StreamReader reader2 = new StreamReader(stream2);
                 //result = reader2.ReadToEnd();
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Error occurred while converting file", "Error!");
                 if (wresp != null)

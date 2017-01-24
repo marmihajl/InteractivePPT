@@ -9,7 +9,6 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using EXCEL = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Diagnostics;
-using System.Threading;
 
 namespace InteractivePPT
 {
@@ -26,8 +25,6 @@ namespace InteractivePPT
         Users users;
         string userUid;
 
-        Thread t;
-
         public Presentation(string path, SurveyList surveyList, string userUid)
         {
             InitializeComponent();
@@ -39,7 +36,6 @@ namespace InteractivePPT
 
         private void Presentation_Load(object sender, EventArgs e)
         {
-
             pptApp.Visible = Microsoft.Office.Core.MsoTriState.msoTrue;
             pptApp.Activate();
             PowerPoint.Presentations ps = pptApp.Presentations;
@@ -54,15 +50,13 @@ namespace InteractivePPT
             comboBox1.ValueMember = "id";
             comboBox1.SelectedIndex = -1;
 
-            t = new Thread(refreshDGV);
-            t.Start();
+            checkAudienceTimer.Start();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox1.SelectedIndex != -1)
             {
-
                 string chosenSurvey = comboBox1.SelectedValue.ToString();
                 using (WebClient client = new WebClient())
                 {
@@ -71,8 +65,8 @@ namespace InteractivePPT
                         byte[] response =
                         client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                         {
-                       { "request_type", "get_questions" },
-                       { "survey_id", chosenSurvey }
+                    { "request_type", "get_questions" },
+                    { "survey_id", chosenSurvey }
                         });
                         serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
                     }
@@ -94,10 +88,10 @@ namespace InteractivePPT
 
                 foreach (Question item in questionList.Items)
                 {
-                    if(item.Question_type_idQuestion_type == 3)
-                    {
-                        item.name += "*";
-                    }
+                    if (item.Question_type_idQuestion_type == 3)
+                        {
+                            item.name += "*";
+                        }
                 }
             }
         }
@@ -118,8 +112,8 @@ namespace InteractivePPT
                             byte[] response =
                             client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                             {
-                       { "request_type", "get_results" },
-                       { "id", id.ToString() }
+                    { "request_type", "get_results" },
+                    { "id", id.ToString() }
                             });
                             serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
                         }
@@ -220,8 +214,8 @@ namespace InteractivePPT
                     byte[] response =
                     client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                     {
-                       { "request_type", "delete_file" },
-                       { "file", name }
+                    { "request_type", "delete_file" },
+                    { "file", name }
                     });
                 }
                 catch
@@ -245,8 +239,8 @@ namespace InteractivePPT
                     byte[] response =
                     client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                     {
-                       { "request_type", "update_subscription" },
-                       { "path", name }
+                    { "request_type", "update_subscription" },
+                    { "path", name }
                     });
                 }
                 catch
@@ -256,26 +250,6 @@ namespace InteractivePPT
                 }
 
             }
-
-            t.Abort();
-        }
-
-        public void refreshDGV()
-        {
-            if (dgvReplice.InvokeRequired)
-            {
-                dgvReplice.Invoke(new MethodInvoker(delegate
-                {
-                    refreshAudience();
-                }));
-            }
-            else
-            {
-                refreshAudience();
-            }
-                
-            Thread.Sleep(5000);
-            refreshDGV();
         }
 
         public void action()
@@ -288,17 +262,7 @@ namespace InteractivePPT
         {
             if (e.RowIndex != -1)
             {
-                if (dgvReplice.InvokeRequired)
-                {
-                    dgvReplice.Invoke(new MethodInvoker(delegate
-                    {
-                        removeAudience(e.RowIndex);
-                    }));
-                }
-                else
-                {
-                    removeAudience(e.RowIndex);
-                }
+                removeAudience(e.RowIndex);
             }
         }
 
@@ -313,9 +277,9 @@ namespace InteractivePPT
                     response =
                     client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                     {
-                            { "request_type", "delete_audience" },
-                            { "app_uid", dgvReplice.Rows[selectedRow].Cells[1].Value.ToString()},
-                            { "path", name }
+                        { "request_type", "delete_audience" },
+                        { "app_uid", dgvReplice.Rows[selectedRow].Cells[1].Value.ToString()},
+                        { "path", name }
                     });
                 }
                 catch
@@ -325,8 +289,13 @@ namespace InteractivePPT
                     return;
                 }
             }
-            dgvReplice.Rows.RemoveAt(selectedRow);
-            dgvReplice.Refresh();
+
+            dgvReplice.Invoke(new MethodInvoker(delegate
+            {
+                dgvReplice.Rows.RemoveAt(selectedRow);
+                dgvReplice.Refresh();
+            }));
+
         }
 
         public void refreshAudience()
@@ -341,8 +310,8 @@ namespace InteractivePPT
                     response =
                     client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                     {
-                               { "request_type", "get_interested_audience" },
-                               { "path", name }
+                            { "request_type", "get_interested_audience" },
+                            { "path", name }
                     });
 
                 }
@@ -353,25 +322,34 @@ namespace InteractivePPT
                     return;
                 }
             }
-               
 
             string serializedUsers = System.Text.Encoding.UTF8.GetString(response);
 
-            
-
+           
             if (serializedUsers != null)
             {
                 users = JsonConvert.DeserializeObject<Users>(serializedUsers);
             }
 
-            dgvReplice.Rows.Clear();
-            foreach (User user in users.data)
+            dgvReplice.Invoke(new MethodInvoker(delegate
             {
-                dgvReplice.Rows.Add(
-                    user.name,
-                    user.uid
-                );
-            }
+                dgvReplice.Rows.Clear();
+                foreach (User user in users.data)
+                {
+                    dgvReplice.Rows.Add(
+                        user.name,
+                        user.uid
+                    );
+                }
+            }));
+
+        }
+
+        private void checkAudienceTimer_Tick(object sender, EventArgs e)
+        {
+            checkAudienceTimer.Stop();
+            refreshAudience();
+            checkAudienceTimer.Start();
         }
     }
 }
