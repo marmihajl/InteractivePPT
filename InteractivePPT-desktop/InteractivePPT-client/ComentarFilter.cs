@@ -36,9 +36,12 @@ namespace InteractivePPT
                 {
                     Presentation.chooseItem.results.Add(currentItem);
                 }
-                presentation.Show();
-                this.Close();
+                
+                
             }
+            Presentation.make = true;
+            presentation.Show();
+            this.Close();
         }
 
         private void button2_Click(object sender, EventArgs e)

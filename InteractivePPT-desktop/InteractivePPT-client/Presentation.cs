@@ -26,6 +26,8 @@ namespace InteractivePPT
         string userUid;
         TextItemsList textItem;
         public static TextItemsList chooseItem = new TextItemsList();
+        string name;
+        public static bool make = false;
 
         public Presentation(string path, SurveyList surveyList, string userUid)
         {
@@ -105,8 +107,10 @@ namespace InteractivePPT
             {
                 if (questionList.GetItemCheckState(i) == CheckState.Checked)
                 {
+                    
                     Question q = (Question)questionList.Items[i];
                     id = q.idQuestions;
+                    name = q.name;
                     if(q.Question_type_idQuestion_type != 3)
                     {
                         using (WebClient client = new WebClient())
@@ -390,10 +394,33 @@ namespace InteractivePPT
 
         private void Presentation_Activated(object sender, EventArgs e)
         {
-            if(chooseItem.results != null)
+            if(chooseItem.results != null && make)
             {
-                chooseItem = chooseItem;
+                addTextSlide(name);
+                make = false;
             }
+        }
+
+        public void addTextSlide(string name)
+        {
+            string answer = "";
+            PowerPoint.Slides slides;
+            PowerPoint._Slide slide;
+            slides = p.Slides;
+            slide = slides.AddSlide(currentSlide() + move++, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
+
+
+
+            foreach (TextItems item in chooseItem.results)
+            {
+                answer += item.choice_name + "\n";
+            }
+
+            slide.Shapes[1].TextFrame.TextRange.Text = answer;
+            slide.Shapes[1].TextFrame.TextRange.Font.Name = "Arial";
+            slide.Shapes[1].TextFrame.TextRange.Font.Size = 18;
+
+            p.Save();
         }
     }
 }
