@@ -155,8 +155,11 @@ namespace InteractivePPT
                             }
                             if (serializedUserSurveys != null)
                             {
+                                chooseItem.results = new List<TextItems>();
                                 textItem = JsonConvert.DeserializeObject<TextItemsList>(serializedUserSurveys);
-                                
+                                ComentarFilter cf = new ComentarFilter(textItem, this);
+                                cf.Show();
+                                Hide();
                             }
 
                         }
@@ -383,6 +386,14 @@ namespace InteractivePPT
             checkAudienceTimer.Stop();
             refreshAudience();
             checkAudienceTimer.Start();
+        }
+
+        private void Presentation_Activated(object sender, EventArgs e)
+        {
+            if(chooseItem.results != null)
+            {
+                chooseItem = chooseItem;
+            }
         }
     }
 }

@@ -83,6 +83,12 @@
   <ItemGroup>
     <Compile Include="Answer.cs" />
     <Compile Include="AnswerList.cs" />
+    <Compile Include="ComentarFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ComentarFilter.Designer.cs">
+      <DependentUpon>ComentarFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileClass.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -118,6 +124,9 @@
     <Compile Include="TextItemsList.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Users.cs" />
+    <EmbeddedResource Include="ComentarFilter.resx">
+      <DependentUpon>ComentarFilter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
