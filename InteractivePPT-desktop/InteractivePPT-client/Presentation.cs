@@ -403,7 +403,7 @@ namespace InteractivePPT
 
         public void addTextSlide(string name)
         {
-            string answer = "";
+            string answer = name+"\n";
             PowerPoint.Slides slides;
             PowerPoint._Slide slide;
             slides = p.Slides;
