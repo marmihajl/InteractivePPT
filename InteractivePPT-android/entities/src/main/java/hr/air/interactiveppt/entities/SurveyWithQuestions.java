@@ -15,19 +15,20 @@ public class SurveyWithQuestions {
     @SerializedName("description")
     public String description;
 
-    @SerializedName("link_to_presentation")
-    public String link;
-
     @SerializedName("questions")
     public List<Question> questions;
 
     @SerializedName("author")
     public String authorId;
 
-    public SurveyWithQuestions(String name, String description, List<Question> questions, String authorId) {
+    @SerializedName("access_code")
+    public String accessCode;
+
+    public SurveyWithQuestions(String name, String description, List<Question> questions, String authorId, String accessCodeIfExistingPpt) {
         this.name = name;
         this.description = description;
         this.questions = questions;
         this.authorId = authorId;
+        this.accessCode = accessCodeIfExistingPpt;
     }
 }

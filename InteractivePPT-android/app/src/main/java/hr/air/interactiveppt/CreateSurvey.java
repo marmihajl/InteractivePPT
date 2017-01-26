@@ -14,6 +14,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +29,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import hr.air.interactiveppt.entities.Option;
+import butterknife.OnItemSelected;
+import hr.air.interactiveppt.entities.ListOfPresentations;
+import hr.air.interactiveppt.entities.Presentation;
 import hr.air.interactiveppt.entities.Question;
 import hr.air.interactiveppt.entities.SurveyWithQuestions;
 import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
@@ -45,11 +51,10 @@ public class CreateSurvey extends AppCompatActivity {
     private static Uri uriOfSelectedFile = null;
 
     ArrayList<Question> questions = new ArrayList<Question>();
-    ArrayList<Option> selectedOptions = new ArrayList<Option>();
     private QuestionRecyclerAdapter adapter;
     AddQuestion cdd;
     RecyclerView mRecycler;
-    boolean show = false;
+    boolean myPptsLoaded = false;
     String surveyAuthorId;
 
     @BindView(R.id.button_attach_presentation)
@@ -61,6 +66,85 @@ public class CreateSurvey extends AppCompatActivity {
     @BindView(R.id.button_discard_changes)
     Button discardChanges;
 
+    @BindView(R.id.newPptOption)
+    RadioButton newPptOption;
+
+    @BindView(R.id.existingPptOption)
+    RadioButton existingPptOption;
+
+    @OnCheckedChanged(R.id.newPptOption)
+    protected void showNewPptPicker() {
+        if (!newPptOption.isChecked()) {
+            return;
+        }
+        (findViewById(R.id.newPptLV)).setVisibility(View.VISIBLE);
+        (findViewById(R.id.existingPptsLV)).setVisibility(View.GONE);
+        if (existingPptOption.isChecked()) {
+            existingPptOption.setChecked(false);
+            newPptOption.setChecked(true);
+        }
+    }
+
+    @OnCheckedChanged(R.id.existingPptOption)
+    protected void showExistingPptPicker() {
+        if (!existingPptOption.isChecked()) {
+            return;
+        }
+        if (newPptOption.isChecked()) {
+            newPptOption.setChecked(false);
+            existingPptOption.setChecked(true);
+        }
+        if (!myPptsLoaded) {
+            (findViewById(R.id.loading_panel)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.activity_create_survey)).setClickable(false);
+            new SendDataAndProcessResponseTask(ServiceGenerator.createService(WebService.class)
+                    .getPresentationList(surveyAuthorId, "get_presentation_list"),
+                    new SendDataAndProcessResponseTask.PostActions() {
+                        @Override
+                        public void onSuccess(Object genericResponse) {
+                            ArrayList<Presentation> myPpts = ((ListOfPresentations) genericResponse).myPresentations;
+                            RadioGroup existingPptsRG = (RadioGroup) ((LinearLayout) findViewById(R.id.existingPptsLV)).getChildAt(1);
+                            int numOfPpts = myPpts.size();
+                            if (numOfPpts != 0) {
+                                for (int i=0; i<numOfPpts; i++) {
+                                    Presentation IthPpt = myPpts.get(i);
+                                    RadioButton rbOfIthPpt = new RadioButton(CreateSurvey.this);
+                                    rbOfIthPpt.setId(i);
+                                    rbOfIthPpt.setText(IthPpt.presentationName);
+                                    rbOfIthPpt.setTag(IthPpt.accessCode);
+                                    existingPptsRG.addView(rbOfIthPpt);
+                                }
+                                if (numOfPpts == 1) {
+                                    existingPptsRG.check(0);
+                                }
+                                (findViewById(R.id.newPptLV)).setVisibility(View.GONE);
+                                (findViewById(R.id.existingPptsLV)).setVisibility(View.VISIBLE);
+                                myPptsLoaded = true;
+                            }
+                            else {
+                                Toast.makeText(CreateSurvey.this,"Ne posjedujete nijednu anketu", Toast.LENGTH_LONG).show();
+                                newPptOption.setChecked(true);
+                            }
+                            findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                            findViewById(R.id.activity_create_survey).setClickable(true);
+                        }
+
+                        @Override
+                        public void onFailure() {
+                            Toast.makeText(CreateSurvey.this,"Greška kod dobavljanja liste Vaših prezentacija", Toast.LENGTH_LONG).show();
+                            findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                            findViewById(R.id.activity_create_survey).setClickable(true);
+                            newPptOption.setChecked(true);
+                        }
+                    }
+            );
+
+        }
+        else {
+            (findViewById(R.id.newPptLV)).setVisibility(View.GONE);
+            (findViewById(R.id.existingPptsLV)).setVisibility(View.VISIBLE);
+        }
+    }
 
     @OnClick(R.id.button_attach_presentation)
     protected void attachPresentationButtonClick(View view){
@@ -101,6 +185,17 @@ public class CreateSurvey extends AppCompatActivity {
         uriOfSelectedFile = null;
         questions.clear();
         loadData();
+    }
+
+    private String getSelectedSurveyFromExisting() {
+        RadioGroup rgWithMyPpts = (RadioGroup) ((LinearLayout)(findViewById(R.id.existingPptsLV))).getChildAt(1);
+        int selectedOption = rgWithMyPpts.getCheckedRadioButtonId();
+        if (selectedOption == -1) {
+            return null;
+        }
+        else {
+            return rgWithMyPpts.getChildAt(selectedOption).getTag().toString();
+        }
     }
 
     private void showFileChooser() {
@@ -166,6 +261,10 @@ public class CreateSurvey extends AppCompatActivity {
         surveyAuthorId = getIntent().getStringExtra("id");
 
         findViewById(R.id.loading_panel).setVisibility(View.GONE);
+        findViewById(R.id.newPptLV).setVisibility(View.GONE);
+        findViewById(R.id.existingPptsLV).setVisibility(View.GONE);
+        newPptOption = (RadioButton) (findViewById(R.id.newPptOption));
+        existingPptOption = (RadioButton) (findViewById(R.id.existingPptOption));
         mRecycler = (RecyclerView) findViewById(R.id.main_recycler);
         Button addQuestion = (Button)findViewById(R.id.btn_add_question);
         addQuestion.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +301,19 @@ public class CreateSurvey extends AppCompatActivity {
         if (description.isEmpty()) {
             reasonsOfIncompetion += "\nOpis ankete nije postavljen!";
         }
+        if (newPptOption.isChecked()) {
+            if (uriOfSelectedFile == null) {
+                reasonsOfIncompetion += "\nNije odabrano kojoj će prezentaciji pripadati anketa!";
+            }
+        }
+        else if (existingPptOption.isChecked()) {
+            if (getSelectedSurveyFromExisting() == null) {
+                reasonsOfIncompetion += "\nNije odabrano kojoj će prezentaciji pripadati anketa!";
+            }
+        }
+        else {
+            reasonsOfIncompetion += "\nNije odabrano kojoj će prezentaciji pripadati anketa!";
+        }
         if (questions.isEmpty()) {
             reasonsOfIncompetion += "\nAnketa je trenutno bez pitanja!";
         }
@@ -210,19 +322,24 @@ public class CreateSurvey extends AppCompatActivity {
 
     void sendRequestForSaving(String surveyName, String surveyDescription) {
         MultipartBody.Part pptAsMessagePart = null;
+        String accessCodeIfExistingPpt = null;
 
-        if (uriOfSelectedFile != null) {
+        if (newPptOption.isChecked()) {
             File fileHandler = FileUtils.getFile(getBaseContext(), uriOfSelectedFile);  //this instead of getBaseContext was before
             RequestBody requestFile =
                     RequestBody.create(MediaType.parse("multipart/form-data"), fileHandler);
             pptAsMessagePart = MultipartBody.Part.createFormData("ppt", fileHandler.getName(), requestFile);
+        }
+        else {
+            accessCodeIfExistingPpt = getSelectedSurveyFromExisting();
         }
 
         SurveyWithQuestions surveyWithQuestions = new SurveyWithQuestions(
                 surveyName,
                 surveyDescription,
                 questions,
-                surveyAuthorId
+                surveyAuthorId,
+                accessCodeIfExistingPpt
         );
 
         String serializedSurvey = (new Gson()).toJson(surveyWithQuestions);

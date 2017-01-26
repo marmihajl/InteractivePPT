@@ -20,32 +20,38 @@ switch ($_POST['request_type']) {
         $facebookId = $survey['author'];
         $questions = $survey['questions'];
         $accessCode;
-        srand(time(0));
-        rand();
-        do {
-            $accessCode = '';
-            for ($i=0 ; $i<10 ; $i++) {
-                switch (rand(0,1)) {
-                    case 0:
-                        $accessCode .= rand(0,9);
-                        break;
-                    case 1:
-                        $accessCode .= chr(rand(97,122));
-                        break;
+        if (isset($survey['access_code'])) {
+            $accessCode = $survey['access_code'];
+            $command = "INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode');SET @survey := LAST_INSERT_ID();";
+        }
+        else {
+            srand(time(0));
+            rand();
+            do {
+                $accessCode = '';
+                for ($i=0 ; $i<10 ; $i++) {
+                    switch (rand(0,1)) {
+                        case 0:
+                            $accessCode .= rand(0,9);
+                            break;
+                        case 1:
+                            $accessCode .= chr(rand(97,122));
+                            break;
+                    }
                 }
+                $recordSet = $dbHandler->query("SELECT * FROM Presentation WHERE access_code='$accessCode' LIMIT 1;");
+            } while ($recordSet->num_rows > 0);
+            $recordSet->free();
+            $fileUri = 'null';
+            if ($userfile!==null) {
+                if (is_uploaded_file($userfile)) {
+                    move_uploaded_file($userfile, "ppt/$filename");
+                    $fileUri = "'ppt/$filename'";
+                }            
             }
-            $recordSet = $dbHandler->query("SELECT * FROM Presentation WHERE access_code='$accessCode' LIMIT 1;");
-        } while ($recordSet->num_rows > 0);
-        $recordSet->free();
-        $fileUri = 'null';
-        if ($userfile!==null) {
-            if (is_uploaded_file($userfile)) {
-                move_uploaded_file($userfile, "ppt/$filename");
-                $fileUri = "'ppt/$filename'";
-            }            
+            $command = "INSERT INTO Presentation VALUES (default, $fileUri, '$accessCode', (SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1));INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode');SET @survey := LAST_INSERT_ID();";
         }
 
-        $command = "INSERT INTO Presentation VALUES (default, $fileUri, '$accessCode', (SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1));INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode');SET @survey := LAST_INSERT_ID();";
 
         if (count($questions)) {
             foreach ($questions as $q) {
@@ -60,20 +66,6 @@ switch ($_POST['request_type']) {
         $dbHandler->multi_query($command);
 
         echo 'true';
-        break;
-    case 'edit_survey':
-        $id = $_POST['id'];
-        $newTitle = $_POST['name'];
-        $newDescription = $_POST['description'];
-        $command = "";    //              NEED TO BE ADDED
-        $result = $dbHandler->query($command);
-
-        break;
-    case 'delete_survey':
-        $id = $_POST['id'];
-        $command = "";    //              NEED TO BE ADDED
-        $result = $dbHandler->query($command);
-
         break;
     case 'get_surveys':
         $appUid = $_POST['app_uid'];

@@ -60,4 +60,7 @@
     <string name="numOfSurveysLabel">Broj anketa:</string>
     <string name="accessCodeLabel">Pristupni kod:</string>
     <string name="authorNameLabel">Autor:</string>
+    <string name="newPptOptionLabel">Nova</string>
+    <string name="existingPptOptionLabel">Postojeća</string>
+    <string name="myPptsCaption">Moje prezentacije:</string>
 </resources>

@@ -54,23 +54,70 @@
             android:text="@string/surveyAttachment"
             android:layout_width="match_parent"
             android:layout_height="20dp"    />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"    >
 
-            <Button
-                android:layout_height="50dp"
-                android:layout_width="wrap_content"
-                android:text="@string/add_presentation_caption"
-                android:id="@+id/button_attach_presentation" />
-            <TextView
-                android:id="@+id/attached_file_name"
+            <RadioGroup
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"    >
+
+                <android.support.percent.PercentRelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"    >
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_widthPercent="45%"
+                        app:layout_marginLeftPercent="2.5%"
+                        android:id="@+id/newPptOption"
+                        android:text="@string/newPptOptionLabel" />
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_widthPercent="45%"
+                        app:layout_marginLeftPercent="52.5%"
+                        android:id="@+id/existingPptOption"
+                        android:text="@string/existingPptOptionLabel"   />
+                </android.support.percent.PercentRelativeLayout>
+            </RadioGroup>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_gravity="center"
-                android:text="@string/no_any_file_attached_msg"   />
+                android:id="@+id/existingPptsLV"    >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/myPptsCaption" />
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"  />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/newPptLV"    >
+
+                <Button
+                    android:layout_height="50dp"
+                    android:layout_width="wrap_content"
+                    android:text="@string/add_presentation_caption"
+                    android:id="@+id/button_attach_presentation" />
+                <TextView
+                    android:id="@+id/attached_file_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_gravity="center"
+                    android:text="@string/no_any_file_attached_msg"   />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
