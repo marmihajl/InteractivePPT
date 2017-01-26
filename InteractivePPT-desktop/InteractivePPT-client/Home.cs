@@ -122,16 +122,22 @@ namespace InteractivePPT
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.ShowDialog();
-            if (ofd.FileName != null)
+            try
             {
-                path = ofd.FileName;
-                FileClass.uploadFile(path, user.uid);
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.ShowDialog();
+                if (ofd.FileName != null)
+                {
+                    path = ofd.FileName;
+                    FileClass.uploadFile(path, user.uid);
 
-                Presentation p = new Presentation(path, mySurveyList, user.uid);
-                p.Show();
+                    Presentation p = new Presentation(path, mySurveyList, user.uid);
+                    p.Show();
+
+                }
+            }
+            catch
+            {
 
             }
         }
