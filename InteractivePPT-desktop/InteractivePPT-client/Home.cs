@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using com.google.zxing;
 using com.google.zxing.qrcode;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using System.Linq;
 
 namespace InteractivePPT
 {
@@ -56,13 +57,17 @@ namespace InteractivePPT
                 mySurveyList = JsonConvert.DeserializeObject<SurveyList>(serializedUserSurveys);
             }
 
-            foreach (Survey survey in mySurveyList.data)
+            foreach (Survey survey in mySurveyList.data.GroupBy(x => x.access_code).Select(x => x.First()))
             {
+                int endPosOfPptName = survey.link_to_presentation.LastIndexOf(".ppt");
+                if (endPosOfPptName == -1)
+                {
+                    endPosOfPptName = survey.link_to_presentation.LastIndexOf(".pptx");
+                }
                 mySurveysDgv.Rows.Add(
-                    survey.id,
-                    survey.name,
+                    survey.link_to_presentation.Substring(4, endPosOfPptName),
                     survey.access_code,
-                    survey.link_to_presentation == null ? null : serverRootDirectoryUri + survey.link_to_presentation,
+                    serverRootDirectoryUri + survey.link_to_presentation,
                     (new QRCodeWriter()).encode(survey.access_code, BarcodeFormat.QR_CODE, 50, 50).ToBitmap()
                 );
             }
@@ -77,7 +82,7 @@ namespace InteractivePPT
 
         private void mySurveysDgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 4 && e.RowIndex >= 0)
+            if (e.ColumnIndex == 3 && e.RowIndex >= 0)
             {
                 using (Form form = new Form())
                 {
@@ -96,17 +101,11 @@ namespace InteractivePPT
                     form.ShowDialog();
                 }
             }
-            else if (e.ColumnIndex == 3 && e.RowIndex >= 0)
-            {
-                if (mySurveysDgv[e.ColumnIndex, e.RowIndex].Value != null) {
-                    Clipboard.SetText(mySurveysDgv[e.ColumnIndex, e.RowIndex].Value.ToString());
-                }
-            }
         }
 
         private void mySurveysDgv_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 4 && e.RowIndex >= 0)
+            if (e.ColumnIndex == 3 && e.RowIndex >= 0)
             {
                 Cursor = Cursors.Hand;
             }
@@ -114,7 +113,7 @@ namespace InteractivePPT
 
         private void mySurveysDgv_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 4 && e.RowIndex >= 0)
+            if (e.ColumnIndex == 3 && e.RowIndex >= 0)
             {
                 Cursor = Cursors.Default;
             }
