@@ -8,6 +8,7 @@ using com.google.zxing;
 using com.google.zxing.qrcode;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using System.Linq;
+using System.IO;
 
 namespace InteractivePPT
 {
@@ -131,7 +132,6 @@ namespace InteractivePPT
                 fbd.ShowDialog();
                 if (fbd.SelectedPath != null)
                 {
-                    WebClient webClient = new WebClient();
                     string remoteUriOfFile = mySurveysDgv.SelectedRows[0].Cells["link_to_presentation"].Value.ToString();
                     localUriOfFile = fbd.SelectedPath + '\\' + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf("/") + 1);
                     if (localUriOfFile.Length > 255)
@@ -139,8 +139,36 @@ namespace InteractivePPT
                         MessageBox.Show("Odaberite kraću putanju jer broj znakova odabrane putanje (uključujući i sâm naziv datoteke koja bi trebala biti pohranjena u odabrani direktorij) prelazi 255 znakova!");
                         return;
                     }
-                    webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
-                    webClient.DownloadFileAsync(new Uri(remoteUriOfFile), localUriOfFile);
+                    if (File.Exists(localUriOfFile))
+                    {
+                        //file's hash signature could also be compared, but in that case signature should be calculated and stored in DB on server-side (otherwise, file would need to be downloaded and then its signature could be checked)
+                        if (GetFileSizeOfRemoteFile(remoteUriOfFile) != new FileInfo(localUriOfFile).Length)
+                        {
+                            switch (MessageBox.Show("U odabranom direktoriju već postoji istoimena prezentacija. Odgovorite potvrdno ako želite prebrisati lokalnu s onom udaljenom, negativno ako želite udaljenu prebrisati lokalnom ili odustanite ako ne znate što učiniti", "Moguća postojanost novije verzije prezentacije", MessageBoxButtons.YesNoCancel))
+                            {
+                                case DialogResult.Yes:
+                                    using (WebClient webClient = new WebClient())
+                                    {
+                                        webClient.DownloadFile(remoteUriOfFile, localUriOfFile);
+                                    }
+                                    break;
+                                case DialogResult.No:
+                                    FileClass.uploadFile(localUriOfFile, user.uid);
+                                    break;
+                                case DialogResult.Cancel:
+                                    return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using (WebClient webClient = new WebClient())
+                        {
+                            webClient.DownloadFile(remoteUriOfFile, localUriOfFile);
+                        }
+                    }
+                    Presentation p = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
+                    p.Show();
                 }
             }
             catch
@@ -149,10 +177,22 @@ namespace InteractivePPT
             }
         }
 
-        private void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private int GetFileSizeOfRemoteFile(string remoteUriOfFile)
         {
-            Presentation p = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
-            p.Show();
+            System.Net.WebRequest req = System.Net.HttpWebRequest.Create(remoteUriOfFile);
+            req.Method = "HEAD";
+            using (System.Net.WebResponse resp = req.GetResponse())
+            {
+                int ContentLength;
+                if (int.TryParse(resp.Headers.Get("Content-Length"), out ContentLength))
+                {
+                    return ContentLength;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
         }
     }
 }
