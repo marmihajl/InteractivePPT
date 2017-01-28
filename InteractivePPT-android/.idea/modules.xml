@@ -4,10 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/InteractivePPT-android.iml" filepath="$PROJECT_DIR$/InteractivePPT-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/deselectablerb/deselectablerb.iml" filepath="$PROJECT_DIR$/deselectablerb/deselectablerb.iml" />
       <module fileurl="file://$PROJECT_DIR$/entities/entities.iml" filepath="$PROJECT_DIR$/entities/entities.iml" />
-      <module fileurl="file://$PROJECT_DIR$/heightbasedproportionallysizeableimageview/heightbasedproportionallysizeableimageview.iml" filepath="$PROJECT_DIR$/heightbasedproportionallysizeableimageview/heightbasedproportionallysizeableimageview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hbpsimageview/hbpsimageview.iml" filepath="$PROJECT_DIR$/hbpsimageview/hbpsimageview.iml" />
       <module fileurl="file://$PROJECT_DIR$/qrreader/qrreader.iml" filepath="$PROJECT_DIR$/qrreader/qrreader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/toggleableradiobutton/toggleableradiobutton.iml" filepath="$PROJECT_DIR$/toggleableradiobutton/toggleableradiobutton.iml" />
       <module fileurl="file://$PROJECT_DIR$/webservice/webservice.iml" filepath="$PROJECT_DIR$/webservice/webservice.iml" />
     </modules>
   </component>

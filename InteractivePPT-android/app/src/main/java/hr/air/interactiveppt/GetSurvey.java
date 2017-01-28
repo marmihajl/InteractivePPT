@@ -106,7 +106,7 @@ public class GetSurvey extends AppCompatActivity{
                     final RadioGroup radioGroup = new RadioGroup(this);
                     radioGroup.setId(idQuestion);
                     for (int j=0; j < numberOfOptions; j++) {
-                        RadioButton radioButton = object.questions.get(i).getRequiredAnswer()==1 ? new RadioButton(this) : new hr.air.interactiveppt.ToggleableRadioButton(this);
+                        RadioButton radioButton = object.questions.get(i).getRequiredAnswer()==1 ? new RadioButton(this) : new hr.air.deselectablerb.DeselectableRb(this);
                         radioButton.setText(object.questions.get(i).getOptions().get(j).getOptionText());
                         radioButton.setId(j);
                         radioGroup.addView(radioButton);

@@ -67,7 +67,7 @@
                         app:layout_heightPercent="28%"
                         app:layout_marginLeftPercent="5%">
 
-                        <hr.air.heightbasedproportionallysizeableimageview.HeightBasedProportionallySizeableImageView
+                        <hr.air.hbpsimageview.HbpsImageView
                             android:layout_marginLeft="15dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
@@ -99,7 +99,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <hr.air.heightbasedproportionallysizeableimageview.HeightBasedProportionallySizeableImageView
+                        <hr.air.hbpsimageview.HbpsImageView
                             xmlns:app="http://schemas.android.com/apk/lib/hr.air.heightbasedproportionallysizeableimageview"
                             android:layout_marginLeft="15dp"
                             android:layout_marginTop="10dp"
@@ -134,7 +134,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <hr.air.heightbasedproportionallysizeableimageview.HeightBasedProportionallySizeableImageView
+                        <hr.air.hbpsimageview.HbpsImageView
                             android:layout_marginLeft="15dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
