@@ -15,7 +15,7 @@ namespace InteractivePPT
     {
         private User user;
         PowerPoint.Application pptApp = new PowerPoint.Application();
-        static string path;
+        static string localUriOfFile;
         SurveyList mySurveyList = null;
         private const string serverRootDirectoryUri = "http://46.101.68.86/";
 
@@ -119,20 +119,28 @@ namespace InteractivePPT
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void openPptButton_Click(object sender, EventArgs e)
         {
+            if (mySurveysDgv.SelectedRows.Count == 0)
+            {
+                return;
+            }
             try
             {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.ShowDialog();
-                if (ofd.FileName != null)
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                fbd.ShowDialog();
+                if (fbd.SelectedPath != null)
                 {
-                    path = ofd.FileName;
-                    FileClass.uploadFile(path, user.uid);
-
-                    Presentation p = new Presentation(path, mySurveyList, user.uid);
-                    p.Show();
-
+                    WebClient webClient = new WebClient();
+                    string remoteUriOfFile = mySurveysDgv.SelectedRows[0].Cells["link_to_presentation"].Value.ToString();
+                    localUriOfFile = fbd.SelectedPath + '\\' + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf("/") + 1);
+                    if (localUriOfFile.Length > 255)
+                    {
+                        MessageBox.Show("Odaberite kraću putanju jer broj znakova odabrane putanje (uključujući i sâm naziv datoteke koja bi trebala biti pohranjena u odabrani direktorij) prelazi 255 znakova!");
+                        return;
+                    }
+                    webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
+                    webClient.DownloadFileAsync(new Uri(remoteUriOfFile), localUriOfFile);
                 }
             }
             catch
@@ -141,5 +149,10 @@ namespace InteractivePPT
             }
         }
 
+        private void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            Presentation p = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
+            p.Show();
+        }
     }
 }

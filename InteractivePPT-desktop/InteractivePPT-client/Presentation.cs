@@ -17,7 +17,7 @@ namespace InteractivePPT
         PowerPoint.Application pptApp = new PowerPoint.Application();
         string path;
         PowerPoint.Presentation p = null;
-        SurveyList surveyList = null;
+        List<Survey> surveyList = null;
         QuestionList myQuestionList = null;
         string serializedUserSurveys = null;
         AnswerList myAnswerList = null;
@@ -29,7 +29,7 @@ namespace InteractivePPT
         string name;
         public static bool make = false;
 
-        public Presentation(string path, SurveyList surveyList, string userUid)
+        public Presentation(string path, List<Survey> surveyList, string userUid)
         {
             InitializeComponent();
             this.path = path;
@@ -48,7 +48,7 @@ namespace InteractivePPT
 
 
             BindingSource bs = new BindingSource();
-            bs.DataSource = surveyList.data;
+            bs.DataSource = surveyList;
             comboBox1.DataSource = bs;
             comboBox1.DisplayMember = "name";
             comboBox1.ValueMember = "id";

@@ -31,11 +31,11 @@
             this.lblUser = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.mySurveysDgv = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.access_code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.link_to_presentation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.qr_code = new System.Windows.Forms.DataGridViewImageColumn();
+            this.openPptButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.mySurveysDgv)).BeginInit();
             this.SuspendLayout();
             // 
@@ -90,17 +90,6 @@
             this.mySurveysDgv.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.mySurveysDgv_CellMouseEnter);
             this.mySurveysDgv.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.mySurveysDgv_CellMouseLeave);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(319, 402);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(136, 52);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Odabir prezentacije";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // name
             // 
             this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -114,7 +103,7 @@
             this.access_code.HeaderText = "Pristupni kôd";
             this.access_code.Name = "access_code";
             this.access_code.ReadOnly = true;
-            this.access_code.Width = 119;
+            this.access_code.Width = 109;
             // 
             // link_to_presentation
             // 
@@ -132,7 +121,18 @@
             this.qr_code.ReadOnly = true;
             this.qr_code.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.qr_code.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.qr_code.Width = 80;
+            this.qr_code.Width = 74;
+            // 
+            // openPptButton
+            // 
+            this.openPptButton.Location = new System.Drawing.Point(319, 402);
+            this.openPptButton.Margin = new System.Windows.Forms.Padding(4);
+            this.openPptButton.Name = "openPptButton";
+            this.openPptButton.Size = new System.Drawing.Size(136, 52);
+            this.openPptButton.TabIndex = 4;
+            this.openPptButton.Text = "Otvori prezentaciju";
+            this.openPptButton.UseVisualStyleBackColor = true;
+            this.openPptButton.Click += new System.EventHandler(this.openPptButton_Click);
             // 
             // Home
             // 
@@ -140,7 +140,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.ClientSize = new System.Drawing.Size(857, 527);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.openPptButton);
             this.Controls.Add(this.mySurveysDgv);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblUser);
@@ -160,7 +160,7 @@
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView mySurveysDgv;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button openPptButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn access_code;
         private System.Windows.Forms.DataGridViewTextBoxColumn link_to_presentation;

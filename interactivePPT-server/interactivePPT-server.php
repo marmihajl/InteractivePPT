@@ -69,7 +69,7 @@ switch ($_POST['request_type']) {
         break;
     case 'get_surveys':
         $appUid = $_POST['app_uid'];
-        $command = "SELECT s.name,p.access_code,p.path AS \"link_to_presentation\" FROM Presentation p JOIN Users u ON p.author=u.idUser LEFT JOIN Survey s ON s.access_code=p.access_code WHERE u.app_uid='$appUid';";
+        $command = "SELECT s.idSurvey AS \"id\",s.name,p.access_code,p.path AS \"link_to_presentation\" FROM Presentation p JOIN Users u ON p.author=u.idUser LEFT JOIN Survey s ON s.access_code=p.access_code WHERE u.app_uid='$appUid';";
         $recordSet = $dbHandler->query($command);
         $outputArray = array();
         if ($recordSet) {
