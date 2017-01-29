@@ -1,4 +1,4 @@
-package hr.foi.air.qrreader;
+package hr.air.interactiveppt.qrreader;
 
 import org.junit.Test;
 

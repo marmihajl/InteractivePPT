@@ -16,7 +16,7 @@ import hr.air.interactiveppt.entities.PresentationWithSurveys;
 import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
-import hr.foi.air.qrreader.QrReader;
+import hr.air.interactiveppt.qrreader.QrReader;
 
 public class GetCode extends AppCompatActivity {
 

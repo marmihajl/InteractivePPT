@@ -1,12 +1,9 @@
-package hr.foi.air.qrreader;
+package hr.air.interactiveppt.qrreader;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.content.Intent;
-import android.view.View;
 
 import com.google.zxing.Result;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;

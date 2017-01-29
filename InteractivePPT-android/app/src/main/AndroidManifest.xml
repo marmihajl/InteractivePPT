@@ -35,7 +35,7 @@
         <activity android:name=".CreateSurvey" />
         <activity android:name=".GetCode" />
         <activity android:name=".InputCode" />
-        <activity android:name="hr.foi.air.qrreader.QrReader" />
+        <activity android:name=".qrreader.QrReader" />
         <activity android:name=".GetSurvey" />
         <activity android:name=".ViewPresentation" />
         <activity android:name=".PresentationList"/>

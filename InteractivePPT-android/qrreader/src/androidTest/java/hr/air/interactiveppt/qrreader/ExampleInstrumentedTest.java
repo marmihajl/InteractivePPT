@@ -1,4 +1,4 @@
-package hr.foi.air.qrreader;
+package hr.air.interactiveppt.qrreader;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
