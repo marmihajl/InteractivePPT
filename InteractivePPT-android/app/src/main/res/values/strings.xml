@@ -63,4 +63,7 @@
     <string name="newPptOptionLabel">Nova</string>
     <string name="existingPptOptionLabel">Postojeća</string>
     <string name="myPptsCaption">Moje prezentacije:</string>
+    <string name="drawer_open">Otvori navigaciju</string>
+    <string name="drawer_close">Zatvori navigaciju</string>
+
 </resources>
