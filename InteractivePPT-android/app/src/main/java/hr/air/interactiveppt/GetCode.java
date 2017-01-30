@@ -87,6 +87,8 @@ public class GetCode extends AppCompatActivity {
         Intent intent= new Intent(this, QrReader.class);
         intent.putExtra("id",id);
         startActivityForResult(intent,2);
+        sifraButton.setVisibility(View.INVISIBLE);
+        qrButton.setVisibility(View.INVISIBLE);
     }
 
     @OnClick(R.id.upisiSifru)
