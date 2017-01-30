@@ -47,10 +47,33 @@ public class PresentationList extends AppCompatActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent(nvDrawer);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ham_ic);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
+        drawerToggle = new ActionBarDrawerToggle(
+                this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+        };
         drawerToggle = setupDrawerToggle();
 
         mDrawer.addDrawerListener(drawerToggle);
-
 
         findViewById(R.id.activity_presentation_list).setClickable(false);
         String requestType = "get_presentation_list";
