@@ -183,13 +183,13 @@ public class ViewPresentation extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.nav_second_fragment:
-                intent = new Intent(this, GetCode.class);
+                intent = new Intent(this, CreateSurvey.class);
                 intent.putExtra("id",userId);
                 finish();
                 startActivity(intent);
                 break;
             case R.id.nav_third_fragment:
-                intent = new Intent(this, CreateSurvey.class);
+                intent = new Intent(this, GetCode.class);
                 intent.putExtra("id",userId);
                 finish();
                 startActivity(intent);

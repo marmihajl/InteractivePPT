@@ -59,6 +59,7 @@ public class GetCode extends AppCompatActivity {
         findViewById(R.id.loading_panel).setVisibility(View.GONE);
         ButterKnife.bind(this);
         id = getIntent().getStringExtra("id");
+
     }
 
     @OnClick(R.id.upisiSifru)
@@ -150,13 +151,13 @@ public class GetCode extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.nav_second_fragment:
-                intent = new Intent(this, GetCode.class);
+                intent = new Intent(this, CreateSurvey.class);
                 intent.putExtra("id",id);
                 finish();
                 startActivity(intent);
                 break;
             case R.id.nav_third_fragment:
-                intent = new Intent(this, CreateSurvey.class);
+                intent = new Intent(this, GetCode.class);
                 intent.putExtra("id",id);
                 finish();
                 startActivity(intent);
