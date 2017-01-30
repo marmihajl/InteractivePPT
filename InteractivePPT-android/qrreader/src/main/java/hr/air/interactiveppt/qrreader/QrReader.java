@@ -1,5 +1,6 @@
 package hr.air.interactiveppt.qrreader;
 
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class QrReader extends AppCompatActivity implements ZXingScannerView.ResultHandler{
         private ZXingScannerView mScannerView;
         private String surveyCode;
+        String id;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,22 @@ public class QrReader extends AppCompatActivity implements ZXingScannerView.Resu
 
             mScannerView.setResultHandler(this);
             mScannerView.startCamera();
+            id = getIntent().getStringExtra("id");
+
+            new CountDownTimer(5000, 1000) {
+
+                public void onTick(long millisUntilFinished) {
+                }
+
+                public void onFinish() {
+                    surveyCode= "";
+                    Intent intent=new Intent();
+                    intent.putExtra("survey_code",surveyCode);
+                    setResult(2,intent);
+                    finish();
+                }
+
+            }.start();
         }
 
         @Override
