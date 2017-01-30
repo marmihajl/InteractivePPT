@@ -234,11 +234,13 @@ public class GetSurvey extends AppCompatActivity{
                                     "Odgovori uspješno poslani!",
                                     Toast.LENGTH_LONG
                             ).show();
+                            finish();
                         } else {
                             Toast.makeText(GetSurvey.this,
                                     "Već ste prethodno predali odgovore na ovu anketu!",
                                     Toast.LENGTH_LONG
                             ).show();
+                            finish();
                         }
                     }
 
