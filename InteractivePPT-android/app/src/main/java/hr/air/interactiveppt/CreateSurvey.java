@@ -3,14 +3,20 @@ package hr.air.interactiveppt;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +50,12 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 public class CreateSurvey extends AppCompatActivity {
+
+    private DrawerLayout mDrawer;
+    private Toolbar toolbar;
+    private NavigationView nvDrawer;
+
+    private ActionBarDrawerToggle drawerToggle;
 
     private static final int REQUEST_CODE = 6384; // onActivityResult request code
 
@@ -257,6 +269,17 @@ public class CreateSurvey extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_survey);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        setupDrawerContent(nvDrawer);
+
+        drawerToggle = setupDrawerToggle();
+
+        mDrawer.addDrawerListener(drawerToggle);
+
         ButterKnife.bind(this);
         surveyAuthorId = getIntent().getStringExtra("id");
 
@@ -381,4 +404,67 @@ public class CreateSurvey extends AppCompatActivity {
         findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
         findViewById(R.id.activity_create_survey).setClickable(false);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        Intent intent;
+        switch(menuItem.getItemId()) {
+            case R.id.nav_first_fragment:
+                intent = new Intent(this, PresentationList.class);
+                intent.putExtra("id",surveyAuthorId);
+                finish();
+                startActivity(intent);
+                break;
+            case R.id.nav_second_fragment:
+                intent = new Intent(this, CreateSurvey.class);
+                intent.putExtra("id",surveyAuthorId);
+                finish();
+                startActivity(intent);
+                break;
+            case R.id.nav_third_fragment:
+                intent = new Intent(this, GetCode.class);
+                intent.putExtra("id",surveyAuthorId);
+                finish();
+                startActivity(intent);
+                break;
+            case R.id.nav_logout:
+                finish();
+                System.exit(0);
+                break;
+        }
+
+    }
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
 }

@@ -12,13 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import hr.air.interactiveppt.entities.ListOfPresentations;
-import hr.air.interactiveppt.entities.Presentation;
 import hr.air.interactiveppt.entities.PresentationWithSurveys;
 import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
@@ -35,8 +33,6 @@ public class PresentationList extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView nvDrawer;
 
-    // Make sure to be using android.support.v7.app.ActionBarDrawerToggle version.
-    // The android.support.v4.app.ActionBarDrawerToggle has been deprecated.
     private ActionBarDrawerToggle drawerToggle;
 
 
@@ -108,6 +104,7 @@ public class PresentationList extends AppCompatActivity {
                                     intent.putExtra("serialized_presentation", new Gson().toJson(response));
                                     findViewById(R.id.activity_presentation_list).setClickable(true);
                                     findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                                    finish();
                                     startActivity(intent);
                                 }
                                 else {
