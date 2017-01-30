@@ -99,6 +99,7 @@ public class InputCode extends AppCompatActivity {
                             intent.putExtra("serialized_presentation", new Gson().toJson(response));
                             findViewById(R.id.activity_input_code).setClickable(true);
                             findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                            finish();
                             startActivity(intent);
                         }
                         else {
