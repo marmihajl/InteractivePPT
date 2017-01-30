@@ -1,5 +1,6 @@
 package hr.air.interactiveppt;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -137,21 +139,9 @@ public class ViewPresentation extends AppCompatActivity {
     }
 
     private void openPresentation(final WebView wv, final String pptPath) {
+        String uriToPpt = "http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true";
 
-        int delayInMs = android.os.Build.VERSION.SDK_INT < 19 ? 2000 : 500;
-
-        wv.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                String uriToPpt = "http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true";
-                wv.loadUrl(uriToPpt);
-                wv.setVisibility(WebView.VISIBLE);
-                wv.getSettings().setJavaScriptEnabled(true);
-                wv.getSettings().setAllowFileAccess(true);
-                wv.getSettings().setPluginState(WebSettings.PluginState.ON);
-            }
-        }, delayInMs);
+        startWebView(uriToPpt, wv);
     }
 
     @Override
@@ -214,5 +204,27 @@ public class ViewPresentation extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private void startWebView(String url, WebView webView) {
+
+
+        webView.setWebViewClient(new WebViewClient() {
+
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+
+            public void onLoadResource (final WebView view, String url) {
+            }
+            public void onPageFinished(WebView view, String url) {
+            }
+
+        });
+
+        webView.getSettings().setJavaScriptEnabled(true);
+
+        webView.loadUrl(url);
     }
 }
