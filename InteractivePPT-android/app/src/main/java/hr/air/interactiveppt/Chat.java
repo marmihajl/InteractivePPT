@@ -37,13 +37,6 @@ import hr.air.interactiveppt.entities.ChatMessage;
 
 public class Chat extends AppCompatActivity {
 
-        private DrawerLayout mDrawer;
-        private Toolbar toolbar;
-        private NavigationView nvDrawer;
-
-        String surveyAuthorId;
-        private ActionBarDrawerToggle drawerToggle;
-
         private static int SIGN_IN_REQUEST_CODE = 1;
         private FirebaseListAdapter<ChatMessage> adapter;
         RelativeLayout activity_chat;
@@ -66,10 +59,7 @@ public class Chat extends AppCompatActivity {
                     }
                 });
             }
-            if (drawerToggle.onOptionsItemSelected(item)) {
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
+            return true;
         }
 
         @Override
@@ -101,43 +91,6 @@ public class Chat extends AppCompatActivity {
             setContentView(R.layout.activity_chat);
 
             activity_chat = (RelativeLayout)findViewById(R.id.activity_chat);
-
-            Intent intent = getIntent();
-            surveyAuthorId= intent.getStringExtra("id");
-
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-            nvDrawer = (NavigationView) findViewById(R.id.nvView);
-            setupDrawerContent(nvDrawer);
-
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ham_ic);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setHomeButtonEnabled(true);
-            }
-
-            drawerToggle = new ActionBarDrawerToggle(
-                    this, mDrawer, toolbar, R.string.drawer_open, R.string.drawer_close) {
-
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    invalidateOptionsMenu();
-                }
-
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    invalidateOptionsMenu();
-                }
-
-                @Override
-                public void onDrawerSlide(View drawerView, float slideOffset) {
-                    super.onDrawerSlide(drawerView, slideOffset);
-                }
-            };
-            drawerToggle = setupDrawerToggle();
-
-            mDrawer.addDrawerListener(drawerToggle);
 
             //Add Emoji
             emojiButton = (ImageView)findViewById(R.id.emoji_button);
@@ -193,60 +146,5 @@ public class Chat extends AppCompatActivity {
             };
             listOfMessage.setAdapter(adapter);
         }
-
-
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
-    }
-
-    public void selectDrawerItem(MenuItem menuItem) {
-        Intent intent;
-        switch(menuItem.getItemId()) {
-            case R.id.nav_first_fragment:
-                intent = new Intent(this, PresentationList.class);
-                intent.putExtra("id",surveyAuthorId);
-                finish();
-                startActivity(intent);
-                break;
-            case R.id.nav_second_fragment:
-                intent = new Intent(this, CreateSurvey.class);
-                intent.putExtra("id",surveyAuthorId);
-                finish();
-                startActivity(intent);
-                break;
-            case R.id.nav_third_fragment:
-                intent = new Intent(this, GetCode.class);
-                intent.putExtra("id",surveyAuthorId);
-                finish();
-                startActivity(intent);
-                break;
-            case R.id.nav_logout:
-                finish();
-                System.exit(0);
-                break;
-        }
-
-    }
-    private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
-    }
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        drawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
 
 }
