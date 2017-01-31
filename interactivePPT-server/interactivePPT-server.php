@@ -56,11 +56,14 @@ switch ($_POST['request_type']) {
         if (count($questions)) {
             foreach ($questions as $q) {
                 $command .= "INSERT INTO Questions VALUES (default, '$q[name]', $q[required_answer], $q[type], @survey);SET @question := LAST_INSERT_ID();";
-                $command .= "INSERT INTO Question_options VALUES ";
+                $questionOptionsCommand = "INSERT INTO Question_options VALUES ";
+                $defaultQuestionOptionsCommand = "INSERT INTO Default_question_options(idOption, idQuestion) VALUES ";
+                $valuesToInsert = "";
                 foreach ($q['options'] as $o) {
-                    $command .= "(createOptionAndGetId('$o[name]'), @question),";
+                    $valuesToInsert .= "(createOptionAndGetId('$o[name]'), @question),";
                 }
-                $command[strlen($command)-1] = ';';
+                $valuesToInsert[strlen($valuesToInsert)-1] = ';';
+                $command .= $questionOptionsCommand . $valuesToInsert . $defaultQuestionOptionsCommand . $valuesToInsert;
             }
         }
         $dbHandler->multi_query($command);

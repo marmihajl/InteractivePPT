@@ -1,1 +1,1 @@
-include ':app', ':hbpsimageview', ':qrreader', ':webservice', ':entities', ':deselectablerb'
+include ':app', ':hbpsimageview', ':qrreader', ':webservice', ':entities', ':deselectablerb', ':questiontype'

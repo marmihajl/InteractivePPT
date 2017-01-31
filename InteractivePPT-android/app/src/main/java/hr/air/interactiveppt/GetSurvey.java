@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import hr.air.interactiveppt.entities.Answer;
 import hr.air.interactiveppt.entities.ListOfAnswers;
 import hr.air.interactiveppt.entities.SurveyWithQuestions;
+import hr.air.interactiveppt.questiontype.QuestionTypeControl;
+import hr.air.interactiveppt.questiontype.ReflectionQtHelper;
+import hr.air.interactiveppt.questiontype.QuestionTypeMode;
 import hr.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.air.interactiveppt.webservice.ServiceGenerator;
 import hr.air.interactiveppt.webservice.WebService;
@@ -77,7 +80,6 @@ public class GetSurvey extends AppCompatActivity{
 
         //questions
         int numberOfQuestions= object.questions.size();
-        int numberOfOptions=0;
         int typeOfQuestion=0;
 
         for (int i=0 ; i < numberOfQuestions; i++){
@@ -85,7 +87,6 @@ public class GetSurvey extends AppCompatActivity{
             question.setText(object.questions.get(i).getQuestionText());
             question.setTextColor(Color.BLACK);
             TextView requiredSign = new TextView(this);
-            requiredSign.setId(object.questions.get(i).getQuestionType());
             if (object.questions.get(i).getRequiredAnswer()==1) {
                 requiredSign.setText("*");
                 requiredSign.setTextColor(Color.RED);
@@ -99,44 +100,11 @@ public class GetSurvey extends AppCompatActivity{
             idQuestion=object.questions.get(i).getQuestionId();
 
             //options
-            numberOfOptions=object.questions.get(i).getOptions().size();
             typeOfQuestion=object.questions.get(i).getQuestionType();
-            switch (typeOfQuestion){
-                case 1:
-                    final RadioGroup radioGroup = new RadioGroup(this);
-                    radioGroup.setId(idQuestion);
-                    for (int j=0; j < numberOfOptions; j++) {
-                        RadioButton radioButton = object.questions.get(i).getRequiredAnswer()==1 ? new RadioButton(this) : new hr.air.deselectablerb.DeselectableRb(this);
-                        radioButton.setText(object.questions.get(i).getOptions().get(j).getOptionText());
-                        radioButton.setId(j);
-                        radioGroup.addView(radioButton);
-                    }
-                    lL.addView(radioGroup);
-                    break;
-                case 2:
-                    LinearLayout checkBoxGroup = new LinearLayout(this);
-                    checkBoxGroup.setOrientation(LinearLayout.VERTICAL);
-                    checkBoxGroup.setId(idQuestion);
-                    for (int j=0; j < numberOfOptions; j++) {
-                        CheckBox checkBox = new CheckBox(this);
-                        checkBox.setText(object.questions.get(i).getOptions().get(j).getOptionText());
-                        checkBox.setId(j);
-                        checkBoxGroup.addView(checkBox);
-                    }
-                    lL.addView(checkBoxGroup);
-                    break;
-                case 3:
-                    EditText editText= new EditText(this);
-                    editText.setId(idQuestion);
-                    editText.setSingleLine(false);
-                    editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                    editText.setLines(5);
-                    editText.setMaxLines(10);
-                    lL.addView(editText);
-                    InputFilter[] inputFilters = new InputFilter[1];
-                    inputFilters[0] = new InputFilter.LengthFilter(100);
-                    editText.setFilters(inputFilters);
-            }
+
+            View inputControl = (View) ReflectionQtHelper.getInstance().instatiateControl(typeOfQuestion, this, object.questions.get(i).getOptions());
+            inputControl.setId(idQuestion);
+            lL.addView(inputControl);
         }
 
         Button button= new Button(this);
@@ -175,42 +143,20 @@ public class GetSurvey extends AppCompatActivity{
         ArrayList<Answer> answers = new ArrayList<>();
         int numOfQuestions = (lL.getChildCount() - 3) / 2;  //in children are surveyName, surveyDesc, submitButton and N pairs of question names and question option groups
         for (int i=0; i < numOfQuestions; i++) {
-            short numOfProvidedOptions = 0;
             LinearLayout ithQuestion = ((LinearLayout)lL.getChildAt(2 + 2*i));
             Object ithOptionGroup = lL.getChildAt(2 + 2*i + 1);
             TextView requiredSign = ((TextView)ithQuestion.getChildAt(1));
             boolean requiredQuestion = requiredSign.getText()=="*";
-            int questionType = requiredSign.getId();
             int questionId = ((View)ithOptionGroup).getId();
-            switch (questionType) {
-                case 1:
-                    int selectedOptionId = ((RadioGroup)ithOptionGroup).getCheckedRadioButtonId();
-                    if (selectedOptionId != -1) {
-                        answers.add(new Answer(questionId, ((RadioButton) ((RadioGroup) ithOptionGroup).getChildAt(selectedOptionId)).getText().toString()));
-                        numOfProvidedOptions++;
-                    }
-                    break;
-                case 2:
-                    LinearLayout checkBoxGroup = ((LinearLayout)ithOptionGroup);
-                    int numOfOptions = checkBoxGroup.getChildCount();
-                    for (int j=0; j < numOfOptions; j++) {
-                        if (((CheckBox)checkBoxGroup.getChildAt(j)).isChecked()) {
-                            answers.add(new Answer(questionId, ((CheckBox)checkBoxGroup.getChildAt(j)).getText().toString()));
-                            numOfProvidedOptions++;
-                        }
-                    }
-                    break;
-                case 3:
-                    EditText textEditField = ((EditText)ithOptionGroup);
-                    if (!textEditField.getText().toString().isEmpty()) {
-                        answers.add(new Answer(questionId, textEditField.getText().toString()));
-                        numOfProvidedOptions++;
-                    }
-                    break;
-                default:
-                    break;
+
+            QuestionTypeControl inputControl = (QuestionTypeControl) ithOptionGroup;
+            for (String selectedOption : inputControl.getSelected()) {
+                if (!selectedOption.isEmpty()) {
+                    answers.add(new Answer(questionId, selectedOption));
+                }
             }
-            if (requiredQuestion && numOfProvidedOptions == 0) {
+
+            if (requiredQuestion && inputControl.isBlank()) {
                 return null;
             }
         }
@@ -234,13 +180,11 @@ public class GetSurvey extends AppCompatActivity{
                                     "Odgovori uspješno poslani!",
                                     Toast.LENGTH_LONG
                             ).show();
-                            finish();
                         } else {
                             Toast.makeText(GetSurvey.this,
                                     "Već ste prethodno predali odgovore na ovu anketu!",
                                     Toast.LENGTH_LONG
                             ).show();
-                            finish();
                         }
                     }
 

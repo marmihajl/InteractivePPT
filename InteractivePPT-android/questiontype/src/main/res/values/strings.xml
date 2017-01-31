@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">QuestionType</string>
+    <string-array name="questionTypesDisplayNames">
+        <item>Single choice</item>
+        <item>Multiple choice</item>
+        <item>Text edit</item>
+    </string-array>
+
+    <string-array name="questionTypesClassNames">
+        <item>RadioGroup</item>
+        <item>CheckboxGroup</item>
+        <item>EditText</item>
+    </string-array>
+</resources>

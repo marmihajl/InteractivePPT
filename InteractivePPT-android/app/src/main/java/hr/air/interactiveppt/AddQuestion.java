@@ -2,10 +2,8 @@ package hr.air.interactiveppt;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,14 +11,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-
 import hr.air.interactiveppt.entities.Option;
 import hr.air.interactiveppt.entities.Question;
+import hr.air.interactiveppt.questiontype.ReflectionQtHelper;
 
 /**
  * Created by marin on 9.11.2016..
@@ -48,7 +45,7 @@ public class AddQuestion extends Dialog {
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.spinnerItems, android.R.layout.simple_spinner_item);
+                R.array.questionTypesDisplayNames, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
@@ -84,31 +81,27 @@ public class AddQuestion extends Dialog {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int type = 0;
-                switch (spinner.getSelectedItem().toString()){
-                    case "Single choice":
-                        type = 1;
-                        break;
-                    case "Multiple choice":
-                        type = 2;
-                        break;
-                    case "Text edit":
-                        type = 3;
-                        break;
-                }
+                int questionTypeCode = spinner.getSelectedItemPosition() + 1;
+
                 String questionName = ((EditText)findViewById(R.id.questionText)).getText().toString();
                 int answerRequired = ((CheckBox)findViewById(R.id.answerRequired)).isChecked() ? 1 : 0;
-                Question question = new Question(id, questionName, type, answerRequired);
+                Question question = new Question(id, questionName, questionTypeCode, answerRequired);
                 id++;
-                if (type != 3) {
-                    for (int i = 0; i < optionList.getChildCount(); i++) {
-                        View view = optionList.getChildAt(i);
-                        if (view instanceof EditText) {
-                            Option option = new Option();
-                            option.setOptionText(((EditText) view).getText().toString());
-                            question.setOptions(option);
+
+                switch (ReflectionQtHelper.getInstance().getModeOfQuestionType(questionTypeCode, activity)) {
+                    case 1:
+                    case 3:
+                        for (int i = 0; i < optionList.getChildCount(); i++) {
+                            View view = optionList.getChildAt(i);
+                            if (view instanceof EditText) {
+                                Option option = new Option();
+                                option.setOptionText(((EditText) view).getText().toString());
+                                question.setOptions(option);
+                            }
                         }
-                    }
+                        break;
+                    case 2:
+                        break;
                 }
 
                 String reasonsOfIncompletion;
@@ -132,8 +125,9 @@ public class AddQuestion extends Dialog {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (spinner.getSelectedItem().toString()) {
-                    case "Text edit":
+                int questionTypeCode = position + 1;
+                switch (ReflectionQtHelper.getInstance().getModeOfQuestionType(questionTypeCode, activity)) {
+                    case 2:
                         optionList.setVisibility(View.INVISIBLE);
                         (findViewById(R.id.pumpOrDumpOptions)).setVisibility(View.INVISIBLE);
                         break;

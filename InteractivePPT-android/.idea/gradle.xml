@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/entities" />
             <option value="$PROJECT_DIR$/hbpsimageview" />
             <option value="$PROJECT_DIR$/qrreader" />
+            <option value="$PROJECT_DIR$/questiontype" />
             <option value="$PROJECT_DIR$/webservice" />
           </set>
         </option>
