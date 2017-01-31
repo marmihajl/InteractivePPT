@@ -14,7 +14,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="@color/com_facebook_button_like_background_color_selected"
+        android:background="@color/com_facebook_button_background_color"
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
         tools:context="hr.air.interactiveppt.GetCode">
@@ -32,11 +32,19 @@
                 android:layout_weight="0.35" />
 
             <Button
-                android:text="@string/requestReply"
+            android:text="@string/requestReply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/requestReply"
+            android:layout_weight="0.35" />
+
+            <Button
+                android:text="Chat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/requestReply"
+                android:id="@+id/chat"
                 android:layout_weight="0.35" />
+
         </LinearLayout>
 
         <WebView

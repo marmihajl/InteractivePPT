@@ -27,8 +27,7 @@
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:label="@string/app_name" />
         <activity
             android:name=".Home"
             android:label="@string/app_name" />
@@ -40,6 +39,7 @@
         <activity android:name=".ViewPresentation" />
         <activity android:name=".PresentationList"/>
         <activity android:name=".SurveyList"/>
+        <activity android:name=".Chat"/>
         <service
             android:name=".MyFirebaseInstanceIDService">
             <intent-filter>

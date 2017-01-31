@@ -160,6 +160,15 @@ public class ViewPresentation extends AppCompatActivity {
             );
         }
 
+        Button chatButton = (Button)findViewById(R.id.chat);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i= new Intent(ViewPresentation.this, Chat.class);
+                i.putExtra("id",userId);
+                startActivity(i);
+            }
+        });
     }
 
     private void openPresentation(final WebView wv, final String pptPath) {
