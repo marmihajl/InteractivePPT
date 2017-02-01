@@ -1,9 +1,8 @@
 <!-- ask god why this shouldn't be clickable and focusable -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:clickable="false"
     android:focusable="false"
     android:descendantFocusability="blocksDescendants"
-    android:orientation="horizontal"
     android:paddingLeft="36dp"
     android:paddingRight="16dp"
     android:layout_width="match_parent"
@@ -12,16 +11,16 @@
         android:id="@+id/presentationName"
         android:clickable="false"
         android:focusable="false"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.03"
+        android:layout_alignParentLeft="true"
         android:textSize="16sp" />
     <ImageButton
         android:id="@+id/proceedButton"
         android:clickable="false"
         android:focusable="false"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.1"
+        android:layout_alignParentRight="true"
         android:background="@android:drawable/ic_media_play" />
-</LinearLayout>
+</RelativeLayout>

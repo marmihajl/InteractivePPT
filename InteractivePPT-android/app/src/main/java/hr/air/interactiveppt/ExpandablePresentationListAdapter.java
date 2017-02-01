@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.List;
 
@@ -113,7 +112,7 @@ public class ExpandablePresentationListAdapter extends BaseExpandableListAdapter
             convertView.findViewById(R.id.proceedButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                String accessCode = presentationItems.get(((LinearLayout)v.getParent()).getId()).accessCode;
+                String accessCode = presentationItems.get(((View)v.getParent()).getId()).accessCode;
                 consumer.onClick(accessCode);
                 }
             });

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -112,7 +111,7 @@ public class ExpandableSurveyListAdapter extends BaseExpandableListAdapter {
             convertView.findViewById(R.id.proceedButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    String id = String.valueOf(((LinearLayout)v.getParent()).getId());
+                    String id = String.valueOf(((View)v.getParent()).getId());
                     consumer.onClick(id);
                 }
             });
