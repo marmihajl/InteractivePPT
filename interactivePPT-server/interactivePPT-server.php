@@ -62,8 +62,10 @@ switch ($_POST['request_type']) {
                 foreach ($q['options'] as $o) {
                     $valuesToInsert .= "(createOptionAndGetId('$o[name]'), @question),";
                 }
-                $valuesToInsert[strlen($valuesToInsert)-1] = ';';
-                $command .= $questionOptionsCommand . $valuesToInsert . $defaultQuestionOptionsCommand . $valuesToInsert;
+                if (!empty($q['options'])) {
+                    $valuesToInsert = substr_replace($valuesToInsert, ';', strlen($valuesToInsert)-1, 1);
+                    $command .= $questionOptionsCommand . $valuesToInsert . $defaultQuestionOptionsCommand . $valuesToInsert;
+                }
             }
         }
         $dbHandler->multi_query($command);
