@@ -84,7 +84,7 @@ public class GetSurvey extends AppCompatActivity{
 
         for (int i=0 ; i < numberOfQuestions; i++){
             TextView question = new TextView(this);
-            question.setText(object.questions.get(i).getQuestionText());
+            question.setText(String.valueOf(i+1) + ") " + object.questions.get(i).getQuestionText());
             question.setTextColor(Color.BLACK);
             TextView requiredSign = new TextView(this);
             if (object.questions.get(i).getRequiredAnswer()==1) {
