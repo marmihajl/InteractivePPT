@@ -1,6 +1,7 @@
 package hr.air.interactiveppt;
 
 
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import hr.air.interactiveppt.entities.Question;
  */
 
 public class QuestionViewHolder extends ParentViewHolder{
+    Context mContext;
     @BindView(R.id.txtQuestion)
     TextView mQuestion;
     @BindView(R.id.txtQuestionType)
@@ -22,24 +24,15 @@ public class QuestionViewHolder extends ParentViewHolder{
 
     View mItemView;
 
-    public QuestionViewHolder(View itemView){
+    public QuestionViewHolder(View itemView, Context context){
         super(itemView);
         mItemView = itemView;
+        mContext = context;
         ButterKnife.bind(this,itemView);
     }
 
     public void bind(Question question){
         mQuestion.setText(question.getQuestionText());
-        switch (question.getQuestionType()){
-            case 1:
-                mQuestionType.setText("Single choice");
-                break;
-            case 2:
-                mQuestionType.setText("Multiple choice");
-                break;
-            case 3:
-                mQuestionType.setText("Text edit");
-                break;
-        }
+        mQuestionType.setText(mContext.getResources().getStringArray(R.array.questionTypesDisplayNames)[question.getQuestionType()-1]);
     }
 }

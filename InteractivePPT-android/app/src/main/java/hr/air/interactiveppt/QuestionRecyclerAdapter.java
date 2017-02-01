@@ -19,17 +19,19 @@ import hr.air.interactiveppt.entities.Option;
 public class QuestionRecyclerAdapter extends ExpandableRecyclerAdapter<ExpandableQuestionItem,
         Option, QuestionViewHolder, OptionViewHolder> {
 
+    private Context mContext;
     private LayoutInflater layoutInflater;
     public QuestionRecyclerAdapter(Context context, @NonNull List<ExpandableQuestionItem> parentList) {
         super(parentList);
         layoutInflater =LayoutInflater.from(context);
+        mContext = context;
     }
 
     @NonNull
     @Override
     public QuestionViewHolder onCreateParentViewHolder(@NonNull ViewGroup parentViewGroup, int viewType) {
         View questionView = layoutInflater.inflate(R.layout.question_list_item, parentViewGroup, false);
-        return new QuestionViewHolder(questionView);
+        return new QuestionViewHolder(questionView, mContext);
     }
 
     @NonNull
