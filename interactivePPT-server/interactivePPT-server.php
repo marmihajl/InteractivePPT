@@ -332,6 +332,7 @@ switch ($_POST['request_type']) {
     case 'get_interested_audience':
         $path = $_POST['path'];
 
+        exec('nohup php -f /var/www/html/notifier.php -- ' . escapeshellarg($path) . ' > /dev/null 2>/dev/null &');
         $command = "SELECT app_uid AS \"uid\", name FROM Reply_request JOIN Users ON user=idUser WHERE presentation=(SELECT id FROM Presentation WHERE path='$path' LIMIT 1);";
         $recordSet = $dbHandler->query($command);
         $interestedUsers = array();
