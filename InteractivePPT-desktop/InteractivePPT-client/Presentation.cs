@@ -9,6 +9,7 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using EXCEL = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Diagnostics;
+using System.Net.Sockets;
 
 namespace InteractivePPT
 {
@@ -54,7 +55,40 @@ namespace InteractivePPT
             comboBox1.ValueMember = "id";
             comboBox1.SelectedIndex = -1;
 
-            checkAudienceTimer.Start();
+            try
+            {
+                Int32 port = 50002;
+                TcpClient client = new TcpClient("46.101.247.168", port);
+                string message = "bla";
+
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+
+                NetworkStream stream = client.GetStream();
+
+                while (true)
+                {
+                    data = new Byte[256];
+
+                    String responseData = String.Empty;
+
+                    Int32 bytes = stream.Read(data, 0, data.Length);
+                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                    MessageBox.Show("Received: " + responseData);
+                }
+
+                stream.Close();
+                client.Close();
+            }
+            catch (ArgumentNullException ex)
+            {
+                MessageBox.Show("ArgumentNullException: ", ex.Message);
+                Application.Exit();
+            }
+            catch (SocketException ex)
+            {
+                MessageBox.Show("SocketException: ", ex.Message);
+                Application.Exit();
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -292,12 +326,6 @@ namespace InteractivePPT
             }
         }
 
-        public void action()
-        {
-            dgvReplice.Rows.Clear();
-            dgvReplice.Refresh();
-        }
-
         private void dgvReplice_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex != -1)
@@ -336,60 +364,6 @@ namespace InteractivePPT
                 dgvReplice.Refresh();
             }));
 
-        }
-
-        public void refreshAudience()
-        {
-            byte[] response;
-            string name = "ppt/" + path.Substring(path.LastIndexOf('\\') + 1);
-
-            using (WebClient client = new WebClient())
-            {
-                try
-                {
-                    response =
-                    client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
-                    {
-                            { "request_type", "get_interested_audience" },
-                            { "path", name }
-                    });
-
-                }
-                catch
-                {
-                    MessageBox.Show("Communication with server-side of this application could not be established! Application will now shut down..");
-                    Application.Exit();
-                    return;
-                }
-            }
-
-            string serializedUsers = System.Text.Encoding.UTF8.GetString(response);
-
-           
-            if (serializedUsers != null)
-            {
-                users = JsonConvert.DeserializeObject<Users>(serializedUsers);
-            }
-
-            dgvReplice.Invoke(new MethodInvoker(delegate
-            {
-                dgvReplice.Rows.Clear();
-                foreach (User user in users.data)
-                {
-                    dgvReplice.Rows.Add(
-                        user.name,
-                        user.uid
-                    );
-                }
-            }));
-
-        }
-
-        private void checkAudienceTimer_Tick(object sender, EventArgs e)
-        {
-            checkAudienceTimer.Stop();
-            refreshAudience();
-            checkAudienceTimer.Start();
         }
 
         private void Presentation_Activated(object sender, EventArgs e)

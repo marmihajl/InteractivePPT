@@ -41,7 +41,6 @@
             this.User = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label3 = new System.Windows.Forms.Label();
-            this.checkAudienceTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dgvReplice)).BeginInit();
             this.SuspendLayout();
             // 
@@ -162,12 +161,6 @@
             this.label3.TabIndex = 10;
             this.label3.Text = "Replicions:";
             // 
-            // checkAudienceTimer
-            // 
-            this.checkAudienceTimer.Enabled = true;
-            this.checkAudienceTimer.Interval = 1000;
-            this.checkAudienceTimer.Tick += new System.EventHandler(this.checkAudienceTimer_Tick);
-            // 
             // Presentation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -208,6 +201,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn User;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.Timer checkAudienceTimer;
     }
 }
