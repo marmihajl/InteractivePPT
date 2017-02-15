@@ -9,7 +9,8 @@ if ($argc > 1) {
     if (is_resource($socket)) {
         $port = 50000 + $pptId;
         socket_bind($socket, '46.101.247.168', $port);
-        file_put_contents('fajl.txt', $port); // for debugging purposes
+echo $port;
+fclose(STDOUT);
         socket_listen($socket);
         $connection = socket_accept($socket);
         if (is_resource($connection)) {

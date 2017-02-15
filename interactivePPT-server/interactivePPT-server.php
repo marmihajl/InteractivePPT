@@ -329,22 +329,18 @@ switch ($_POST['request_type']) {
         }
         break;
 
-    case 'get_interested_audience':
+    case 'get_notifiers_listening_port':
         $path = $_POST['path'];
 
         setlocale(LC_CTYPE, "en_US.UTF-8");
-        exec('nohup php -f /var/www/html/notifier.php -- ' . escapeshellarg($path) . ' > /dev/null 2>/dev/null &');
-        $command = "SELECT app_uid AS \"uid\", name FROM Reply_request JOIN Users ON user=idUser WHERE presentation=(SELECT id FROM Presentation WHERE path='$path' LIMIT 1);";
-        $recordSet = $dbHandler->query($command);
-        $interestedUsers = array();
+        $descriptorspec = array(
+            1 => array("pipe", "w")
+        );
 
-        if ($recordSet) {
-            for ($i=0; $i<$recordSet->num_rows; $i++) {
-                array_push($interestedUsers, $recordSet->fetch_assoc());
-            }
-            $recordSet->free();
+        $process = proc_open('nohup php -f /var/www/html/notifier.php -- ' . escapeshellarg($path) . ' &', $descriptorspec, $pipes);
+        if (is_resource($process)) {
+            echo stream_get_contents($pipes[1]);
         }
-        echo '{"data":' . json_encode($interestedUsers) . '}';
 
         break;
 
