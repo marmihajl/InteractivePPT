@@ -57,13 +57,23 @@ namespace InteractivePPT
 
             try
             {
-                Int32 port = 50002;
-                TcpClient client = new TcpClient("46.101.247.168", port);
+                Int32 port;
+                using (WebClient httpClient = new WebClient())
+                {
+                    byte[] response =
+                    httpClient.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                    {
+                        { "request_type", "get_notifiers_listening_port" },
+                        { "path", "ppt/" + path.Substring(path.LastIndexOf('\\')+1) }
+                    });
+                    port = Int32.Parse(System.Text.Encoding.UTF8.GetString(response));
+                }
+                TcpClient tcpClient = new TcpClient("46.101.247.168", port);
                 string message = "bla";
 
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
-                NetworkStream stream = client.GetStream();
+                NetworkStream stream = tcpClient.GetStream();
 
                 while (true)
                 {
@@ -77,7 +87,7 @@ namespace InteractivePPT
                 }
 
                 stream.Close();
-                client.Close();
+                tcpClient.Close();
             }
             catch (ArgumentNullException ex)
             {
