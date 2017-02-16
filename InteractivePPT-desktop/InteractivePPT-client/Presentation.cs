@@ -9,6 +9,7 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using EXCEL = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Diagnostics;
+using System.Threading;
 
 namespace InteractivePPT
 {
@@ -222,7 +223,8 @@ namespace InteractivePPT
             
             foreach (var i in item)
             {
-                dataSheet.Cells.Range["A" + index].Value2 = i.choice_name;
+                string input = "'" + i.choice_name;
+                dataSheet.Cells.Range["A" + index].Value2 = input;
                 dataSheet.Cells.Range["B" + index].Value2 = i.count;
                 index++;
             }
@@ -388,7 +390,7 @@ namespace InteractivePPT
         private void checkAudienceTimer_Tick(object sender, EventArgs e)
         {
             checkAudienceTimer.Stop();
-            refreshAudience();
+            //refreshAudience();
             checkAudienceTimer.Start();
         }
 
