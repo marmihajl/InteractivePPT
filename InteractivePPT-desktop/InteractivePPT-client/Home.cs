@@ -129,8 +129,7 @@ namespace InteractivePPT
             try
             {
                 FolderBrowserDialog fbd = new FolderBrowserDialog();
-                fbd.ShowDialog();
-                if (fbd.SelectedPath != null)
+                if (fbd.ShowDialog() == DialogResult.OK)
                 {
                     string remoteUriOfFile = mySurveysDgv.SelectedRows[0].Cells["link_to_presentation"].Value.ToString();
                     localUriOfFile = fbd.SelectedPath + '\\' + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf("/") + 1);
