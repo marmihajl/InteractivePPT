@@ -273,7 +273,7 @@ namespace InteractivePPT
             }
 
             var workbook = (EXCEL.Workbook)chart.ChartData.Workbook;
-            workbook.Windows.Application.Visible = true;
+            workbook.Windows.Application.Visible = false;
 
             var dataSheet = (EXCEL.Worksheet)workbook.Worksheets[1];
             dataSheet.Cells.ClearContents();
