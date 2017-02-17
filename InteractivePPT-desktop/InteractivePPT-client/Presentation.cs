@@ -29,6 +29,7 @@ namespace InteractivePPT
         public static TextItemsList chooseItem = new TextItemsList();
         string name;
         public static bool make = false;
+        TcpClient tcpClient;
 
         public Presentation(string path, List<Survey> surveyList, string userUid)
         {
@@ -37,7 +38,7 @@ namespace InteractivePPT
             this.surveyList = surveyList;
             this.userUid = userUid;
         }
-        
+
 
         private void Presentation_Load(object sender, EventArgs e)
         {
@@ -55,6 +56,7 @@ namespace InteractivePPT
             comboBox1.ValueMember = "id";
             comboBox1.SelectedIndex = -1;
 
+            
             try
             {
                 Int32 port;
@@ -68,26 +70,8 @@ namespace InteractivePPT
                     });
                     port = Int32.Parse(System.Text.Encoding.UTF8.GetString(response));
                 }
-                TcpClient tcpClient = new TcpClient("46.101.247.168", port);
-                string message = "bla";
-
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
-
-                NetworkStream stream = tcpClient.GetStream();
-
-                while (true)
-                {
-                    data = new Byte[256];
-
-                    String responseData = String.Empty;
-
-                    Int32 bytes = stream.Read(data, 0, data.Length);
-                    responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                    MessageBox.Show("Received: " + responseData);
-                }
-
-                stream.Close();
-                tcpClient.Close();
+                tcpClient = new TcpClient(AddressFamily.InterNetwork);
+                tcpClient.BeginConnect("46.101.247.168", port, ListenForInterestedUsers, tcpClient);
             }
             catch (ArgumentNullException ex)
             {
@@ -99,6 +83,41 @@ namespace InteractivePPT
                 MessageBox.Show("SocketException: ", ex.Message);
                 Application.Exit();
             }
+        }
+
+        private void ListenForInterestedUsers(IAsyncResult ar)
+        {
+            NetworkStream stream = tcpClient.GetStream();
+
+            while (true)
+            {
+                Byte[] data = new Byte[256];
+
+                String responseData = String.Empty;
+
+                Int32 bytes;
+                try
+                {
+                    bytes = stream.Read(data, 0, data.Length);
+                }
+                catch
+                {
+                    break;
+                }
+                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
+                if (responseData == String.Empty)
+                {
+                    break;
+                }
+                string[] userInfo = responseData.Split('-');
+                dgvReplice.Invoke((MethodInvoker) delegate
+                {
+                    dgvReplice.Rows.Add(userInfo[1], userInfo[0]);
+                });
+            }
+
+            stream.Close();
+            tcpClient.Close();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -333,7 +352,21 @@ namespace InteractivePPT
                     return;
                 }
 
+                try
+                {
+                    client.UploadValuesAsync(new Uri("http://46.101.68.86/interactivePPT-server.php"), new NameValueCollection()
+                    {
+                    { "request_type", "shutdown_listener" },
+                    { "path", name }
+                    });
+                }
+                catch
+                {
+                    MessageBox.Show("Communication with server-side of this application could not be established");
+                    return;
+                }
             }
+            tcpClient.Close();
         }
 
         private void dgvReplice_CellClick(object sender, DataGridViewCellEventArgs e)
