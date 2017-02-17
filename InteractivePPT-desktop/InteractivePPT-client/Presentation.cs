@@ -1,4 +1,4 @@
-﻿using Microsoft.Office.Core;
+using Microsoft.Office.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using EXCEL = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Diagnostics;
+using System.Net.Sockets;
 using System.Threading;
 
 namespace InteractivePPT
@@ -29,6 +30,7 @@ namespace InteractivePPT
         public static TextItemsList chooseItem = new TextItemsList();
         string name;
         public static bool make = false;
+        TcpClient tcpClient;
 
         public Presentation(string path, List<Survey> surveyList, string userUid)
         {
@@ -37,7 +39,7 @@ namespace InteractivePPT
             this.surveyList = surveyList;
             this.userUid = userUid;
         }
-        
+
 
         private void Presentation_Load(object sender, EventArgs e)
         {
@@ -55,7 +57,68 @@ namespace InteractivePPT
             comboBox1.ValueMember = "id";
             comboBox1.SelectedIndex = -1;
 
-            checkAudienceTimer.Start();
+            
+            try
+            {
+                Int32 port;
+                using (WebClient httpClient = new WebClient())
+                {
+                    byte[] response =
+                    httpClient.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                    {
+                        { "request_type", "get_notifiers_listening_port" },
+                        { "path", "ppt/" + path.Substring(path.LastIndexOf('\\')+1) }
+                    });
+                    port = Int32.Parse(System.Text.Encoding.UTF8.GetString(response));
+                }
+                tcpClient = new TcpClient(AddressFamily.InterNetwork);
+                tcpClient.BeginConnect("46.101.247.168", port, ListenForInterestedUsers, tcpClient);
+            }
+            catch (ArgumentNullException ex)
+            {
+                MessageBox.Show("ArgumentNullException: ", ex.Message);
+                Application.Exit();
+            }
+            catch (SocketException ex)
+            {
+                MessageBox.Show("SocketException: ", ex.Message);
+                Application.Exit();
+            }
+        }
+
+        private void ListenForInterestedUsers(IAsyncResult ar)
+        {
+            NetworkStream stream = tcpClient.GetStream();
+
+            while (true)
+            {
+                Byte[] data = new Byte[256];
+
+                String responseData = String.Empty;
+
+                Int32 bytes;
+                try
+                {
+                    bytes = stream.Read(data, 0, data.Length);
+                }
+                catch
+                {
+                    break;
+                }
+                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
+                if (responseData == String.Empty)
+                {
+                    break;
+                }
+                string[] userInfo = responseData.Split('-');
+                dgvReplice.Invoke((MethodInvoker) delegate
+                {
+                    dgvReplice.Rows.Add(userInfo[1], userInfo[0]);
+                });
+            }
+
+            stream.Close();
+            tcpClient.Close();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -291,13 +354,21 @@ namespace InteractivePPT
                     return;
                 }
 
+                try
+                {
+                    client.UploadValuesAsync(new Uri("http://46.101.68.86/interactivePPT-server.php"), new NameValueCollection()
+                    {
+                    { "request_type", "shutdown_listener" },
+                    { "path", name }
+                    });
+                }
+                catch
+                {
+                    MessageBox.Show("Communication with server-side of this application could not be established");
+                    return;
+                }
             }
-        }
-
-        public void action()
-        {
-            dgvReplice.Rows.Clear();
-            dgvReplice.Refresh();
+            tcpClient.Close();
         }
 
         private void dgvReplice_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -338,60 +409,6 @@ namespace InteractivePPT
                 dgvReplice.Refresh();
             }));
 
-        }
-
-        public void refreshAudience()
-        {
-            byte[] response;
-            string name = "ppt/" + path.Substring(path.LastIndexOf('\\') + 1);
-
-            using (WebClient client = new WebClient())
-            {
-                try
-                {
-                    response =
-                    client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
-                    {
-                            { "request_type", "get_interested_audience" },
-                            { "path", name }
-                    });
-
-                }
-                catch
-                {
-                    MessageBox.Show("Communication with server-side of this application could not be established! Application will now shut down..");
-                    Application.Exit();
-                    return;
-                }
-            }
-
-            string serializedUsers = System.Text.Encoding.UTF8.GetString(response);
-
-           
-            if (serializedUsers != null)
-            {
-                users = JsonConvert.DeserializeObject<Users>(serializedUsers);
-            }
-
-            dgvReplice.Invoke(new MethodInvoker(delegate
-            {
-                dgvReplice.Rows.Clear();
-                foreach (User user in users.data)
-                {
-                    dgvReplice.Rows.Add(
-                        user.name,
-                        user.uid
-                    );
-                }
-            }));
-
-        }
-
-        private void checkAudienceTimer_Tick(object sender, EventArgs e)
-        {
-            checkAudienceTimer.Stop();
-            //refreshAudience();
-            checkAudienceTimer.Start();
         }
 
         private void Presentation_Activated(object sender, EventArgs e)

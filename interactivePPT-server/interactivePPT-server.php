@@ -319,30 +319,54 @@ switch ($_POST['request_type']) {
         $path = $_POST['path'];
         $userUid = $_POST['id'];
 
-        $command = "INSERT INTO Reply_request VALUES ((SELECT idUser FROM Users WHERE app_uid = '$userUid'), (SELECT id FROM Presentation WHERE path = '$path'), CURRENT_TIMESTAMP());";
-        $result = $dbHandler->query($command);
-        if ($result) {
-            echo 'true';
+        $command = "SET @pptid := (SELECT id FROM Presentation WHERE path = '$path' LIMIT 1);INSERT INTO Reply_request VALUES ((SELECT idUser FROM Users WHERE app_uid = '$userUid' LIMIT 1), @pptid, CURRENT_TIMESTAMP());SELECT @pptid;";
+        if ($dbHandler->multi_query($command)) {
+            $dbHandler->next_result();
+            do {
+                if ($result = $dbHandler->store_result()) {
+                    $pptId = $result->fetch_row()[0];
+                    $result->free();
+                }
+                else {
+                    if ($dbHandler->affected_rows === -1) {
+                        $dbHandler->close();
+                        die('false');
+                    }
+                }
+            } while ($dbHandler->more_results() && $dbHandler->next_result());
+            if (!msg_queue_exists($pptId)) {
+                echo 'false';
+            }
+            else {
+                $queue = msg_get_queue($pptId);
+                if ($queue === false) {
+                    echo 'false';
+                }
+                else {
+                    msg_send($queue, 1, $userUid, false);
+                    echo 'true';
+                }
+            }
         }
         else {
             echo 'false';
         }
         break;
 
-    case 'get_interested_audience':
+    case 'get_notifiers_listening_port':
         $path = $_POST['path'];
 
-        $command = "SELECT app_uid AS \"uid\", name FROM Reply_request JOIN Users ON user=idUser WHERE presentation=(SELECT id FROM Presentation WHERE path='$path' LIMIT 1);";
-        $recordSet = $dbHandler->query($command);
-        $interestedUsers = array();
+        setlocale(LC_CTYPE, "en_US.UTF-8");
+        $descriptorspec = array(
+            1 => array("pipe", "w")
+        );
 
-        if ($recordSet) {
-            for ($i=0; $i<$recordSet->num_rows; $i++) {
-                array_push($interestedUsers, $recordSet->fetch_assoc());
-            }
-            $recordSet->free();
+        $pptId = $dbHandler->query("SELECT id FROM Presentation WHERE path='$path' LIMIT 1;")->fetch_row()[0];
+
+        $process = proc_open('nohup php -f notifier.php -- ' . $pptId . ' &', $descriptorspec, $pipes);
+        if (is_resource($process)) {
+            echo stream_get_contents($pipes[1]);
         }
-        echo '{"data":' . json_encode($interestedUsers) . '}';
 
         break;
 
@@ -366,6 +390,20 @@ switch ($_POST['request_type']) {
             $recordSet->free();
         }
         echo '{"surveys":' . json_encode($outputArray, JSON_NUMERIC_CHECK) . '}';
+        
+        break;
+    case 'shutdown_listener':
+        $path = $_POST['path'];
+        $pptId = $dbHandler->query("SELECT id FROM Presentation WHERE path='$path' LIMIT 1;")->fetch_row()[0];
+
+        $queue = msg_get_queue($pptId);
+        if ($queue === false) {
+            echo 'false';
+        }
+        else {
+            msg_send($queue, 1, 'exit', false);
+            echo 'true';
+        }
         
         break;
 }
