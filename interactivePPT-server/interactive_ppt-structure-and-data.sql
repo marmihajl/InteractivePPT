@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 31, 2017 at 07:50 PM
+-- Generation Time: Feb 17, 2017 at 02:49 PM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
--- PHP Version: 7.0.8-0ubuntu0.16.04.3
+-- PHP Version: 7.0.13-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -24,7 +24,7 @@ DELIMITER $$
 --
 -- Functions
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `createOptionAndGetId` (`name` VARCHAR(100)) RETURNS INT(11) BEGIN
+CREATE DEFINER=`root`@`localhost` FUNCTION `createOptionAndGetId` (`name` VARCHAR(100) CHARSET utf8) RETURNS INT(11) BEGIN
 DECLARE returnValue int(11);
 SET returnValue := (SELECT idOptions FROM Options WHERE choice_name = name LIMIT 1);
 IF returnValue IS NULL THEN
@@ -190,8 +190,12 @@ INSERT INTO `Default_question_options` (`idQuestion`, `idOption`) VALUES
 (8, 20),
 (9, 21),
 (13, 21),
+(87, 21),
+(89, 21),
 (9, 22),
 (13, 22),
+(87, 22),
+(89, 22),
 (10, 23),
 (10, 24),
 (10, 25),
@@ -211,12 +215,11 @@ INSERT INTO `Default_question_options` (`idQuestion`, `idOption`) VALUES
 (45, 37),
 (43, 40),
 (55, 40),
-(60, 40),
 (61, 40),
 (43, 41),
 (55, 41),
-(60, 41),
 (61, 41),
+(89, 42),
 (37, 52),
 (37, 53),
 (38, 54),
@@ -248,7 +251,15 @@ INSERT INTO `Default_question_options` (`idQuestion`, `idOption`) VALUES
 (59, 103),
 (59, 104),
 (59, 105),
-(60, 107);
+(60, 107),
+(90, 110),
+(90, 111),
+(90, 112),
+(90, 113),
+(91, 114),
+(91, 116),
+(91, 117),
+(91, 118);
 
 -- --------------------------------------------------------
 
@@ -353,6 +364,7 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 (39, 'b'),
 (40, 'da'),
 (41, 'ne'),
+(42, 'Možda'),
 (50, 'nedodijeljeni'),
 (51, 'sfsdfsdf'),
 (52, 'muško'),
@@ -402,7 +414,18 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 (104, 'Bao Bao'),
 (105, 'Lei Ming'),
 (106, 'krastavac'),
-(107, 'ne vidim nista');
+(107, 'ne vidim nista'),
+(108, 'sda'),
+(109, 'blah'),
+(110, '0-5'),
+(111, '5-10'),
+(112, '10-15'),
+(113, '15+'),
+(114, 'ispitivanje potreba i stavova potencijalnih kupaca na prezentacijama proizvoda'),
+(115, 'kuki'),
+(116, 'provjeru stečenog znanja nakon nastave'),
+(117, 'kolaboraciju na nastavnim aktivnostima'),
+(118, 'brainstorming');
 
 -- --------------------------------------------------------
 
@@ -413,6 +436,7 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 CREATE TABLE `Presentation` (
   `id` int(11) NOT NULL,
   `path` varchar(255) NOT NULL,
+  `checksum` varchar(32) NOT NULL,
   `access_code` varchar(10) NOT NULL,
   `author` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -421,18 +445,18 @@ CREATE TABLE `Presentation` (
 -- Dumping data for table `Presentation`
 --
 
-INSERT INTO `Presentation` (`id`, `path`, `access_code`, `author`) VALUES
-(3, 'ppt/nepoznato.ppt', 'd9b4vs69v2', 2),
-(4, 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 'rpk_anketa', 1),
-(5, 'ppt/Proizvodnja vina.pptx', '7dsR6n2n', 1),
-(7, 'ppt/Varijable i pokazivači.pptx', 'm45k0fz42t', 1),
-(10, 'ppt/test.pptx', 'j173hbvuos', 2),
-(15, 'ppt/nova.pptx', '14imt3221c', 2),
-(17, 'ppt/Poslovni plan za poduzeće CroIoT-final.pptx', '4rl0dn7a68', 10),
-(18, 'ppt/Youtube.pptx', 'n0879n11j3', 1),
-(19, 'ppt/blank_ppt.pptx', '69up787n13', 1),
-(20, 'ppt/nova.pptx', '33g4y723t4', 2),
-(21, 'ppt/LN01-Introduction.ppt', 'knv58t744c', 1);
+INSERT INTO `Presentation` (`id`, `path`, `checksum`, `access_code`, `author`) VALUES
+(3, 'ppt/nepoznato.ppt', '', 'd9b4vs69v2', 2),
+(4, 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 'f20a266070f9bc4f669cf32d3421ae94', 'rpk_anketa', 1),
+(5, 'ppt/Proizvodnja vina.pptx', '62bec847df18737e125679b52be123fc', '7dsR6n2n', 1),
+(7, 'ppt/Varijable i pokazivači.pptx', '1cd8176f540c820e1d842573f4034894', 'm45k0fz42t', 1),
+(10, 'ppt/test.pptx', 'd88c3d4fa509135671919f920d802c20', 'j173hbvuos', 2),
+(17, 'ppt/Poslovni plan za poduzeće CroIoT-final.pptx', 'e226a6cc8afc9a8d0e8246c715d57789', '4rl0dn7a68', 10),
+(18, 'ppt/Youtube.pptx', '99def3c5cba7f9c405a7a90d3c462841', 'n0879n11j3', 1),
+(19, 'ppt/blank_ppt.pptx', 'ef2f95333dc42a7f68412cf504690fb3', '69up787n13', 1),
+(20, 'ppt/nova.pptx', '7d8588f883d92d03333318fcf5c730e7', '33g4y723t4', 2),
+(22, 'ppt/CSharp and Software Design.pptx', '3f243e6c26dc4cf275751a6ef6ae3d6f', '5a99909p6k', 1),
+(28, 'ppt/LN01-Introduction.ppt', '9cdf2b479616648fa834247d66bc530c', 'rg8a62oq1s', 1);
 
 -- --------------------------------------------------------
 
@@ -494,10 +518,15 @@ INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `Question_typ
 (56, 'drugo', 0, 3, 40),
 (57, 'pitanje 1', 0, 1, 41),
 (58, 'koje jelo vole pande?', 1, 2, 42),
-(59, 'kak je zove siva panda?', 0, 1, 42),
+(59, 'kak se zove siva panda?', 0, 1, 42),
 (60, 'dal je ovo klasican checkbox group?', 1, 2, 43),
 (61, 'dal je ovo klasican radiobutton group?', 1, 1, 43),
-(62, 'dal je ovo klasicno pitanje s nadopunjavanjem?', 1, 3, 43);
+(62, 'dal je ovo klasicno pitanje s nadopunjavanjem?', 1, 3, 43),
+(87, 'Jeste li se ikad sreli s ičim sličnim na nekoj prezentaciji?', 1, 1, 54),
+(88, 'Ako da, gdje (na čijem izlaganju, koja aplikacija je korištena?)', 0, 3, 54),
+(89, 'Mislite li da aplikacija može pospješiti interakciju između izlagatelja i publike?', 1, 1, 54),
+(90, 'Koliko često sudjelujete u prezentacijama godišnje?', 1, 1, 54),
+(91, 'Ovakav način prezentiranja mi se čini primijenjiv za:', 1, 2, 54);
 
 -- --------------------------------------------------------
 
@@ -602,11 +631,22 @@ INSERT INTO `Question_options` (`idOptions`, `idQuestions`) VALUES
 (103, 59),
 (104, 59),
 (105, 59),
-(40, 60),
-(41, 60),
 (107, 60),
 (40, 61),
-(41, 61);
+(41, 61),
+(21, 87),
+(22, 87),
+(21, 89),
+(22, 89),
+(42, 89),
+(110, 90),
+(111, 90),
+(112, 90),
+(113, 90),
+(114, 91),
+(116, 91),
+(117, 91),
+(118, 91);
 
 -- --------------------------------------------------------
 
@@ -670,9 +710,8 @@ CREATE TABLE `Reply_request` (
 --
 
 INSERT INTO `Reply_request` (`user`, `presentation`, `time`) VALUES
-(1, 3, '2017-01-05 18:02:57'),
-(1, 4, '2017-01-09 13:20:17'),
-(1, 5, '2017-01-09 13:00:54'),
+(1, 4, '2017-02-17 00:00:56'),
+(1, 5, '2017-02-16 20:48:13'),
 (2, 10, '2017-01-31 15:47:10'),
 (10, 4, '2017-01-07 19:01:22');
 
@@ -715,13 +754,12 @@ CREATE TABLE `Subscription` (
 
 INSERT INTO `Subscription` (`idUser`, `idPresentation`, `active`) VALUES
 (1, 3, 'yes'),
-(1, 4, 'yes'),
+(1, 4, 'no'),
 (1, 5, 'no'),
 (1, 7, 'no'),
 (1, 10, 'no'),
 (2, 3, 'yes'),
 (2, 10, 'yes'),
-(2, 15, 'yes'),
 (10, 4, 'no');
 
 -- --------------------------------------------------------
@@ -761,7 +799,9 @@ INSERT INTO `Survey` (`idSurvey`, `name`, `description`, `access_code`) VALUES
 (40, 'tekst test', 'ovo je tekst test', '33g4y723t4'),
 (41, 'anketa naknadno dodana', 'yeeeee', 'rpk_anketa'),
 (42, 'pandologija', 'anketa o pandama', 'm45k0fz42t'),
-(43, 'Anketa za ispitivanje modularnosti', 'Ova anketa je napravljena kako bi se ispitali aspekti modularnosti kod kreiranja i pregleda anketa', 'knv58t744c');
+(43, 'Anketa za ispitivanje modularnosti', 'Ova anketa je napravljena kako bi se ispitali aspekti modularnosti kod kreiranja i pregleda anketa', 'rg8a62oq1s'),
+(44, 'SOLID Design Principles', 'Još jedna prezentacija o uzorcima dizajna', '5a99909p6k'),
+(54, 'Mišljenje o aplikaciji', 'Molimo Vas da nam rješavanjem ove ankete izrazite mišljenje o aplikaciji.', 'rg8a62oq1s');
 
 -- --------------------------------------------------------
 
@@ -917,17 +957,17 @@ ALTER TABLE `Answers`
 -- AUTO_INCREMENT for table `Options`
 --
 ALTER TABLE `Options`
-  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 --
 -- AUTO_INCREMENT for table `Presentation`
 --
 ALTER TABLE `Presentation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT for table `Questions`
 --
 ALTER TABLE `Questions`
-  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 --
 -- AUTO_INCREMENT for table `Question_type`
 --
@@ -942,7 +982,7 @@ ALTER TABLE `Role`
 -- AUTO_INCREMENT for table `Survey`
 --
 ALTER TABLE `Survey`
-  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 --
 -- AUTO_INCREMENT for table `Users`
 --
