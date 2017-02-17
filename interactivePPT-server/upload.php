@@ -32,7 +32,8 @@ function sendGCM($message, $id) {
 	$uploaddir = "ppt/";
 	$uploadfile = $uploaddir . basename($_FILES["file"]["name"]);
 	move_uploaded_file($_FILES["file"]["tmp_name"], $uploadfile);
-	
+    $fileChecksum = hash_file('md5', $uploadfile);
+
 	$accessCode;
         srand(time(0));
         rand();
@@ -58,6 +59,7 @@ function sendGCM($message, $id) {
 	if($recordSet->num_rows > 0){
 		$result = $recordSet->fetch_assoc();
 		$pId = (int)$result['id'];
+        $dbHandler->query("UPDATE Presentation SET checksum='$fileChecksum' WHERE id=$pId;");
 		$command = "SELECT token FROM Users u JOIN Subscription s JOIN Presentation p WHERE u.idUser = s.idUser AND p.id = s.idPresentation AND p.id = $pId";
 		$recordSet = $dbHandler->query($command);
 		$outputArray = array();
@@ -79,7 +81,7 @@ function sendGCM($message, $id) {
         }
 		//sendGCM($ac,$recordSet);
 	}else{
-		$command = "INSERT INTO Presentation VALUES (default, '$uploadfile', '$accessCode', (SELECT idUser FROM Users WHERE app_uid='$_POST[uid]'));";
+		$command = "INSERT INTO Presentation VALUES (default, '$uploadfile', '$fileChecksum', '$accessCode', (SELECT idUser FROM Users WHERE app_uid='$_POST[uid]'));";
 		$dbHandler->query($command);
 	}
 	

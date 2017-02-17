@@ -60,26 +60,12 @@ namespace InteractivePPT
             byte[] trailer = System.Text.Encoding.ASCII.GetBytes("\r\n--" + boundary + "--\r\n");
             rs.Write(trailer, 0, trailer.Length);
             rs.Close();
-            WebResponse wresp = null;
             try
             {
-                wresp = wr.GetResponse();
-                Stream stream2 = wresp.GetResponseStream();
-                StreamReader reader2 = new StreamReader(stream2);
-                //result = reader2.ReadToEnd();
+                wr.GetResponse();
             }
             catch
             {
-                MessageBox.Show("Error occurred while converting file", "Error!");
-                if (wresp != null)
-                {
-                    wresp.Close();
-                    wresp = null;
-                }
-            }
-            finally
-            {
-                wr = null;
             }
         }
     }

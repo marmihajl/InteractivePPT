@@ -47,9 +47,10 @@ switch ($_POST['request_type']) {
                 if (is_uploaded_file($userfile)) {
                     move_uploaded_file($userfile, "ppt/$filename");
                     $fileUri = "'ppt/$filename'";
+                    $fileChecksum = hash_file('md5', trim($fileUri, "'"));
                 }            
             }
-            $command = "INSERT INTO Presentation VALUES (default, $fileUri, '$accessCode', (SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1));INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode');SET @survey := LAST_INSERT_ID();";
+            $command = "INSERT INTO Presentation VALUES (default, $fileUri, '$fileChecksum', '$accessCode', (SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1));INSERT INTO Survey VALUES (default, '$title', '$description', '$accessCode');SET @survey := LAST_INSERT_ID();";
         }
 
 
@@ -391,6 +392,11 @@ switch ($_POST['request_type']) {
         }
         echo '{"surveys":' . json_encode($outputArray, JSON_NUMERIC_CHECK) . '}';
         
+        break;
+    case 'get_file_checksum':
+        $path = $_POST['path'];
+        echo hash_file('md5', $path);
+
         break;
     case 'shutdown_listener':
         $path = $_POST['path'];

@@ -9,6 +9,7 @@ using com.google.zxing.qrcode;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using System.Linq;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace InteractivePPT
 {
@@ -16,7 +17,6 @@ namespace InteractivePPT
     {
         private User user;
         PowerPoint.Application pptApp = new PowerPoint.Application();
-        static string localUriOfFile;
         SurveyList mySurveyList = null;
         private const string serverRootDirectoryUri = "http://46.101.68.86/";
 
@@ -132,7 +132,7 @@ namespace InteractivePPT
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
                     string remoteUriOfFile = mySurveysDgv.SelectedRows[0].Cells["link_to_presentation"].Value.ToString();
-                    localUriOfFile = fbd.SelectedPath + '\\' + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf("/") + 1);
+                    string localUriOfFile = fbd.SelectedPath + '\\' + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf("/") + 1);
                     if (localUriOfFile.Length > 255)
                     {
                         MessageBox.Show("Odaberite kraću putanju jer broj znakova odabrane putanje (uključujući i sâm naziv datoteke koja bi trebala biti pohranjena u odabrani direktorij) prelazi 255 znakova!");
@@ -140,22 +140,30 @@ namespace InteractivePPT
                     }
                     if (File.Exists(localUriOfFile))
                     {
-                        //file's hash signature could also be compared, but in that case signature should be calculated and stored in DB on server-side (otherwise, file would need to be downloaded and then its signature could be checked)
                         if (GetFileSizeOfRemoteFile(remoteUriOfFile) != new FileInfo(localUriOfFile).Length)
                         {
-                            switch (MessageBox.Show("U odabranom direktoriju već postoji istoimena prezentacija. Odgovorite potvrdno ako želite prebrisati lokalnu s onom udaljenom, negativno ako želite udaljenu prebrisati lokalnom ili odustanite ako ne znate što učiniti", "Moguća postojanost novije verzije prezentacije", MessageBoxButtons.YesNoCancel))
+                            AskUserHowToHandleCollisions(localUriOfFile, remoteUriOfFile);
+                        }
+                        else
+                        {
+                            string remoteFileChecksum;
+                            using (WebClient client = new WebClient())
                             {
-                                case DialogResult.Yes:
-                                    using (WebClient webClient = new WebClient())
-                                    {
-                                        webClient.DownloadFile(remoteUriOfFile, localUriOfFile);
-                                    }
-                                    break;
-                                case DialogResult.No:
-                                    FileClass.uploadFile(localUriOfFile, user.uid);
-                                    break;
-                                case DialogResult.Cancel:
-                                    return;
+                                byte[] response =
+                                client.UploadValues(serverRootDirectoryUri + "interactivePPT-server.php", new NameValueCollection()
+                                {
+                                    { "request_type", "get_file_checksum" },
+                                    { "path",  "ppt/" + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf('/')+1) }
+                                });
+                                remoteFileChecksum = System.Text.Encoding.UTF8.GetString(response);
+                            }
+                            using (var md5 = MD5.Create())
+                            using (var stream = File.OpenRead(localUriOfFile))
+                            {
+                                if (BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", String.Empty).ToLower() != remoteFileChecksum)
+                                {
+                                    AskUserHowToHandleCollisions(localUriOfFile, remoteUriOfFile);
+                                }
                             }
                         }
                     }
@@ -173,6 +181,24 @@ namespace InteractivePPT
             catch
             {
 
+            }
+        }
+
+        private void AskUserHowToHandleCollisions(string localUriOfFile, string remoteUriOfFile)
+        {
+            switch (MessageBox.Show("U odabranom direktoriju već postoji istoimena prezentacija. Odgovorite potvrdno ako želite prebrisati lokalnu s onom udaljenom, negativno ako želite udaljenu prebrisati lokalnom ili odustanite ako ne znate što učiniti", "Moguća postojanost novije verzije prezentacije", MessageBoxButtons.YesNoCancel))
+            {
+                case DialogResult.Yes:
+                    using (WebClient webClient = new WebClient())
+                    {
+                        webClient.DownloadFile(remoteUriOfFile, localUriOfFile);
+                    }
+                    break;
+                case DialogResult.No:
+                    FileClass.uploadFile(localUriOfFile, user.uid);
+                    break;
+                case DialogResult.Cancel:
+                    return;
             }
         }
 
