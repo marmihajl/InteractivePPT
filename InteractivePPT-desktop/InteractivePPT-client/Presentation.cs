@@ -1,4 +1,4 @@
-using Microsoft.Office.Core;
+﻿using Microsoft.Office.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -290,6 +290,14 @@ namespace InteractivePPT
                 dataSheet.Cells.Range["A" + index].Value2 = input;
                 dataSheet.Cells.Range["B" + index].Value2 = i.count;
                 index++;
+            }
+
+            if (index < 6)
+            {
+                for (int i = 6; i >= index; i--)
+                {
+                    ((EXCEL.Range)dataSheet.Rows[i]).Delete(EXCEL.XlDeleteShiftDirection.xlShiftUp);
+                }
             }
 
             chart.HasTitle = true;
