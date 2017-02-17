@@ -1,4 +1,4 @@
-﻿using Microsoft.Office.Core;
+using Microsoft.Office.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using EXCEL = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Diagnostics;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace InteractivePPT
 {
@@ -285,7 +286,8 @@ namespace InteractivePPT
             
             foreach (var i in item)
             {
-                dataSheet.Cells.Range["A" + index].Value2 = i.choice_name;
+                string input = "'" + i.choice_name;
+                dataSheet.Cells.Range["A" + index].Value2 = input;
                 dataSheet.Cells.Range["B" + index].Value2 = i.count;
                 index++;
             }
