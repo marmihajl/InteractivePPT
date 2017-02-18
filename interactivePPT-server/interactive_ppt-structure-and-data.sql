@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 17, 2017 at 02:49 PM
+-- Generation Time: Feb 18, 2017 at 09:26 PM
 -- Server version: 5.7.16-0ubuntu0.16.04.1
 -- PHP Version: 7.0.13-0ubuntu0.16.04.1
 
@@ -21,6 +21,119 @@ SET time_zone = "+00:00";
 --
 
 DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_question_type` (IN `IdNum` INT UNSIGNED)  BEGIN
+	DECLARE rows_num int;
+    DECLARE msg varchar(255);
+    DECLARE exit handler for sqlstate '45000'
+  	BEGIN
+	    GET DIAGNOSTICS CONDITION 1
+    	msg = MESSAGE_TEXT;
+    	SIGNAL sqlstate '45000' SET message_text = msg;
+  	END;
+	DECLARE exit handler for sqlexception
+  	BEGIN
+		ROLLBACK;
+	END;
+        
+	DECLARE exit handler for sqlwarning
+	BEGIN
+	 	ROLLBACK;
+	END;
+    
+    SET rows_num = (SELECT count(*) FROM Question_type);
+    IF IdNum>rows_num THEN
+    	SIGNAL sqlstate '45000' SET message_text = 'Question type with given Id does not exist!';
+	ELSEIF IdNum IS NOT NULL THEN
+		START TRANSACTION;
+			SET @from_procedure_call = 1;
+    		DELETE FROM Question_type WHERE idQuestion_type=IdNum;
+    		UPDATE Question_type SET idQuestion_type=idQuestion_type-1 WHERE idQuestion_type>IdNum;
+        	SET @from_procedure_call = NULL;
+        COMMIT;
+    END IF;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_question_type` (IN `id` INT UNSIGNED, IN `name` VARCHAR(45) CHARSET utf8, IN `mode` TINYINT)  NO SQL
+BEGIN
+    DECLARE num_to_change INT;
+    DECLARE msg varchar(255);
+    
+    DECLARE exit handler for sqlstate '45000'
+  	BEGIN
+	    GET DIAGNOSTICS CONDITION 1
+    	msg = MESSAGE_TEXT;
+    	SIGNAL sqlstate '45000' SET message_text = msg;
+  	END;
+    DECLARE exit handler for sqlexception
+  	BEGIN
+		ROLLBACK;
+	END;
+        
+	DECLARE exit handler for sqlwarning
+	BEGIN
+	 	ROLLBACK;
+	END;
+
+	IF id IS NOT NULL AND id<>0 THEN
+
+            SET num_to_change = (SELECT count(*) FROM Question_type);
+            IF id >= num_to_change+1 THEN
+            	INSERT INTO Question_type VALUES (id, name, mode);
+            ELSE
+            	START TRANSACTION;
+					SET @from_procedure_call = 1;
+		            WHILE num_to_change>=id DO
+	    		        UPDATE Question_type SET idQuestion_type=idQuestion_type+1 WHERE idQuestion_type=num_to_change;
+            	        SET num_to_change = num_to_change-1;
+                	END WHILE;
+        	    	INSERT INTO Question_type VALUES (id, name, mode);
+            		SET @from_procedure_call = NULL;
+				COMMIT;
+            END IF;
+    ELSE
+    	INSERT INTO Question_type VALUES (0, name, mode);
+	END IF;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `swap_question_types` (IN `id1` INT, IN `id2` INT)  NO SQL
+BEGIN
+	DECLARE rows_num int;
+    DECLARE msg varchar(255);
+
+	DECLARE exit handler for sqlstate '45000'
+  	BEGIN
+	    GET DIAGNOSTICS CONDITION 1
+    	msg = MESSAGE_TEXT;
+    	SIGNAL sqlstate '45000' SET message_text = msg;
+  	END;
+
+	DECLARE exit handler for sqlexception
+  	BEGIN
+		ROLLBACK;
+	END;
+        
+	DECLARE exit handler for sqlwarning
+	BEGIN
+	 	ROLLBACK;
+	END;
+
+    SET rows_num = (SELECT count(*) FROM Question_type);
+    IF id1>rows_num OR id2>rows_num THEN
+    	SIGNAL sqlstate '45000' SET message_text = 'Question type with given Id does not exist!';
+	ELSEIF id1 IS NOT NULL AND id2 IS NOT NULL THEN
+		START TRANSACTION;
+    	SET @from_procedure_call = 1;
+    	UPDATE Question_type SET idQuestion_type=-1 WHERE idQuestion_type=id1;
+    	UPDATE Question_type SET idQuestion_type=id1 WHERE idQuestion_type=id2;
+    	UPDATE Question_type SET idQuestion_type=id2 WHERE idQuestion_type=-1;
+    	SET @from_procedure_call = NULL;
+    	COMMIT;
+	END IF;
+END$$
+
 --
 -- Functions
 --
@@ -141,7 +254,19 @@ INSERT INTO `Answers` (`idAnswer`, `idUser`, `idQuestion`, `idOption`) VALUES
 (194, 2, 56, 95),
 (195, 1, 60, 40),
 (196, 1, 61, 40),
-(197, 1, 62, 40);
+(197, 1, 62, 40),
+(198, 2, 92, 40),
+(199, 2, 93, 35),
+(200, 2, 93, 36),
+(201, 2, 93, 37),
+(202, 2, 93, 119),
+(203, 2, 93, 120),
+(204, 2, 94, 35),
+(205, 2, 95, 35),
+(206, 2, 95, 36),
+(207, 2, 95, 37),
+(208, 2, 95, 119),
+(209, 2, 95, 120);
 
 -- --------------------------------------------------------
 
@@ -210,15 +335,25 @@ INSERT INTO `Default_question_options` (`idQuestion`, `idOption`) VALUES
 (43, 34),
 (5, 35),
 (45, 35),
+(93, 35),
+(94, 35),
+(95, 35),
 (5, 36),
 (45, 36),
+(93, 36),
+(94, 36),
+(95, 36),
 (45, 37),
+(93, 37),
+(95, 37),
 (43, 40),
 (55, 40),
 (61, 40),
+(92, 40),
 (43, 41),
 (55, 41),
 (61, 41),
+(92, 41),
 (89, 42),
 (37, 52),
 (37, 53),
@@ -259,7 +394,11 @@ INSERT INTO `Default_question_options` (`idQuestion`, `idOption`) VALUES
 (91, 114),
 (91, 116),
 (91, 117),
-(91, 118);
+(91, 118),
+(93, 119),
+(95, 119),
+(93, 120),
+(95, 120);
 
 -- --------------------------------------------------------
 
@@ -425,7 +564,9 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 (115, 'kuki'),
 (116, 'provjeru stečenog znanja nakon nastave'),
 (117, 'kolaboraciju na nastavnim aktivnostima'),
-(118, 'brainstorming');
+(118, 'brainstorming'),
+(119, '4'),
+(120, '5');
 
 -- --------------------------------------------------------
 
@@ -450,13 +591,14 @@ INSERT INTO `Presentation` (`id`, `path`, `checksum`, `access_code`, `author`) V
 (4, 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 'f20a266070f9bc4f669cf32d3421ae94', 'rpk_anketa', 1),
 (5, 'ppt/Proizvodnja vina.pptx', '62bec847df18737e125679b52be123fc', '7dsR6n2n', 1),
 (7, 'ppt/Varijable i pokazivači.pptx', '1cd8176f540c820e1d842573f4034894', 'm45k0fz42t', 1),
-(10, 'ppt/test.pptx', 'd88c3d4fa509135671919f920d802c20', 'j173hbvuos', 2),
+(10, 'ppt/test.pptx', '', 'j173hbvuos', 2),
 (17, 'ppt/Poslovni plan za poduzeće CroIoT-final.pptx', 'e226a6cc8afc9a8d0e8246c715d57789', '4rl0dn7a68', 10),
 (18, 'ppt/Youtube.pptx', '99def3c5cba7f9c405a7a90d3c462841', 'n0879n11j3', 1),
 (19, 'ppt/blank_ppt.pptx', 'ef2f95333dc42a7f68412cf504690fb3', '69up787n13', 1),
 (20, 'ppt/nova.pptx', '7d8588f883d92d03333318fcf5c730e7', '33g4y723t4', 2),
 (22, 'ppt/CSharp and Software Design.pptx', '3f243e6c26dc4cf275751a6ef6ae3d6f', '5a99909p6k', 1),
-(28, 'ppt/LN01-Introduction.ppt', '9cdf2b479616648fa834247d66bc530c', 'rg8a62oq1s', 1);
+(28, 'ppt/LN01-Introduction.ppt', '9cdf2b479616648fa834247d66bc530c', 'rg8a62oq1s', 1),
+(29, 'ppt/interactive_presentation.pptx', '1093f0f2db00f2d9d77a92a576ea8ae6', 'y1u03ows85', 2);
 
 -- --------------------------------------------------------
 
@@ -526,7 +668,11 @@ INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `Question_typ
 (88, 'Ako da, gdje (na čijem izlaganju, koja aplikacija je korištena?)', 0, 3, 54),
 (89, 'Mislite li da aplikacija može pospješiti interakciju između izlagatelja i publike?', 1, 1, 54),
 (90, 'Koliko često sudjelujete u prezentacijama godišnje?', 1, 1, 54),
-(91, 'Ovakav način prezentiranja mi se čini primijenjiv za:', 1, 2, 54);
+(91, 'Ovakav način prezentiranja mi se čini primijenjiv za:', 1, 2, 54),
+(92, 'prvo', 1, 1, 55),
+(93, 'drugo', 1, 2, 55),
+(94, 'prv', 1, 1, 56),
+(95, 'dr', 1, 2, 56);
 
 -- --------------------------------------------------------
 
@@ -646,7 +792,21 @@ INSERT INTO `Question_options` (`idOptions`, `idQuestions`) VALUES
 (114, 91),
 (116, 91),
 (117, 91),
-(118, 91);
+(118, 91),
+(40, 92),
+(41, 92),
+(35, 93),
+(36, 93),
+(37, 93),
+(119, 93),
+(120, 93),
+(35, 94),
+(36, 94),
+(35, 95),
+(36, 95),
+(37, 95),
+(119, 95),
+(120, 95);
 
 -- --------------------------------------------------------
 
@@ -667,28 +827,51 @@ CREATE TABLE `Question_type` (
 INSERT INTO `Question_type` (`idQuestion_type`, `name`, `mode`) VALUES
 (1, 'selection', 1),
 (2, 'checkbox', 1),
-(3, 'text', 2);
+(3, 'text', 2),
+(4, 'das', 2);
 
 --
 -- Triggers `Question_type`
 --
 DELIMITER $$
-CREATE TRIGGER `question_type_mode_range` BEFORE UPDATE ON `Question_type` FOR EACH ROW BEGIN DECLARE msg varchar(255);
-     IF (NOT NEW.mode IN (1,2,3))
-     THEN
-        SET msg = concat('Logička pogreška: mode može imati vrijednost 1, 2 ili 3. Vi ste pokušali staviti ', cast(new.mode as char));
-        SIGNAL sqlstate '45000' SET message_text = msg;
-     END IF; 
+CREATE TRIGGER `question_type_delete` BEFORE DELETE ON `Question_type` FOR EACH ROW BEGIN
+DECLARE msg varchar(255);
+DECLARE last_consecutive_num int;
+SET last_consecutive_num = (SELECT count(*) FROM Question_type);
+IF OLD.idQuestion_type <> last_consecutive_num AND @from_procedure_call IS NULL THEN
+	SET msg = 'Perform deletion of non-last question type with following command: CALL delete_question_type(IdNum);';
+	SIGNAL sqlstate '45000' SET message_text = msg;
+END IF;
 END
 $$
 DELIMITER ;
 DELIMITER $$
-CREATE TRIGGER `question_type_mode_range_insert` BEFORE INSERT ON `Question_type` FOR EACH ROW BEGIN DECLARE msg varchar(255);
-     IF (NOT NEW.mode IN (1,2,3))
-     THEN
-        SET msg = concat('Logička pogreška: mode može imati vrijednost 1, 2 ili 3. Vi ste pokušali staviti ', cast(new.mode as char));
-        SIGNAL sqlstate '45000' SET message_text = msg;
-     END IF; 
+CREATE TRIGGER `question_type_insert` BEFORE INSERT ON `Question_type` FOR EACH ROW BEGIN
+DECLARE next_consecutive_num int;
+IF NOT NEW.mode IN (1,2,3) THEN
+	SIGNAL sqlstate '45000' SET message_text = 'Error: mode can only have value 1, 2 or 3.';
+END IF;
+SET next_consecutive_num = (SELECT count(*) FROM Question_type) +1;
+IF NEW.idQuestion_type=0 THEN
+	SET NEW.idQuestion_type = next_consecutive_num;
+ELSEIF NEW.idQuestion_type<next_consecutive_num AND @from_procedure_call IS NULL THEN
+	SIGNAL sqlstate '45000' SET message_text = 'Perform insertion of question type with following command: CALL insert_question_type(nullOrIdNum, 'qt name', qtModeNum);';
+ELSEIF NEW.idQuestion_type>next_consecutive_num THEN
+    SIGNAL sqlstate '45000' SET message_text = 'Error: Ids of question types have to be in consecutive order!';
+END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `question_type_update` BEFORE UPDATE ON `Question_type` FOR EACH ROW BEGIN DECLARE msg varchar(255);
+IF OLD.idQuestion_type<>NEW.idQuestion_type AND @from_procedure_call IS NULL THEN
+	SET msg = 'Perform swap of question types with following command: CALL swap_question_types(IdNum1, IdNum2);';
+	SIGNAL sqlstate '45000' SET message_text = msg;
+ELSE
+	IF NOT NEW.mode IN (1,2,3) THEN
+		SIGNAL sqlstate '45000' SET message_text = 'Error: mode can only have value 1, 2 or 3.';
+	END IF;
+END IF;
 END
 $$
 DELIMITER ;
@@ -759,7 +942,7 @@ INSERT INTO `Subscription` (`idUser`, `idPresentation`, `active`) VALUES
 (1, 7, 'no'),
 (1, 10, 'no'),
 (2, 3, 'yes'),
-(2, 10, 'yes'),
+(2, 10, 'no'),
 (10, 4, 'no');
 
 -- --------------------------------------------------------
@@ -801,7 +984,9 @@ INSERT INTO `Survey` (`idSurvey`, `name`, `description`, `access_code`) VALUES
 (42, 'pandologija', 'anketa o pandama', 'm45k0fz42t'),
 (43, 'Anketa za ispitivanje modularnosti', 'Ova anketa je napravljena kako bi se ispitali aspekti modularnosti kod kreiranja i pregleda anketa', 'rg8a62oq1s'),
 (44, 'SOLID Design Principles', 'Još jedna prezentacija o uzorcima dizajna', '5a99909p6k'),
-(54, 'Mišljenje o aplikaciji', 'Molimo Vas da nam rješavanjem ove ankete izrazite mišljenje o aplikaciji.', 'rg8a62oq1s');
+(54, 'Mišljenje o aplikaciji', 'Molimo Vas da nam rješavanjem ove ankete izrazite mišljenje o aplikaciji.', 'rg8a62oq1s'),
+(55, 'nova anketa', 'anketa', 'j173hbvuos'),
+(56, 'ank', 'ank', 'y1u03ows85');
 
 -- --------------------------------------------------------
 
@@ -952,27 +1137,27 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Answers`
 --
 ALTER TABLE `Answers`
-  MODIFY `idAnswer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
+  MODIFY `idAnswer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=210;
 --
 -- AUTO_INCREMENT for table `Options`
 --
 ALTER TABLE `Options`
-  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 --
 -- AUTO_INCREMENT for table `Presentation`
 --
 ALTER TABLE `Presentation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT for table `Questions`
 --
 ALTER TABLE `Questions`
-  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 --
 -- AUTO_INCREMENT for table `Question_type`
 --
 ALTER TABLE `Question_type`
-  MODIFY `idQuestion_type` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idQuestion_type` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `Role`
 --
@@ -982,7 +1167,7 @@ ALTER TABLE `Role`
 -- AUTO_INCREMENT for table `Survey`
 --
 ALTER TABLE `Survey`
-  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 --
 -- AUTO_INCREMENT for table `Users`
 --
@@ -1023,7 +1208,7 @@ ALTER TABLE `Presentation`
 -- Constraints for table `Questions`
 --
 ALTER TABLE `Questions`
-  ADD CONSTRAINT `fk_Questions_Question_type1` FOREIGN KEY (`Question_type_idQuestion_type`) REFERENCES `Question_type` (`idQuestion_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `Questions_ibfk_1` FOREIGN KEY (`Question_type_idQuestion_type`) REFERENCES `Question_type` (`idQuestion_type`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_Questions_Survey1` FOREIGN KEY (`Survey_idSurvey`) REFERENCES `Survey` (`idSurvey`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
