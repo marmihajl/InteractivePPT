@@ -11,7 +11,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="hr.air.interactiveppt.Chat">
+    tools:context="hr.foi.air.interactiveppt.hr.foi.air.interactiveppt.Chat">
 
     <ImageView
         android:id="@+id/emoji_button"

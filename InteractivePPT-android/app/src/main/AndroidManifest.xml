@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="hr.air.interactiveppt">
+    package="hr.foi.air.interactiveppt">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,7 +17,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name="hr.foi.air.interactiveppt.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,26 +28,23 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-        <activity
-            android:name=".Home"
-            android:label="@string/app_name" />
-        <activity android:name=".CreateSurvey" />
-        <activity android:name=".GetCode" />
-        <activity android:name=".InputCode" />
-        <activity android:name=".qrreader.QrReader" />
-        <activity android:name=".GetSurvey" />
-        <activity android:name=".ViewPresentation" />
-        <activity android:name=".PresentationList"/>
-        <activity android:name=".SurveyList"/>
-        <activity android:name=".Chat"/>
+        <activity android:name="hr.foi.air.interactiveppt.CreateSurvey" />
+        <activity android:name="hr.foi.air.interactiveppt.GetCode" />
+        <activity android:name="hr.foi.air.interactiveppt.InputCode" />
+        <activity android:name="hr.foi.air.interactiveppt.qrreader.QrReader" />
+        <activity android:name="hr.foi.air.interactiveppt.GetSurvey" />
+        <activity android:name="hr.foi.air.interactiveppt.ViewPresentation" />
+        <activity android:name="hr.foi.air.interactiveppt.PresentationList"/>
+        <activity android:name="hr.foi.air.interactiveppt.SurveyList"/>
+        <activity android:name="hr.foi.air.interactiveppt.Chat"/>
         <service
-            android:name=".MyFirebaseInstanceIDService">
+            android:name="hr.foi.air.interactiveppt.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name=".MyFirebaseMessagingService">
+            android:name="hr.foi.air.interactiveppt.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

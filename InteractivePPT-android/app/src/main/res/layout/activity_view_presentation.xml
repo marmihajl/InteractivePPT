@@ -17,7 +17,7 @@
         android:background="@color/com_facebook_button_like_background_color_selected"
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
-        tools:context="hr.air.interactiveppt.GetCode">
+        tools:context="hr.foi.air.interactiveppt.GetCode">
 
         <LinearLayout
             android:orientation="horizontal"

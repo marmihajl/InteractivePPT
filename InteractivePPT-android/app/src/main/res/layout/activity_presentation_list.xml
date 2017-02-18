@@ -17,7 +17,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:background="@color/com_facebook_button_like_background_color_selected"
-        tools:context="hr.air.interactiveppt.PresentationList">
+        tools:context="hr.foi.air.interactiveppt.PresentationList">
         <include
             layout="@layout/toolbar"
             android:layout_width="match_parent"

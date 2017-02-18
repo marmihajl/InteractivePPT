@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/deselectablerb/deselectablerb.iml" filepath="$PROJECT_DIR$/deselectablerb/deselectablerb.iml" />
       <module fileurl="file://$PROJECT_DIR$/entities/entities.iml" filepath="$PROJECT_DIR$/entities/entities.iml" />
-      <module fileurl="file://$PROJECT_DIR$/hbpsimageview/hbpsimageview.iml" filepath="$PROJECT_DIR$/hbpsimageview/hbpsimageview.iml" />
       <module fileurl="file://$PROJECT_DIR$/qrreader/qrreader.iml" filepath="$PROJECT_DIR$/qrreader/qrreader.iml" />
       <module fileurl="file://$PROJECT_DIR$/questiontype/questiontype.iml" filepath="$PROJECT_DIR$/questiontype/questiontype.iml" />
       <module fileurl="file://$PROJECT_DIR$/webservice/webservice.iml" filepath="$PROJECT_DIR$/webservice/webservice.iml" />
