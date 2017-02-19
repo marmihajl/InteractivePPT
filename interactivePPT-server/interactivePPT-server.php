@@ -204,11 +204,12 @@ switch ($_POST['request_type']) {
     case 'register_user':
         $appUid = $_POST['app_uid'];
         $fullName = $_POST['name'];
+        $token = $_POST['token'];
         if ($dbHandler->query("SELECT * FROM Users WHERE app_uid='$appUid';")->num_rows === 0) {
-            $dbHandler->query("INSERT INTO Users VALUES (default, '$fullName', '$appUid', 3, '');");
+            $dbHandler->query("INSERT INTO Users VALUES (default, '$fullName', '$appUid', 3, '$token');");
         }
         else {
-            $dbHandler->query("UPDATE Users SET name='$fullName' WHERE app_uid='$appUid';");
+            $dbHandler->query("UPDATE Users SET name='$fullName', token='$token' WHERE app_uid='$appUid';");
         }
         echo 'true';
 
@@ -247,18 +248,6 @@ switch ($_POST['request_type']) {
         echo json_encode(array('my_ppts' => $userPpts, 'subbed_ppts' => $subbedPpts));
 
         break;
-		
-	case 'save_token':
-	
-		$token = $_POST['token'];
-		$id = $_POST['id'];
-		
-		$command = "UPDATE Users u SET u.token = '$token' WHERE u.app_uid = '$id'";	
-		$dbHandler->query($command);
-		
-		echo 'true';
-		
-		break;
 		
 	case 'save_subscription':
 	

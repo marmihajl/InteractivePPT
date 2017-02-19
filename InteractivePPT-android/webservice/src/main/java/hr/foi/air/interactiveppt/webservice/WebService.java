@@ -37,7 +37,8 @@ public interface WebService {
     Call<Boolean> registerUser(
             @Field("request_type") String requestType,
             @Field("app_uid") String appUid,
-            @Field("name") String name
+            @Field("name") String name,
+            @Field("token") String token
     );
 
     @FormUrlEncoded
@@ -59,14 +60,6 @@ public interface WebService {
     Call<PresentationWithSurveys> getPresentation(
             @Field("access_code") String accessCode,
             @Field("request_type") String requestType
-    );
-
-    @FormUrlEncoded
-    @POST("interactivePPT-server.php")
-    Call<Boolean> saveToken(
-            @Field("request_type") String requestType,
-            @Field("token") String token,
-            @Field("id") String id
     );
 
     @FormUrlEncoded

@@ -2,6 +2,8 @@ package hr.foi.air.interactiveppt;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -154,11 +156,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registerUserIntoWebservice(User u) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit().putString("USER_ID",u.id).apply();
+        String token = PreferenceManager.getDefaultSharedPreferences(this).getString("FCM_TOKEN","");
+
         new SendDataAndProcessResponseTask(
                 ServiceGenerator.createService(WebService.class).registerUser(
                         "register_user",
                         u.id,
-                        u.fullName
+                        u.fullName,
+                        token
                 ),
                 new SendDataAndProcessResponseTask.PostActions() {
                     @Override
