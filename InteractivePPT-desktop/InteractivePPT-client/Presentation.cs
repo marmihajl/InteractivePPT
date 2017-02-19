@@ -272,12 +272,13 @@ namespace InteractivePPT
                 chart.HasLegend = false;
             }
 
+            
+
             var workbook = (EXCEL.Workbook)chart.ChartData.Workbook;
             workbook.Windows.Application.Visible = false;
 
             var dataSheet = (EXCEL.Worksheet)workbook.Worksheets[1];
-            dataSheet.Cells.ClearContents();
-
+            
             int index = 1;
 
             dataSheet.Cells.Range["A" + index].Value2 = "";
@@ -292,12 +293,19 @@ namespace InteractivePPT
                 index++;
             }
 
+            dataSheet.Cells.get_Range("A1:A10");
+
             if (index < 6)
             {
                 for (int i = 6; i >= index; i--)
-                {
+                { 
                     ((EXCEL.Range)dataSheet.Rows[i]).Delete(EXCEL.XlDeleteShiftDirection.xlShiftUp);
                 }
+            }
+
+            for (int i = 4; i > 2; i--)
+            {
+                ((EXCEL.Range)dataSheet.Columns[i]).Delete(EXCEL.XlDeleteShiftDirection.xlShiftToLeft);
             }
 
             chart.HasTitle = true;
