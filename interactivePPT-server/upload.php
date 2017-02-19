@@ -60,12 +60,12 @@ function sendGCM($message, $id) {
 		$result = $recordSet->fetch_assoc();
 		$pId = (int)$result['id'];
         $dbHandler->query("UPDATE Presentation SET checksum='$fileChecksum' WHERE id=$pId;");
-		$command = "SELECT token FROM Users u JOIN Subscription s JOIN Presentation p WHERE u.idUser = s.idUser AND p.id = s.idPresentation AND p.id = $pId";
+		$command = "SELECT token FROM Users u JOIN Subscription s JOIN Presentation p WHERE u.idUser = s.idUser AND p.id = s.idPresentation AND p.id = $pId AND token<>'';";
 		$recordSet = $dbHandler->query($command);
 		$outputArray = array();
 		for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
-                array_push($outputArray, $recordSet->fetch_assoc()['token']);
-            }
+            array_push($outputArray, $recordSet->fetch_assoc()['token']);
+        }
         $recordSet->free();
 		$command = "SELECT access_code FROM Presentation WHERE id = $pId LIMIT 1;";
 		$ac = $dbHandler->query($command)->fetch_assoc()['access_code'];
