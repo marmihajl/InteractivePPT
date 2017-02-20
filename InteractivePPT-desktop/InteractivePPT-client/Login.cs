@@ -9,7 +9,7 @@ using System.Collections.Specialized;
 
 namespace InteractivePPT
 {
-    public partial class Login : Form
+    public partial class Login : MetroFramework.Forms.MetroForm
     {
         Form1 f;
         User user = new User();
@@ -111,12 +111,17 @@ namespace InteractivePPT
 
                     DeleteCookiesOfIntegratedWebBrowser();
 
-                    Home h = new Home(user);
+                    Pocetna h = new Pocetna(user);
                     h.WindowState = FormWindowState.Maximized;
+                    h.MdiParent = f;
                     h.Show();
                     this.Close();
-                    f.Hide();
 
+                    /*Home h = new Home(user);
+                    h.WindowState = FormWindowState.Maximized;
+                    h.MdiParent = f;
+                    h.Show();
+                    this.Close();*/
                     break;
                 }
             }

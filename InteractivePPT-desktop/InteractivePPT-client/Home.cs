@@ -10,20 +10,23 @@ using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using System.Linq;
 using System.IO;
 using System.Security.Cryptography;
+using MetroFramework.Controls;
 
 namespace InteractivePPT
 {
-    public partial class Home : Form
+    public partial class Home : MetroFramework.Forms.MetroForm
     {
+        MetroPanel panel;
         private User user;
         PowerPoint.Application pptApp = new PowerPoint.Application();
         SurveyList mySurveyList = null;
         private const string serverRootDirectoryUri = "http://46.101.68.86/";
 
-        public Home(User u)
+        public Home(User u, MetroPanel mp)
         {
             InitializeComponent();
             user = u;
+            panel = mp;
         }
 
         private void Home_Load(object sender, EventArgs e)
@@ -78,31 +81,9 @@ namespace InteractivePPT
 
         private void Home_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Application.Exit();
+            //Application.Exit();
         }
-
-        private void mySurveysDgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex == 3 && e.RowIndex >= 0)
-            {
-                using (Form form = new Form())
-                {
-                    int numOfPixels = Math.Min(Screen.PrimaryScreen.WorkingArea.Height, Screen.PrimaryScreen.WorkingArea.Width);
-
-                    Bitmap img = (new QRCodeWriter()).encode(mySurveysDgv["access_code", e.RowIndex].Value.ToString(), BarcodeFormat.QR_CODE, numOfPixels, numOfPixels).ToBitmap();
-
-                    form.StartPosition = FormStartPosition.CenterScreen;
-                    form.Size = img.Size;
-
-                    PictureBox pb = new PictureBox();
-                    pb.Dock = DockStyle.Fill;
-                    pb.Image = img;
-
-                    form.Controls.Add(pb);
-                    form.ShowDialog();
-                }
-            }
-        }
+        
 
         private void mySurveysDgv_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
@@ -174,8 +155,24 @@ namespace InteractivePPT
                             webClient.DownloadFile(remoteUriOfFile, localUriOfFile);
                         }
                     }
-                    Presentation p = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
-                    p.Show();
+
+
+                    try
+                    {
+                        Presentation objForm = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
+                        objForm.TopLevel = true;
+                        panel.Controls.Add(objForm);
+                        objForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                        objForm.Dock = DockStyle.Fill;
+                        objForm.Show();
+                    }
+                    catch
+                    {
+
+                    }
+
+                   /* Presentation p = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
+                    p.Show();*/
                 }
             }
             catch
@@ -219,5 +216,29 @@ namespace InteractivePPT
                 }
             }
         }
+
+        private void mySurveysDgv_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 3 && e.RowIndex >= 0)
+            {
+                using (Form form = new Form())
+                {
+                    int numOfPixels = Math.Min(Screen.PrimaryScreen.WorkingArea.Height, Screen.PrimaryScreen.WorkingArea.Width);
+
+                    Bitmap img = (new QRCodeWriter()).encode(mySurveysDgv["access_code", e.RowIndex].Value.ToString(), BarcodeFormat.QR_CODE, numOfPixels, numOfPixels).ToBitmap();
+
+                    form.StartPosition = FormStartPosition.CenterScreen;
+                    form.Size = img.Size;
+
+                    PictureBox pb = new PictureBox();
+                    pb.Dock = DockStyle.Fill;
+                    pb.Image = img;
+
+                    form.Controls.Add(pb);
+                    form.ShowDialog();
+                }
+            }
+        }
+        
     }
 }

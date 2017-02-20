@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace InteractivePPT
 {
-    public partial class Presentation : Form
+    public partial class Presentation : MetroFramework.Forms.MetroForm
     {
         PowerPoint.Application pptApp = new PowerPoint.Application();
         string path;

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.questionList = new System.Windows.Forms.CheckedListBox();
@@ -48,7 +47,7 @@
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(63, 17);
+            this.comboBox1.Location = new System.Drawing.Point(75, 63);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 1;
@@ -57,7 +56,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 20);
+            this.label1.Location = new System.Drawing.Point(25, 66);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 2;
@@ -66,14 +65,14 @@
             // questionList
             // 
             this.questionList.FormattingEnabled = true;
-            this.questionList.Location = new System.Drawing.Point(16, 55);
+            this.questionList.Location = new System.Drawing.Point(28, 101);
             this.questionList.Name = "questionList";
-            this.questionList.Size = new System.Drawing.Size(309, 184);
+            this.questionList.Size = new System.Drawing.Size(309, 124);
             this.questionList.TabIndex = 3;
             // 
             // btnAddGraph
             // 
-            this.btnAddGraph.Location = new System.Drawing.Point(109, 352);
+            this.btnAddGraph.Location = new System.Drawing.Point(121, 277);
             this.btnAddGraph.Name = "btnAddGraph";
             this.btnAddGraph.Size = new System.Drawing.Size(75, 23);
             this.btnAddGraph.TabIndex = 4;
@@ -85,7 +84,7 @@
             // 
             this.radioLine.AutoSize = true;
             this.radioLine.Image = global::InteractivePPT.Properties.Resources.linechart;
-            this.radioLine.Location = new System.Drawing.Point(237, 271);
+            this.radioLine.Location = new System.Drawing.Point(254, 231);
             this.radioLine.Name = "radioLine";
             this.radioLine.Size = new System.Drawing.Size(57, 36);
             this.radioLine.TabIndex = 7;
@@ -96,7 +95,7 @@
             // 
             this.radioPie.AutoSize = true;
             this.radioPie.Image = global::InteractivePPT.Properties.Resources.pie_chart__1_;
-            this.radioPie.Location = new System.Drawing.Point(158, 271);
+            this.radioPie.Location = new System.Drawing.Point(175, 231);
             this.radioPie.Name = "radioPie";
             this.radioPie.Size = new System.Drawing.Size(57, 36);
             this.radioPie.TabIndex = 6;
@@ -107,7 +106,7 @@
             // 
             this.radioBar.AutoSize = true;
             this.radioBar.Image = global::InteractivePPT.Properties.Resources.barChart3;
-            this.radioBar.Location = new System.Drawing.Point(84, 271);
+            this.radioBar.Location = new System.Drawing.Point(101, 231);
             this.radioBar.Name = "radioBar";
             this.radioBar.Size = new System.Drawing.Size(57, 36);
             this.radioBar.TabIndex = 5;
@@ -117,7 +116,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 283);
+            this.label2.Location = new System.Drawing.Point(29, 243);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(61, 13);
             this.label2.TabIndex = 8;
@@ -131,7 +130,7 @@
             this.dgvReplice.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.User,
             this.id});
-            this.dgvReplice.Location = new System.Drawing.Point(355, 55);
+            this.dgvReplice.Location = new System.Drawing.Point(367, 101);
             this.dgvReplice.MultiSelect = false;
             this.dgvReplice.Name = "dgvReplice";
             this.dgvReplice.ReadOnly = true;
@@ -155,7 +154,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(381, 36);
+            this.label3.Location = new System.Drawing.Point(393, 82);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 13);
             this.label3.TabIndex = 10;
@@ -165,8 +164,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.ClientSize = new System.Drawing.Size(604, 433);
+            this.ClientSize = new System.Drawing.Size(683, 433);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.dgvReplice);
             this.Controls.Add(this.label2);

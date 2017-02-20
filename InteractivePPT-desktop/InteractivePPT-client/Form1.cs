@@ -10,24 +10,27 @@ using System.Windows.Forms;
 
 namespace InteractivePPT_client
 {
-    public partial class Form1 : Form
+    public partial class Form1 : MetroFramework.Forms.MetroForm
     {
         public Form1()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
         }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
+        
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             Login login = new Login(this);
+            login.MdiParent = this;
+            login.WindowState = FormWindowState.Maximized;
+            pictureBox1.Visible = false;
             login.Show();
-            this.Enabled = false;
         }
-        
+
+        private void metroButton1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
