@@ -179,7 +179,7 @@ public class PresentationList extends AppCompatActivity {
             case R.id.nav_first_fragment:
                 intent = new Intent(this, PresentationList.class);
                 intent.putExtra("id",userId);
-                finish();
+                //finish();
                 startActivity(intent);
                 break;
             case R.id.nav_second_fragment:

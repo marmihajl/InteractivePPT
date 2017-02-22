@@ -107,50 +107,59 @@ public class GetCode extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != RESULT_CANCELED) {
-            if (requestCode == 2) {
-                final String accessCode = data.getStringExtra("survey_code");
-                if (!accessCode.equals("")) {
-                    findViewById(R.id.activity_get_code).setClickable(false);
-                    findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
-                    new SendDataAndProcessResponseTask(ServiceGenerator.createService(WebService.class)
-                            .getPresentation(accessCode, "get_presentation"),
-                            new SendDataAndProcessResponseTask.PostActions() {
-                                @Override
-                                public void onSuccess(Object responseObject) {
-                                    PresentationWithSurveys response = (PresentationWithSurveys) responseObject;
-                                    if (response != null) {
-                                        Intent intent = new Intent(GetCode.this, ViewPresentation.class);
-                                        intent.putExtra("id", id);
-                                        intent.putExtra("manual_open", text);
-                                        intent.putExtra("serialized_presentation", new Gson().toJson(response));
+        if(data != null){
+            if (requestCode != RESULT_CANCELED) {
+                if (requestCode == 2) {
+                    final String accessCode = data.getStringExtra("survey_code");
+                    if (!accessCode.equals("")) {
+                        findViewById(R.id.activity_get_code).setClickable(false);
+                        findViewById(R.id.loading_panel).setVisibility(View.VISIBLE);
+                        new SendDataAndProcessResponseTask(ServiceGenerator.createService(WebService.class)
+                                .getPresentation(accessCode, "get_presentation"),
+                                new SendDataAndProcessResponseTask.PostActions() {
+                                    @Override
+                                    public void onSuccess(Object responseObject) {
+                                        PresentationWithSurveys response = (PresentationWithSurveys) responseObject;
+                                        if (response != null) {
+                                            Intent intent = new Intent(GetCode.this, ViewPresentation.class);
+                                            intent.putExtra("id", id);
+                                            intent.putExtra("manual_open", text);
+                                            intent.putExtra("serialized_presentation", new Gson().toJson(response));
+                                            findViewById(R.id.activity_get_code).setClickable(true);
+                                            findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                                            finish();
+                                            startActivity(intent);
+                                        } else {
+                                            findViewById(R.id.activity_input_code).setClickable(true);
+                                            findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                                            Toast.makeText(GetCode.this, "Prezentacija s navedenim pristupnim kodom ne postoji!", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure() {
                                         findViewById(R.id.activity_get_code).setClickable(true);
                                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                        finish();
-                                        startActivity(intent);
-                                    } else {
-                                        findViewById(R.id.activity_input_code).setClickable(true);
-                                        findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                        Toast.makeText(GetCode.this, "Prezentacija s navedenim pristupnim kodom ne postoji!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(GetCode.this, "Greška kod dobavljanja prezentacije", Toast.LENGTH_LONG).show();
                                     }
                                 }
-
-                                @Override
-                                public void onFailure() {
-                                    findViewById(R.id.activity_get_code).setClickable(true);
-                                    findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                    Toast.makeText(GetCode.this, "Greška kod dobavljanja prezentacije", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                    );
-                } else {
-                    Intent intent = new Intent(this, InputCode.class);
-                    intent.putExtra("id", id);
-                    finish();
-                    startActivity(intent);
+                        );
+                    } else {
+                        Intent intent = new Intent(this, InputCode.class);
+                        intent.putExtra("id", id);
+                        finish();
+                        startActivity(intent);
+                    }
                 }
             }
+        }else
+        {
+            Intent i = new Intent(this, PresentationList.class);
+            i.putExtra("id", id);
+            finish();
+            startActivity(i);
         }
+
     }
 
     @Override

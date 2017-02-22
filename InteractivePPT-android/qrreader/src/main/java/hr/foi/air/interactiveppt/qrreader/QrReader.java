@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.google.zxing.Result;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -68,4 +69,6 @@ public class QrReader extends AppCompatActivity implements ZXingScannerView.Resu
             setResult(2,intent);
             finish();
         }
+
+
 }
