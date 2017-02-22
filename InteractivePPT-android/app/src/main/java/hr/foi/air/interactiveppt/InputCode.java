@@ -48,6 +48,17 @@ public class InputCode extends AppCompatActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         setupDrawerContent(nvDrawer);
 
+        Button reScanning = (Button)findViewById(R.id.button2);
+        reScanning.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), GetCode.class);
+                intent.putExtra("id",id);
+                finish();
+                startActivity(intent);
+            }
+        });
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ham_ic);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

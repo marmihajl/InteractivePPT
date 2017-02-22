@@ -23,6 +23,16 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent" >
 
+            <Button
+                android:text="Učitaj Qr kod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button2"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="95dp"
+                android:layout_alignParentRight="true" />
+
             <RelativeLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -57,19 +67,23 @@
                     android:id="@+id/posaljiSifruButton"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true" />
+
             </RelativeLayout>
         </android.support.percent.PercentRelativeLayout>
 
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/loading_panel">
+            android:id="@+id/loading_panel"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true">
 
             <ProgressBar
                 android:layout_width="match_parent"
                 app:layout_heightPercent="50%"
                 app:layout_marginTopPercent="25%"
                 android:indeterminate="true" />
+
         </android.support.percent.PercentRelativeLayout>
 
     </RelativeLayout>
