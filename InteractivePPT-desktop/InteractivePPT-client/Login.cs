@@ -113,9 +113,9 @@ namespace InteractivePPT
 
                     Pocetna h = new Pocetna(user);
                     h.WindowState = FormWindowState.Maximized;
-                    h.MdiParent = f;
                     h.Show();
                     this.Close();
+                    f.Hide();
 
                     /*Home h = new Home(user);
                     h.WindowState = FormWindowState.Maximized;

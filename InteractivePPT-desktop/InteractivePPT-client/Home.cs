@@ -81,7 +81,7 @@ namespace InteractivePPT
 
         private void Home_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //Application.Exit();
+            Pocetna.homeOpen = false;
         }
         
 
@@ -100,86 +100,7 @@ namespace InteractivePPT
                 Cursor = Cursors.Default;
             }
         }
-
-        private void openPptButton_Click(object sender, EventArgs e)
-        {
-            if (mySurveysDgv.SelectedRows.Count == 0)
-            {
-                return;
-            }
-            try
-            {
-                FolderBrowserDialog fbd = new FolderBrowserDialog();
-                if (fbd.ShowDialog() == DialogResult.OK)
-                {
-                    string remoteUriOfFile = mySurveysDgv.SelectedRows[0].Cells["link_to_presentation"].Value.ToString();
-                    string localUriOfFile = fbd.SelectedPath + '\\' + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf("/") + 1);
-                    if (localUriOfFile.Length > 255)
-                    {
-                        MessageBox.Show("Odaberite kraću putanju jer broj znakova odabrane putanje (uključujući i sâm naziv datoteke koja bi trebala biti pohranjena u odabrani direktorij) prelazi 255 znakova!");
-                        return;
-                    }
-                    if (File.Exists(localUriOfFile))
-                    {
-                        if (GetFileSizeOfRemoteFile(remoteUriOfFile) != new FileInfo(localUriOfFile).Length)
-                        {
-                            AskUserHowToHandleCollisions(localUriOfFile, remoteUriOfFile);
-                        }
-                        else
-                        {
-                            string remoteFileChecksum;
-                            using (WebClient client = new WebClient())
-                            {
-                                byte[] response =
-                                client.UploadValues(serverRootDirectoryUri + "interactivePPT-server.php", new NameValueCollection()
-                                {
-                                    { "request_type", "get_file_checksum" },
-                                    { "path",  "ppt/" + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf('/')+1) }
-                                });
-                                remoteFileChecksum = System.Text.Encoding.UTF8.GetString(response);
-                            }
-                            using (var md5 = MD5.Create())
-                            using (var stream = File.OpenRead(localUriOfFile))
-                            {
-                                if (BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", String.Empty).ToLower() != remoteFileChecksum)
-                                {
-                                    AskUserHowToHandleCollisions(localUriOfFile, remoteUriOfFile);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (WebClient webClient = new WebClient())
-                        {
-                            webClient.DownloadFile(remoteUriOfFile, localUriOfFile);
-                        }
-                    }
-
-
-                    try
-                    {
-                        Presentation objForm = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
-                        objForm.TopLevel = true;
-                        panel.Controls.Add(objForm);
-                        objForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                        objForm.Dock = DockStyle.Fill;
-                        objForm.Show();
-                    }
-                    catch
-                    {
-
-                    }
-
-                   /* Presentation p = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
-                    p.Show();*/
-                }
-            }
-            catch
-            {
-
-            }
-        }
+        
 
         private void AskUserHowToHandleCollisions(string localUriOfFile, string remoteUriOfFile)
         {
@@ -239,6 +160,86 @@ namespace InteractivePPT
                 }
             }
         }
-        
+
+        private void openPptButton_Click_1(object sender, EventArgs e)
+        {
+            if (mySurveysDgv.SelectedRows.Count == 0)
+            {
+                return;
+            }
+            try
+            {
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                if (fbd.ShowDialog() == DialogResult.OK)
+                {
+                    string remoteUriOfFile = mySurveysDgv.SelectedRows[0].Cells["link_to_presentation"].Value.ToString();
+                    string localUriOfFile = fbd.SelectedPath + '\\' + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf("/") + 1);
+                    if (localUriOfFile.Length > 255)
+                    {
+                        MessageBox.Show("Odaberite kraću putanju jer broj znakova odabrane putanje (uključujući i sâm naziv datoteke koja bi trebala biti pohranjena u odabrani direktorij) prelazi 255 znakova!");
+                        return;
+                    }
+                    if (File.Exists(localUriOfFile))
+                    {
+                        if (GetFileSizeOfRemoteFile(remoteUriOfFile) != new FileInfo(localUriOfFile).Length)
+                        {
+                            AskUserHowToHandleCollisions(localUriOfFile, remoteUriOfFile);
+                        }
+                        else
+                        {
+                            string remoteFileChecksum;
+                            using (WebClient client = new WebClient())
+                            {
+                                byte[] response =
+                                client.UploadValues(serverRootDirectoryUri + "interactivePPT-server.php", new NameValueCollection()
+                                {
+                                    { "request_type", "get_file_checksum" },
+                                    { "path",  "ppt/" + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf('/')+1) }
+                                });
+                                remoteFileChecksum = System.Text.Encoding.UTF8.GetString(response);
+                            }
+                            using (var md5 = MD5.Create())
+                            using (var stream = File.OpenRead(localUriOfFile))
+                            {
+                                if (BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", String.Empty).ToLower() != remoteFileChecksum)
+                                {
+                                    AskUserHowToHandleCollisions(localUriOfFile, remoteUriOfFile);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        using (WebClient webClient = new WebClient())
+                        {
+                            webClient.DownloadFile(remoteUriOfFile, localUriOfFile);
+                        }
+                    }
+                    Pocetna.homeOpen = false;
+
+                    try
+                    {
+                        this.Hide();
+                        Presentation objForm = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
+                        objForm.TopLevel = false;
+                        panel.Controls.Add(objForm);
+                        objForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                        objForm.Dock = DockStyle.Fill;
+                        objForm.Show();
+                        
+                    }
+                    catch
+                    {
+
+                    }
+                    /* Presentation p = new Presentation(localUriOfFile, mySurveyList.data.Where(x => x.access_code == mySurveysDgv.SelectedRows[0].Cells["access_code"].Value.ToString() && x.id != null).ToList(), user.uid);
+                     p.Show();*/
+                }
+            }
+            catch
+            {
+
+            }
+        }
     }
 }

@@ -120,125 +120,8 @@ namespace InteractivePPT
             stream.Close();
             tcpClient.Close();
         }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBox1.SelectedIndex != -1)
-            {
-                string chosenSurvey = comboBox1.SelectedValue.ToString();
-                using (WebClient client = new WebClient())
-                {
-                    try
-                    {
-                        byte[] response =
-                        client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
-                        {
-                    { "request_type", "get_questions" },
-                    { "survey_id", chosenSurvey }
-                        });
-                        serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Communication with server-side of this application could not be established");
-                        return;
-                    }
-                }
-
-                if (serializedUserSurveys != null)
-                {
-                    myQuestionList = JsonConvert.DeserializeObject<QuestionList>(serializedUserSurveys);
-                }
-
-                ((ListBox)questionList).DataSource = myQuestionList.questions;
-                ((ListBox)questionList).DisplayMember = "name";
-                questionList.Visible = true;
-
-                foreach (Question item in questionList.Items)
-                {
-                    if (item.Question_type_idQuestion_type == 3)
-                        {
-                            item.name += "*";
-                        }
-                }
-            }
-        }
-
-        private void btnAddGraph_Click(object sender, EventArgs e)
-        {
-            int id = 0;
-            for (int i = 0; i < questionList.Items.Count; i++)
-            {
-                if (questionList.GetItemCheckState(i) == CheckState.Checked)
-                {
-                    
-                    Question q = (Question)questionList.Items[i];
-                    id = q.idQuestions;
-                    name = q.name;
-                    if(q.Question_type_idQuestion_type != 3)
-                    {
-                        using (WebClient client = new WebClient())
-                        {
-                            try
-                            {
-                                byte[] response =
-                                client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
-                                {
-                                    { "request_type", "get_results" },
-                                    { "id", id.ToString() }
-                                });
-                                serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
-                            }
-                            catch
-                            {
-                                MessageBox.Show("Communication with server-side of this application could not be established");
-                                return;
-                            }
-                            if (serializedUserSurveys != null)
-                            {
-                                myAnswerList = JsonConvert.DeserializeObject<AnswerList>(serializedUserSurveys);
-                                addSlide(myAnswerList.results, q.name);
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        using (WebClient client = new WebClient())
-                        {
-                            try
-                            {
-                                byte[] response =
-                                client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
-                                {
-                                    { "request_type", "get_text_results" },
-                                    { "id", id.ToString() }
-                                });
-                                serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
-                            }
-                            catch
-                            {
-                                MessageBox.Show("Communication with server-side of this application could not be established");
-                                return;
-                            }
-                            if (serializedUserSurveys != null)
-                            {
-                                chooseItem.results = new List<TextItems>();
-                                textItem = JsonConvert.DeserializeObject<TextItemsList>(serializedUserSurveys);
-                                ComentarFilter cf = new ComentarFilter(textItem, this);
-                                cf.Show();
-                                Hide();
-                            }
-
-                        }
-                    }
-                    
-                }
-
-            }
-            move = 1;
-            updatePresentation();
-        }
+        
+        
 
         private int currentSlide()
         {
@@ -386,14 +269,7 @@ namespace InteractivePPT
             }
             tcpClient.Close();
         }
-
-        private void dgvReplice_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex != -1)
-            {
-                removeAudience(e.RowIndex);
-            }
-        }
+        
 
         public void removeAudience(int selectedRow)
         {
@@ -456,6 +332,141 @@ namespace InteractivePPT
             slide.Shapes[1].TextFrame.TextRange.Font.Size = 18;
 
             p.Save();
+        }
+
+        private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex != -1)
+            {
+                string chosenSurvey = comboBox1.SelectedValue.ToString();
+                using (WebClient client = new WebClient())
+                {
+                    try
+                    {
+                        byte[] response =
+                        client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                        {
+                    { "request_type", "get_questions" },
+                    { "survey_id", chosenSurvey }
+                        });
+                        serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Communication with server-side of this application could not be established");
+                        return;
+                    }
+                }
+
+                if (serializedUserSurveys != null)
+                {
+                    myQuestionList = JsonConvert.DeserializeObject<QuestionList>(serializedUserSurveys);
+                }
+
+                ((ListBox)questionList).DataSource = myQuestionList.questions;
+                ((ListBox)questionList).DisplayMember = "name";
+                questionList.Visible = true;
+
+                foreach (Question item in questionList.Items)
+                {
+                    if (item.Question_type_idQuestion_type == 3)
+                    {
+                        item.name += "*";
+                    }
+                }
+            }
+        }
+
+        private void metroGrid1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex != -1)
+            {
+                removeAudience(e.RowIndex);
+            }
+        }
+
+        private void btnAddGraph_Click_1(object sender, EventArgs e)
+        {
+            int id = 0;
+            for (int i = 0; i < questionList.Items.Count; i++)
+            {
+                if (questionList.GetItemCheckState(i) == CheckState.Checked)
+                {
+
+                    Question q = (Question)questionList.Items[i];
+                    id = q.idQuestions;
+                    name = q.name;
+                    if (q.Question_type_idQuestion_type != 3)
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            try
+                            {
+                                byte[] response =
+                                client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                                {
+                                    { "request_type", "get_results" },
+                                    { "id", id.ToString() }
+                                });
+                                serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Communication with server-side of this application could not be established");
+                                return;
+                            }
+                            if (serializedUserSurveys != null)
+                            {
+                                myAnswerList = JsonConvert.DeserializeObject<AnswerList>(serializedUserSurveys);
+                                addSlide(myAnswerList.results, q.name);
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            try
+                            {
+                                byte[] response =
+                                client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                                {
+                                    { "request_type", "get_text_results" },
+                                    { "id", id.ToString() }
+                                });
+                                serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Communication with server-side of this application could not be established");
+                                return;
+                            }
+                            if (serializedUserSurveys != null)
+                            {
+                                chooseItem.results = new List<TextItems>();
+                                textItem = JsonConvert.DeserializeObject<TextItemsList>(serializedUserSurveys);
+                                ComentarFilter cf = new ComentarFilter(textItem, this);
+                                cf.Show();
+                                Hide();
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+            move = 1;
+            updatePresentation();
+        }
+
+        private void Presentation_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            foreach (Process clsProcess in Process.GetProcesses())
+                if (clsProcess.ProcessName.Equals("POWERPNT"))
+                    clsProcess.Kill();
+
         }
     }
 }

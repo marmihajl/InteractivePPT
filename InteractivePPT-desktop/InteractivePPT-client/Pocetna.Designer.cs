@@ -36,7 +36,7 @@
             // 
             this.metroButton1.Location = new System.Drawing.Point(23, 64);
             this.metroButton1.Name = "metroButton1";
-            this.metroButton1.Size = new System.Drawing.Size(143, 23);
+            this.metroButton1.Size = new System.Drawing.Size(143, 36);
             this.metroButton1.TabIndex = 0;
             this.metroButton1.Text = "Popis prezentacija";
             this.metroButton1.Theme = MetroFramework.MetroThemeStyle.Dark;
@@ -45,12 +45,13 @@
             // 
             // metroPanel1
             // 
+            this.metroPanel1.AutoSize = true;
             this.metroPanel1.HorizontalScrollbarBarColor = true;
             this.metroPanel1.HorizontalScrollbarHighlightOnWheel = false;
             this.metroPanel1.HorizontalScrollbarSize = 10;
-            this.metroPanel1.Location = new System.Drawing.Point(173, 64);
+            this.metroPanel1.Location = new System.Drawing.Point(193, 64);
             this.metroPanel1.Name = "metroPanel1";
-            this.metroPanel1.Size = new System.Drawing.Size(488, 383);
+            this.metroPanel1.Size = new System.Drawing.Size(475, 379);
             this.metroPanel1.TabIndex = 1;
             this.metroPanel1.VerticalScrollbarBarColor = true;
             this.metroPanel1.VerticalScrollbarHighlightOnWheel = false;
@@ -65,8 +66,11 @@
             this.Controls.Add(this.metroButton1);
             this.Name = "Pocetna";
             this.Text = "Pocetna";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Pocetna_FormClosed);
             this.Load += new System.EventHandler(this.Pocetna_Load);
+            this.Resize += new System.EventHandler(this.Pocetna_Resize);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
