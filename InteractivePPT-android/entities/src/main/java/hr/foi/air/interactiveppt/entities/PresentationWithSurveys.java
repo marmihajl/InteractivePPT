@@ -10,6 +10,9 @@ import java.util.List;
 
 public class PresentationWithSurveys {
 
+    @SerializedName("id")
+    public int id;
+
     @SerializedName("path")
     public String path;
 

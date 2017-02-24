@@ -93,4 +93,12 @@ public interface WebService {
             @Field("ppt_path") String path
     );
 
+    @FormUrlEncoded
+    @POST("interactivePPT-server.php")
+    Call<Boolean> sendChatMessage(
+            @Field("request_type") String requestType,
+            @Field("pptid") int pptId,
+            @Field("userid") String uid,
+            @Field("content") String messageContent
+    );
 }

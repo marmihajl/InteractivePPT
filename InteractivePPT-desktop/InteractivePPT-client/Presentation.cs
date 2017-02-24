@@ -24,7 +24,6 @@ namespace InteractivePPT
         string serializedUserSurveys = null;
         AnswerList myAnswerList = null;
         int move = 1;
-        Users users;
         string userUid;
         TextItemsList textItem;
         public static TextItemsList chooseItem = new TextItemsList();
@@ -69,16 +68,21 @@ namespace InteractivePPT
 
             try
             {
-                Int32 port;
+                ushort port;
+                byte[] response;
                 using (WebClient httpClient = new WebClient())
                 {
-                    byte[] response =
+                    response =
                     httpClient.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
                     {
                         { "request_type", "get_notifiers_listening_port" },
                         { "path", "ppt/" + path.Substring(path.LastIndexOf('\\')+1) }
                     });
-                    port = Int32.Parse(System.Text.Encoding.UTF8.GetString(response));
+                }
+                if (!ushort.TryParse(System.Text.Encoding.UTF8.GetString(response), out port))
+                {
+                    MessageBox.Show("Pojavila se pogreška na strani poslužitelja kod pokušaja pokretanja daemon procesa za Vašu prezentaciju! Pokušajte ponovno za koji trenutak ili se javite administratoru poslužitelja");
+                    this.Close();
                 }
                 tcpClient = new TcpClient(AddressFamily.InterNetwork);
                 tcpClient.BeginConnect("46.101.247.168", port, ListenForInterestedUsers, tcpClient);
@@ -114,16 +118,23 @@ namespace InteractivePPT
                 {
                     break;
                 }
-                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
-                if (responseData == String.Empty)
+                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes).TrimEnd('\n').Replace("\f", "\n");
+                if (responseData == String.Empty || responseData == "exit")
                 {
                     break;
                 }
-                string[] userInfo = responseData.Split('-');
-                dgvReplice.Invoke((MethodInvoker) delegate
+                string[] messageInfo = responseData.Split('\t');
+                if (messageInfo[2] == "")
                 {
-                    dgvReplice.Rows.Add(userInfo[1], userInfo[0]);
-                });
+                    dgvReplice.Invoke((MethodInvoker)delegate
+                    {
+                        dgvReplice.Rows.Add(messageInfo[1], messageInfo[0]);
+                    });
+                }
+                else
+                {
+                    MessageBox.Show("Korisnik " + messageInfo[1] + " je poslao sljedeću poruku: " + messageInfo[2]);
+                }
             }
 
             stream.Close();
@@ -293,39 +304,42 @@ namespace InteractivePPT
 
         private void Presentation_FormClosing(object sender, FormClosingEventArgs e)
         {
-            string name = "ppt/" + path.Substring(path.LastIndexOf('\\') + 1);
-            using (WebClient client = new WebClient())
+            if (tcpClient != null)
             {
-                try
+                string name = "ppt/" + path.Substring(path.LastIndexOf('\\') + 1);
+                using (WebClient client = new WebClient())
                 {
-                    byte[] response =
-                    client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                    try
                     {
+                        byte[] response =
+                        client.UploadValues("http://46.101.68.86/interactivePPT-server.php", new NameValueCollection()
+                        {
                     { "request_type", "update_subscription" },
                     { "path", name }
-                    });
-                }
-                catch
-                {
-                    MessageBox.Show("Communication with server-side of this application could not be established");
-                    return;
-                }
+                        });
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Communication with server-side of this application could not be established");
+                        return;
+                    }
 
-                try
-                {
-                    client.UploadValuesAsync(new Uri("http://46.101.68.86/interactivePPT-server.php"), new NameValueCollection()
+                    try
+                    {
+                        client.UploadValuesAsync(new Uri("http://46.101.68.86/interactivePPT-server.php"), new NameValueCollection()
                     {
                     { "request_type", "shutdown_listener" },
                     { "path", name }
                     });
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Communication with server-side of this application could not be established");
+                        return;
+                    }
                 }
-                catch
-                {
-                    MessageBox.Show("Communication with server-side of this application could not be established");
-                    return;
-                }
+                tcpClient.Close();
             }
-            tcpClient.Close();
         }
         
 

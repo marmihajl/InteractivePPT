@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -25,6 +26,9 @@ import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 import hr.foi.air.interactiveppt.entities.ChatMessage;
+import hr.foi.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
+import hr.foi.air.interactiveppt.webservice.ServiceGenerator;
+import hr.foi.air.interactiveppt.webservice.WebService;
 
 /**
  * Created by Smrad on 31.1.2017..
@@ -32,8 +36,8 @@ import hr.foi.air.interactiveppt.entities.ChatMessage;
 
 public class Chat extends AppCompatActivity {
 
-        private static int SIGN_IN_REQUEST_CODE = 1;
-        private FirebaseListAdapter<ChatMessage> adapter;
+        private String idUser;
+        private int pptId;
         RelativeLayout activity_chat;
 
         //Add Emojicon
@@ -46,13 +50,7 @@ public class Chat extends AppCompatActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             if(item.getItemId() == R.id.menu_sign_out)
             {
-                AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Snackbar.make(activity_chat,"You have been signed out.", Snackbar.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
+                //send http rest data with your uid and action identifier to mute chat (server then puts that in message queue and following process in notifier.php saves state that message doesn't need to be sent to that user
             }
             return true;
         }
@@ -64,26 +62,12 @@ public class Chat extends AppCompatActivity {
         }
 
         @Override
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            if(requestCode == SIGN_IN_REQUEST_CODE)
-            {
-                if(resultCode == RESULT_OK)
-                {
-                    Snackbar.make(activity_chat,"Successfully signed in.Welcome!", Snackbar.LENGTH_SHORT).show();
-                    displayChatMessage();
-                }
-                else{
-                    Snackbar.make(activity_chat,"We couldn't sign you in.Please try again later", Snackbar.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-        }
-
-        @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_chat);
+
+            idUser = getIntent().getStringExtra("userId");
+            pptId = getIntent().getIntExtra("pptId", -1);
 
             activity_chat = (RelativeLayout)findViewById(R.id.activity_chat);
 
@@ -97,24 +81,33 @@ public class Chat extends AppCompatActivity {
             submitButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FirebaseDatabase.getInstance().getReference().push().setValue(new ChatMessage(emojiconEditText.getText().toString(),
-                            FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+                    new SendDataAndProcessResponseTask(ServiceGenerator.createService(WebService.class)
+                            .sendChatMessage("send_chat_message", pptId, idUser, emojiconEditText.getText().toString().replace("\f", "").replace("\t", "").replace('\n', '\f') + '\n'),
+                            new SendDataAndProcessResponseTask.PostActions() {
+                                @Override
+                                public void onSuccess(Object genericResponse) {
+                                    boolean response = (boolean) genericResponse;
+                                    if (response) {
+
+                                    }
+                                    else {
+                                        Toast.makeText(Chat.this, "Poslužitelj nije uspio obraditi i proslijediti navedenu poruku!", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure() {
+                                    Toast.makeText(Chat.this, "Neuspjeh kod slanja poruke poslužitelju! Provjerite vezu s Internetom", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                    );
+
                     emojiconEditText.setText("");
                     emojiconEditText.requestFocus();
                 }
             });
 
-            //Check if not sign-in then navigate Signin page
-            if(FirebaseAuth.getInstance().getCurrentUser() == null)
-            {
-                startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().build(),SIGN_IN_REQUEST_CODE);
-            }
-            else
-            {
-                Snackbar.make(activity_chat,"Welcome "+FirebaseAuth.getInstance().getCurrentUser().getEmail(),Snackbar.LENGTH_SHORT).show();
-                //Load content
-                displayChatMessage();
-            }
+            displayChatMessage();
 
 
         }
@@ -122,24 +115,6 @@ public class Chat extends AppCompatActivity {
         private void displayChatMessage() {
 
             ListView listOfMessage = (ListView)findViewById(R.id.list_of_message);
-            adapter = new FirebaseListAdapter<ChatMessage>(this,ChatMessage.class,R.layout.list_item,FirebaseDatabase.getInstance().getReference())
-            {
-                @Override
-                protected void populateView(View v, ChatMessage model, int position) {
-
-                    //Get references to the views of list_item.xml
-                    TextView messageText, messageUser, messageTime;
-                    messageText = (EmojiconTextView) v.findViewById(R.id.message_text);
-                    messageUser = (TextView) v.findViewById(R.id.message_user);
-                    messageTime = (TextView) v.findViewById(R.id.message_time);
-
-                    messageText.setText(model.getMessageText());
-                    messageUser.setText(model.getMessageUser());
-                    messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", model.getMessageTime()));
-
-                }
-            };
-            listOfMessage.setAdapter(adapter);
         }
 
 }

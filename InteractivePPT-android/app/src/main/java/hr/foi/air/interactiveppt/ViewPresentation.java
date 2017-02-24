@@ -1,5 +1,6 @@
 package hr.foi.air.interactiveppt;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
@@ -17,6 +18,18 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import hr.foi.air.interactiveppt.entities.PresentationWithSurveys;
 import hr.foi.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.foi.air.interactiveppt.webservice.ServiceGenerator;
@@ -29,6 +42,7 @@ public class ViewPresentation extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
+    private Socket socket;
 
     private ActionBarDrawerToggle drawerToggle;
     @Override
@@ -164,11 +178,71 @@ public class ViewPresentation extends AppCompatActivity {
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i= new Intent(ViewPresentation.this, Chat.class);
-                i.putExtra("id",userId);
+                Intent i = new Intent(ViewPresentation.this, Chat.class);
+                i.putExtra("userId", userId);
+                i.putExtra("pptId", presentation.id);
                 startActivity(i);
             }
         });
+
+        new Thread(new ClientThread(this, presentation.id, userId)).start();
+    }
+
+    class ClientThread implements Runnable {
+
+        private Activity activity;
+        private int pptId;
+        private String userId;
+
+        ClientThread(Activity activity, int pptId, String userId) {
+            this.activity = activity;
+            this.pptId = pptId;
+            this.userId = userId;
+        }
+
+        @Override
+        public void run() {
+            try {
+                InetAddress serverAddr = InetAddress.getByName("46.101.247.168");
+                socket = new Socket(serverAddr, 50000 + pptId);
+                OutputStream outToServer = socket.getOutputStream();
+                DataOutputStream out = new DataOutputStream(outToServer);
+                out.writeUTF(userId);
+            }
+            catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                while (true) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    final String receivedMessage = in.readLine();
+                    final String[] messageParts = receivedMessage.split("\t");
+                    if (receivedMessage.equals("exit")) {
+                        break;
+                    }
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(activity, String.format("%s: %s", messageParts[1], messageParts[2].replace('\f', '\n')), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    System.out.println(String.format("%s: %s", messageParts[1], messageParts[2].replace('\f', '\n')));
+                }
+                socket.close();
+            }
+            catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void openPresentation(final WebView wv, final String pptPath) {

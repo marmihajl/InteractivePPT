@@ -333,7 +333,10 @@ switch ($_POST['request_type']) {
                     echo 'false';
                 }
                 else {
-                    msg_send($queue, 1, $userUid, false);
+                    $userName = $dbHandler->query("SELECT name FROM Users WHERE app_uid='$userUid' LIMIT 1;")->fetch_row()[0];
+                    $message = "$userUid\t$userName\t\t";
+                    msg_receive(msg_get_queue(-$pptId), 0, $receivedType, 1, $irrelevantData, false);
+                    msg_send($queue, 1, $message, false);
                     echo 'true';
                 }
             }
@@ -356,6 +359,30 @@ switch ($_POST['request_type']) {
         $process = proc_open('nohup php -f notifier.php -- ' . $pptId . ' &', $descriptorspec, $pipes);
         if (is_resource($process)) {
             echo stream_get_contents($pipes[1]);
+        }
+
+        break;
+
+    case 'send_chat_message':
+        $pptId = $_POST['pptid'];
+        $userUid = $_POST['userid'];
+        $content = $_POST['content'];
+
+        if (!msg_queue_exists($pptId)) {
+            echo 'false';
+        }
+        else {
+            $queue = msg_get_queue($pptId);
+            if ($queue === false) {
+                echo 'false';
+            }
+            else {
+                $userName = $dbHandler->query("SELECT name FROM Users WHERE app_uid='$userUid' LIMIT 1;")->fetch_row()[0];
+                $message = "$userUid\t$userName\t$content\t";
+                msg_receive(msg_get_queue(-$pptId), 0, $receivedType, 1, $irrelevantData, false);
+                msg_send($queue, 1, $message, false);
+                echo 'true';
+            }
         }
 
         break;
@@ -396,7 +423,24 @@ switch ($_POST['request_type']) {
             echo 'false';
         }
         else {
-            msg_send($queue, 1, 'exit', false);
+            msg_receive(msg_get_queue(-$pptId), 0, $receivedType, 1, $irrelevantData, false);
+            msg_send($queue, 1, "0\texit\t\t", false);
+            echo 'true';
+        }
+        
+        break;
+    case 'kill_connection':
+        $path = $_POST['path'];
+        $userUid = $_POST['id'];
+        $pptId = $dbHandler->query("SELECT id FROM Presentation WHERE path='$path' LIMIT 1;")->fetch_row()[0];
+
+        $queue = msg_get_queue($pptId);
+        if ($queue === false) {
+            echo 'false';
+        }
+        else {
+            msg_receive(msg_get_queue(-$pptId), 0, $receivedType, 1, $irrelevantData, false);
+            msg_send($queue, 1, "$userUid\texit\t\t", false);
             echo 'true';
         }
         

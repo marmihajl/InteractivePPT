@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 18, 2017 at 09:26 PM
--- Server version: 5.7.16-0ubuntu0.16.04.1
--- PHP Version: 7.0.13-0ubuntu0.16.04.1
+-- Generation Time: Feb 23, 2017 at 11:06 AM
+-- Server version: 5.7.17-0ubuntu0.16.04.1
+-- PHP Version: 7.0.15-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -598,7 +598,7 @@ INSERT INTO `Presentation` (`id`, `path`, `checksum`, `access_code`, `author`) V
 (20, 'ppt/nova.pptx', '7d8588f883d92d03333318fcf5c730e7', '33g4y723t4', 2),
 (22, 'ppt/CSharp and Software Design.pptx', '3f243e6c26dc4cf275751a6ef6ae3d6f', '5a99909p6k', 1),
 (28, 'ppt/LN01-Introduction.ppt', '9cdf2b479616648fa834247d66bc530c', 'rg8a62oq1s', 1),
-(29, 'ppt/interactive_presentation.pptx', '1093f0f2db00f2d9d77a92a576ea8ae6', 'y1u03ows85', 2);
+(29, 'ppt/interactive_presentation.pptx', '003ad9eb973ef3247791d6be12a7450f', 'y1u03ows85', 2);
 
 -- --------------------------------------------------------
 
@@ -893,7 +893,6 @@ CREATE TABLE `Reply_request` (
 --
 
 INSERT INTO `Reply_request` (`user`, `presentation`, `time`) VALUES
-(1, 4, '2017-02-17 00:00:56'),
 (1, 5, '2017-02-16 20:48:13'),
 (2, 10, '2017-01-31 15:47:10'),
 (10, 4, '2017-01-07 19:01:22');
@@ -943,7 +942,9 @@ INSERT INTO `Subscription` (`idUser`, `idPresentation`, `active`) VALUES
 (1, 10, 'no'),
 (2, 3, 'yes'),
 (2, 10, 'no'),
-(10, 4, 'no');
+(2, 29, 'yes'),
+(10, 4, 'no'),
+(12, 4, 'yes');
 
 -- --------------------------------------------------------
 
@@ -1007,10 +1008,11 @@ CREATE TABLE `Users` (
 --
 
 INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`, `token`) VALUES
-(1, 'Petar Šestak', '1431307750213523', 1, 'favpD4g2lYs:APA91bEMX8jcFgyUWeLNVh-mXBNHuxAVQ88ZKiwQh7sQKifUK2Vf7qs9x7XvU7EL_l2WMsddv_VnNmTJw4OCMw4KYepGHnYodOsGUWjmbIv92naV4LtGQrIdO_l6mxqGmge6aRQ8khiU'),
-(2, 'Marin Mihajlovic', '10210532062074946', 2, 'cqoFmicQg9g:APA91bEHnRCf4LqNhRg3VEAHuec11DU8LKt-nStsotdh8IDp9x2LKWPMJL3a6WoKdehvvUhZouzRKAg9HM6wEwQWRQBctBTf4UkCtaadZHBNdUz4eq07spo5DdhSl_YtNmDk88N6rAih'),
+(1, 'Petar Šestak', '1431307750213523', 1, ''),
+(2, 'Marin Mihajlovic', '10210532062074946', 2, ''),
 (8, 'Marinela Levak', '1336022606431703', 3, ''),
-(10, 'Mario Šelek', '1256649427742897', 3, 'ed2L3DqVgfY:APA91bHfonVwB2Hnk7fe-MT4MaUHSiz5xXExFL3LaIDOaPt2fah91hIpD-EpuauXdQGWFrFCHR8ZSxY_xeBV1sYko1KGZ7Rh7tZ3nFi-P8igKlDatvL1I8REaBH3CKA1SUc_UEei4LQ7');
+(10, 'Mario Šelek', '1256649427742897', 3, 'ed2L3DqVgfY:APA91bHfonVwB2Hnk7fe-MT4MaUHSiz5xXExFL3LaIDOaPt2fah91hIpD-EpuauXdQGWFrFCHR8ZSxY_xeBV1sYko1KGZ7Rh7tZ3nFi-P8igKlDatvL1I8REaBH3CKA1SUc_UEei4LQ7'),
+(12, 'Račun Za Testiranje', '166569610511915', 3, '');
 
 -- --------------------------------------------------------
 
@@ -1019,7 +1021,7 @@ INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`, `token`) VALUES
 --
 DROP TABLE IF EXISTS `getPresentationDetails`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `getPresentationDetails`  AS  select `p`.`access_code` AS `access_code`,concat('{"path":"',`p`.`path`,'","author_name":"',`u`.`name`,'","surveys":[',ifnull(group_concat(concat('{"id":',`s`.`idSurvey`,',"name":"',`s`.`name`,'"}') separator ','),''),']}') AS `presentation_details` from ((`Presentation` `p` left join `Users` `u` on((`p`.`author` = `u`.`idUser`))) left join `Survey` `s` on((`p`.`access_code` = `s`.`access_code`))) group by `p`.`id` order by `p`.`access_code` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `getPresentationDetails`  AS  select `p`.`access_code` AS `access_code`,concat('{"path":"',`p`.`path`,'","id":',`p`.`id`,',"author_name":"',`u`.`name`,'","surveys":[',ifnull(group_concat(concat('{"id":',`s`.`idSurvey`,',"name":"',`s`.`name`,'"}') separator ','),''),']}') AS `presentation_details` from ((`Presentation` `p` left join `Users` `u` on((`p`.`author` = `u`.`idUser`))) left join `Survey` `s` on((`p`.`access_code` = `s`.`access_code`))) group by `p`.`id` order by `p`.`access_code` ;
 
 -- --------------------------------------------------------
 
@@ -1157,7 +1159,7 @@ ALTER TABLE `Questions`
 -- AUTO_INCREMENT for table `Question_type`
 --
 ALTER TABLE `Question_type`
-  MODIFY `idQuestion_type` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `idQuestion_type` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `Role`
 --
@@ -1172,7 +1174,7 @@ ALTER TABLE `Survey`
 -- AUTO_INCREMENT for table `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- Constraints for dumped tables
 --
