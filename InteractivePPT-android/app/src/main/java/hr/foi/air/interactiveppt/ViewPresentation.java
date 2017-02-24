@@ -132,6 +132,10 @@ public class ViewPresentation extends AppCompatActivity {
                 startActivity(intent);
             }});
 
+        if(presentation.surveys.size() == 0){
+            openSurveyListButton.setEnabled(false);
+        }
+
         if(manual.equals("open")){
             new SendDataAndProcessResponseTask(
                     ServiceGenerator.createService(WebService.class).saveSubscription(
