@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -148,10 +149,24 @@ public class PresentationList extends AppCompatActivity {
         };
 
         adapter = new ExpandablePresentationListAdapter(this, presentations.myPresentations, consumer);
-        myPptsLV.setAdapter(adapter);
+        if(presentations.myPresentations.size() > 0){
+            myPptsLV.setAdapter(adapter);
+        }else {
+            TextView textView = (TextView)findViewById(R.id.noPresentation);
+            textView.setVisibility(View.VISIBLE);
+            myPptsLV.setVisibility(View.INVISIBLE);
+        }
 
         adapter = new ExpandablePresentationListAdapter(this, presentations.subbedPresentations, consumer);
-        subbedPptsLV.setAdapter(adapter);
+        if(presentations.subbedPresentations.size() > 0){
+            subbedPptsLV.setAdapter(adapter);
+        }else {
+            TextView textView = (TextView)findViewById(R.id.noSubscription);
+            textView.setVisibility(View.VISIBLE);
+            subbedPptsLV.setVisibility(View.INVISIBLE);
+        }
+
+
     }
 
     @Override

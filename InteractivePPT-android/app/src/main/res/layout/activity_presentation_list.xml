@@ -38,6 +38,16 @@
                     android:text="@string/myPresentationsHeader"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
+
+                <TextView
+                    android:text="Niste kreirali niti jednu prezentaciju"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:id="@+id/noPresentation"
+                    android:visibility="invisible"
+                    android:layout_below="@+id/my_ppts_title"/>
+
                 <ExpandableListView
                     android:id="@+id/my_ppts_listview"
                     android:layout_width="match_parent"
@@ -59,6 +69,16 @@
                     android:text="@string/subbedPresentationsHeader"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
+
+                <TextView
+                    android:text="Nemate pretplaćenih prezentacija"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:visibility="invisible"
+                    android:layout_below="@+id/subbed_ppts_title"
+                    android:id="@+id/noSubscription" />
+
                 <ExpandableListView
                     android:id="@+id/subbed_ppts_listview"
                     android:layout_width="match_parent"
@@ -67,10 +87,13 @@
                 </ExpandableListView>
             </RelativeLayout>
         </android.support.percent.PercentRelativeLayout>
+
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/loading_panel">
+            android:id="@+id/loading_panel"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true">
             <ProgressBar
                 android:layout_width="match_parent"
                 app:layout_heightPercent="50%"
