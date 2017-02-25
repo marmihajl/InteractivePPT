@@ -1,5 +1,0 @@
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/layout_border_button_pressed"
-        android:state_pressed="true" />
-    <item android:drawable="@drawable/layout_border_button_normal" />
-</selector>
