@@ -29,7 +29,10 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
+import hr.foi.air.interactiveppt.entities.ActiveChatMessagesList;
+import hr.foi.air.interactiveppt.entities.ChatMessage;
 import hr.foi.air.interactiveppt.entities.PresentationWithSurveys;
 import hr.foi.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.foi.air.interactiveppt.webservice.ServiceGenerator;
@@ -193,6 +196,7 @@ public class ViewPresentation extends AppCompatActivity {
         private Activity activity;
         private int pptId;
         private String userId;
+        private ActiveChatMessagesList chatMessagesList;
 
         ClientThread(Activity activity, int pptId, String userId) {
             this.activity = activity;
@@ -217,6 +221,7 @@ public class ViewPresentation extends AppCompatActivity {
             }
 
             try {
+                boolean initialState = true;
                 while (true) {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     final String receivedMessage = in.readLine();
@@ -224,12 +229,24 @@ public class ViewPresentation extends AppCompatActivity {
                     if (receivedMessage.equals("exit")) {
                         break;
                     }
-                    activity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(activity, String.format("%s: %s", messageParts[1], messageParts[2].replace('\f', '\n')), Toast.LENGTH_SHORT).show();
+                    if (initialState) {
+                        ArrayList<ChatMessage> chatMessages = new ArrayList<>();
+                        for (int i = 0; i < messageParts.length; i+=3) {
+                            if (!messageParts[i+2].isEmpty()) {
+                                chatMessages.add(new ChatMessage(messageParts[i+2].replace('\f', '\n'), messageParts[i+1]));
+                            }
                         }
-                    });
-                    System.out.println(String.format("%s: %s", messageParts[1], messageParts[2].replace('\f', '\n')));
+                        ActiveChatMessagesList.getInstance().setChatMessages(chatMessages);
+                        initialState = false;
+                    }
+                    else {
+                        activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(activity, String.format("%s: %s", messageParts[1], messageParts[2].replace('\f', '\n')), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        ActiveChatMessagesList.getInstance().addChatMessageIntoList(new ChatMessage(messageParts[2].replace('\f', '\n'), messageParts[1]));
+                    }
                 }
                 socket.close();
             }
