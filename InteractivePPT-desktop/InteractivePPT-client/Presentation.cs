@@ -60,7 +60,6 @@ namespace InteractivePPT
             Dictionary<string, string> test = new Dictionary<string, string>();
             test.Add("1", "slijedeći slajd");
             test.Add("2", "tag: naziv pitanja");
-            test.Add("3", "tag: korisnički");
             graphPosition.DataSource = new BindingSource(test, null);
             graphPosition.DisplayMember = "Value";
             graphPosition.ValueMember = "Key";
@@ -179,28 +178,7 @@ namespace InteractivePPT
                     }
                 }
             }
-            if (graphPosition.SelectedIndex == 2)
-            {
-                for (int i = currentSlide(); i < p.Slides.Count; i++)
-                {
-                    foreach (var it in p.Slides[i + 1].Shapes)
-                    {
-                        var shape = (PowerPoint.Shape)it;
-                        if (shape.HasTextFrame == MsoTriState.msoTrue)
-                        {
-                            if (shape.TextFrame.HasText == MsoTriState.msoTrue)
-                            {
-                                string textRange = shape.TextFrame.TextRange.Text;
-                                string hash = "[" + metroTextBox1.Text.ToString() + "]";
-                                if (textRange == hash)
-                                {
-                                    slideIndex = i + 1;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            
             slide = slides.AddSlide(slideIndex, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
             //var chart = slide.Shapes.AddChart(XlChartType.xlBarClustered, 10f, 10f, 900f, 400f).Chart;
             PowerPoint.Chart chart = null;

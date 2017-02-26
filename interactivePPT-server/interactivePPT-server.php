@@ -43,10 +43,13 @@ switch ($_POST['request_type']) {
             } while ($recordSet->num_rows > 0);
             $recordSet->free();
             $fileUri = 'null';
+			$command = "SELECT idUser FROM Users WHERE app_uid='10210532062074946' LIMIT 1";
+			$recordSet = $dbHandler->query($command)->fetch_assoc();
+			$fiu = $recordSet["idUser"]."-".$filename;
             if ($userfile!==null) {
                 if (is_uploaded_file($userfile)) {
-                    move_uploaded_file($userfile, "ppt/$filename");
-                    $fileUri = "'ppt/$filename'";
+                    move_uploaded_file($userfile, "ppt/$fiu");
+                    $fileUri = "'ppt/$fiu'";
                     $fileChecksum = hash_file('md5', trim($fileUri, "'"));
                 }            
             }
