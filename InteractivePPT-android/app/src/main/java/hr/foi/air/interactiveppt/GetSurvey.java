@@ -21,6 +21,7 @@ import hr.foi.air.interactiveppt.entities.Answer;
 import hr.foi.air.interactiveppt.entities.ListOfAnswers;
 import hr.foi.air.interactiveppt.entities.SurveyWithQuestions;
 import hr.foi.air.interactiveppt.questiontype.QuestionTypeControl;
+import hr.foi.air.interactiveppt.questiontype.RadioGroup;
 import hr.foi.air.interactiveppt.questiontype.ReflectionQtHelper;
 import hr.foi.air.interactiveppt.webservice.SendDataAndProcessResponseTask;
 import hr.foi.air.interactiveppt.webservice.ServiceGenerator;
@@ -110,6 +111,25 @@ public class GetSurvey extends AppCompatActivity{
         lL.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         lL.setGravity(Gravity.CENTER);
         lL.addView(button);
+
+        Button button2= new Button(this);
+        button2.setText("Obriši sve");
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+                startActivity(getIntent());
+                
+            }
+        });
+        LinearLayout.LayoutParams buttonLayoutParams2 = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        buttonLayoutParams2.setMargins(30, 5, 30, 20);
+        button2.setLayoutParams(buttonLayoutParams2);
+        lL.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        lL.setGravity(Gravity.CENTER);
+        lL.addView(button2);
 
         scrollView.addView(lL);
         scrollView.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
