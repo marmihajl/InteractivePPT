@@ -68,8 +68,9 @@ namespace InteractivePPT
                 {
                     endPosOfPptName = survey.link_to_presentation.LastIndexOf(".pptx");
                 }
+                int startPosOfPptName = survey.link_to_presentation.IndexOf('-') + 1;
                 mySurveysDgv.Rows.Add(
-                    survey.link_to_presentation.Substring(4, endPosOfPptName),
+                    survey.link_to_presentation.Substring(startPosOfPptName, endPosOfPptName - startPosOfPptName),
                     survey.access_code,
                     serverRootDirectoryUri + survey.link_to_presentation,
                     (new QRCodeWriter()).encode(survey.access_code, BarcodeFormat.QR_CODE, 50, 50).ToBitmap()
@@ -236,9 +237,9 @@ namespace InteractivePPT
                      p.Show();*/
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                ;
             }
         }
     }

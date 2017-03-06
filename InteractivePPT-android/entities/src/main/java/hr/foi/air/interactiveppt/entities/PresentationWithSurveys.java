@@ -21,4 +21,8 @@ public class PresentationWithSurveys {
 
     @SerializedName("author_name")
     public String authorName;
+
+    public String getPresentationName() {
+        return path.substring(path.indexOf('-') + 1, path.lastIndexOf('.'));
+    }
 }

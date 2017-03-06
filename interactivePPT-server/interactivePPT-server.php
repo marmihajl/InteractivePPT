@@ -43,7 +43,7 @@ switch ($_POST['request_type']) {
             } while ($recordSet->num_rows > 0);
             $recordSet->free();
             $fileUri = 'null';
-			$command = "SELECT idUser FROM Users WHERE app_uid='10210532062074946' LIMIT 1";
+			$command = "SELECT idUser FROM Users WHERE app_uid='$facebookId' LIMIT 1";
 			$recordSet = $dbHandler->query($command)->fetch_assoc();
 			$fiu = $recordSet["idUser"]."-".$filename;
             if ($userfile!==null) {

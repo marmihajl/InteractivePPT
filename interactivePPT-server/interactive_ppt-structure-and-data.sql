@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 23, 2017 at 11:06 AM
+-- Generation Time: Mar 06, 2017 at 09:57 AM
 -- Server version: 5.7.17-0ubuntu0.16.04.1
 -- PHP Version: 7.0.15-0ubuntu0.16.04.1
 
@@ -159,114 +159,27 @@ CREATE TABLE `Answers` (
   `idAnswer` int(11) NOT NULL,
   `idUser` int(11) NOT NULL,
   `idQuestion` int(11) NOT NULL,
-  `idOption` int(11) NOT NULL
+  `idOption` int(11) NOT NULL,
+  `datetime` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Answers`
 --
 
-INSERT INTO `Answers` (`idAnswer`, `idUser`, `idQuestion`, `idOption`) VALUES
-(9, 1, 15, 2),
-(10, 1, 15, 3),
-(11, 1, 14, 1),
-(12, 1, 47, 63),
-(13, 1, 14, 1),
-(14, 1, 47, 64),
-(15, 1, 14, 1),
-(16, 1, 15, 2),
-(17, 1, 15, 3),
-(18, 1, 47, 65),
-(19, 1, 14, 1),
-(20, 1, 15, 2),
-(21, 1, 15, 3),
-(22, 1, 47, 65),
-(23, 1, 14, 1),
-(24, 1, 15, 2),
-(25, 1, 15, 3),
-(26, 1, 47, 65),
-(27, 1, 15, 2),
-(28, 1, 15, 3),
-(29, 1, 14, 1),
-(30, 1, 47, 66),
-(31, 1, 14, 1),
-(32, 1, 15, 2),
-(33, 1, 15, 3),
-(34, 1, 47, 67),
-(35, 1, 14, 1),
-(36, 1, 15, 2),
-(37, 1, 15, 3),
-(38, 1, 47, 67),
-(39, 1, 14, 3),
-(40, 1, 15, 2),
-(41, 1, 15, 3),
-(42, 1, 47, 67),
-(43, 1, 14, 2),
-(44, 1, 15, 2),
-(45, 1, 15, 3),
-(46, 1, 47, 68),
-(47, 1, 14, 2),
-(48, 1, 15, 2),
-(49, 1, 47, 68),
-(50, 1, 15, 1),
-(51, 1, 10, 23),
-(52, 1, 10, 28),
-(53, 1, 11, 30),
-(54, 1, 13, 22),
-(55, 1, 6, 12),
-(56, 1, 7, 15),
-(57, 1, 8, 17),
-(58, 1, 9, 21),
-(59, 1, 10, 23),
-(60, 1, 10, 28),
-(61, 1, 11, 30),
-(62, 1, 13, 22),
-(63, 1, 6, 12),
-(64, 1, 7, 15),
-(65, 1, 8, 17),
-(66, 1, 12, 69),
-(69, 1, 9, 21),
-(70, 1, 10, 24),
-(71, 1, 10, 27),
-(72, 1, 11, 31),
-(73, 1, 6, 11),
-(74, 1, 7, 15),
-(75, 1, 8, 18),
-(76, 1, 9, 21),
-(176, 1, 52, 78),
-(177, 1, 52, 79),
-(178, 1, 52, 80),
-(179, 1, 52, 82),
-(180, 1, 53, 84),
-(181, 1, 54, 90),
-(182, 1, 1, 2),
-(183, 1, 3, 5),
-(184, 1, 4, 7),
-(185, 1, 5, 8),
-(186, 2, 14, 1),
-(187, 2, 15, 2),
-(188, 2, 15, 3),
-(189, 2, 47, 91),
-(190, 2, 31, 92),
-(191, 2, 55, 40),
-(192, 2, 56, 93),
-(193, 2, 56, 94),
-(194, 2, 56, 95),
-(195, 1, 60, 40),
-(196, 1, 61, 40),
-(197, 1, 62, 40),
-(198, 2, 92, 40),
-(199, 2, 93, 35),
-(200, 2, 93, 36),
-(201, 2, 93, 37),
-(202, 2, 93, 119),
-(203, 2, 93, 120),
-(204, 2, 94, 35),
-(205, 2, 95, 35),
-(206, 2, 95, 36),
-(207, 2, 95, 37),
-(208, 2, 95, 119),
-(209, 2, 95, 120);
+INSERT INTO `Answers` (`idAnswer`, `idUser`, `idQuestion`, `idOption`, `datetime`) VALUES
+(212, 2, 97, 121, '2017-02-28 22:57:09'),
+(213, 2, 94, 35, '2017-03-01 12:00:19'),
+(214, 2, 95, 35, '2017-03-01 12:00:19'),
+(215, 2, 95, 36, '2017-03-01 12:00:19'),
+(216, 2, 95, 37, '2017-03-01 12:00:19'),
+(217, 2, 95, 119, '2017-03-01 12:00:19'),
+(218, 2, 95, 120, '2017-03-01 12:00:19'),
+(219, 2, 96, 36, '2017-03-01 12:00:27'),
+(220, 2, 37, 52, '2017-03-01 12:18:00'),
+(221, 2, 38, 54, '2017-03-01 12:18:00'),
+(222, 2, 38, 56, '2017-03-01 12:18:00'),
+(223, 2, 39, 123, '2017-03-01 12:18:00');
 
 -- --------------------------------------------------------
 
@@ -338,11 +251,13 @@ INSERT INTO `Default_question_options` (`idQuestion`, `idOption`) VALUES
 (93, 35),
 (94, 35),
 (95, 35),
+(96, 35),
 (5, 36),
 (45, 36),
 (93, 36),
 (94, 36),
 (95, 36),
+(96, 36),
 (45, 37),
 (93, 37),
 (95, 37),
@@ -398,7 +313,9 @@ INSERT INTO `Default_question_options` (`idQuestion`, `idOption`) VALUES
 (93, 119),
 (95, 119),
 (93, 120),
-(95, 120);
+(95, 120),
+(97, 121),
+(97, 122);
 
 -- --------------------------------------------------------
 
@@ -566,7 +483,10 @@ INSERT INTO `Options` (`idOptions`, `choice_name`) VALUES
 (117, 'kolaboraciju na nastavnim aktivnostima'),
 (118, 'brainstorming'),
 (119, '4'),
-(120, '5');
+(120, '5'),
+(121, 'w'),
+(122, 'z'),
+(123, 'bok');
 
 -- --------------------------------------------------------
 
@@ -587,18 +507,19 @@ CREATE TABLE `Presentation` (
 --
 
 INSERT INTO `Presentation` (`id`, `path`, `checksum`, `access_code`, `author`) VALUES
-(3, 'ppt/nepoznato.ppt', '', 'd9b4vs69v2', 2),
-(4, 'ppt/Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 'f20a266070f9bc4f669cf32d3421ae94', 'rpk_anketa', 1),
-(5, 'ppt/Proizvodnja vina.pptx', '62bec847df18737e125679b52be123fc', '7dsR6n2n', 1),
-(7, 'ppt/Varijable i pokazivači.pptx', '1cd8176f540c820e1d842573f4034894', 'm45k0fz42t', 1),
-(10, 'ppt/test.pptx', '', 'j173hbvuos', 2),
-(17, 'ppt/Poslovni plan za poduzeće CroIoT-final.pptx', 'e226a6cc8afc9a8d0e8246c715d57789', '4rl0dn7a68', 10),
-(18, 'ppt/Youtube.pptx', '99def3c5cba7f9c405a7a90d3c462841', 'n0879n11j3', 1),
-(19, 'ppt/blank_ppt.pptx', 'ef2f95333dc42a7f68412cf504690fb3', '69up787n13', 1),
-(20, 'ppt/nova.pptx', '7d8588f883d92d03333318fcf5c730e7', '33g4y723t4', 2),
-(22, 'ppt/CSharp and Software Design.pptx', '3f243e6c26dc4cf275751a6ef6ae3d6f', '5a99909p6k', 1),
-(28, 'ppt/LN01-Introduction.ppt', '9cdf2b479616648fa834247d66bc530c', 'rg8a62oq1s', 1),
-(29, 'ppt/interactive_presentation.pptx', '003ad9eb973ef3247791d6be12a7450f', 'y1u03ows85', 2);
+(3, 'ppt/2-nepoznato.ppt', '', 'd9b4vs69v2', 2),
+(4, 'ppt/1-Petar Šestak-Programiranje u skriptnim programskim jezicima-1.pptx', 'f20a266070f9bc4f669cf32d3421ae94', 'rpk_anketa', 1),
+(5, 'ppt/1-Proizvodnja vina.pptx', '8d3b30b7292e01f3d9b9a0e15c3c9aeb', '7dsR6n2n', 1),
+(7, 'ppt/1-Varijable i pokazivači.pptx', '1cd8176f540c820e1d842573f4034894', 'm45k0fz42t', 1),
+(10, 'ppt/2-test.pptx', '', 'j173hbvuos', 2),
+(17, 'ppt/10-Poslovni plan za poduzeće CroIoT-final.pptx', 'e226a6cc8afc9a8d0e8246c715d57789', '4rl0dn7a68', 10),
+(18, 'ppt/1-Youtube.pptx', '99def3c5cba7f9c405a7a90d3c462841', 'n0879n11j3', 1),
+(19, 'ppt/1-blank_ppt.pptx', 'ef2f95333dc42a7f68412cf504690fb3', '69up787n13', 1),
+(20, 'ppt/2-nova.pptx', '7d8588f883d92d03333318fcf5c730e7', '33g4y723t4', 2),
+(22, 'ppt/1-CSharp and Software Design.pptx', '3f243e6c26dc4cf275751a6ef6ae3d6f', '5a99909p6k', 1),
+(28, 'ppt/1-LN01-Introduction.ppt', '9cdf2b479616648fa834247d66bc530c', 'rg8a62oq1s', 1),
+(30, 'ppt/2-bez_ankete.pptx', '', '123qwe456q', 2),
+(31, 'ppt/2-interactive_presentation.pptx', '50d57e6be037a2d3a58de51d5bfeec7c', '4k2dh58k2d', 2);
 
 -- --------------------------------------------------------
 
@@ -672,7 +593,9 @@ INSERT INTO `Questions` (`idQuestions`, `name`, `answer_required`, `Question_typ
 (92, 'prvo', 1, 1, 55),
 (93, 'drugo', 1, 2, 55),
 (94, 'prv', 1, 1, 56),
-(95, 'dr', 1, 2, 56);
+(95, 'dr', 1, 2, 56),
+(96, 'w', 0, 1, 57),
+(97, 'qq', 0, 1, 58);
 
 -- --------------------------------------------------------
 
@@ -806,7 +729,11 @@ INSERT INTO `Question_options` (`idOptions`, `idQuestions`) VALUES
 (36, 95),
 (37, 95),
 (119, 95),
-(120, 95);
+(120, 95),
+(35, 96),
+(36, 96),
+(121, 97),
+(122, 97);
 
 -- --------------------------------------------------------
 
@@ -893,9 +820,11 @@ CREATE TABLE `Reply_request` (
 --
 
 INSERT INTO `Reply_request` (`user`, `presentation`, `time`) VALUES
+(1, 4, '2017-03-05 15:38:59'),
 (1, 5, '2017-02-16 20:48:13'),
 (2, 10, '2017-01-31 15:47:10'),
-(10, 4, '2017-01-07 19:01:22');
+(10, 4, '2017-01-07 19:01:22'),
+(12, 4, '2017-03-05 15:38:48');
 
 -- --------------------------------------------------------
 
@@ -941,10 +870,11 @@ INSERT INTO `Subscription` (`idUser`, `idPresentation`, `active`) VALUES
 (1, 7, 'no'),
 (1, 10, 'no'),
 (2, 3, 'yes'),
+(2, 5, 'yes'),
 (2, 10, 'no'),
-(2, 29, 'yes'),
 (10, 4, 'no'),
-(12, 4, 'yes');
+(12, 4, 'no'),
+(13, 10, 'yes');
 
 -- --------------------------------------------------------
 
@@ -987,7 +917,9 @@ INSERT INTO `Survey` (`idSurvey`, `name`, `description`, `access_code`) VALUES
 (44, 'SOLID Design Principles', 'Još jedna prezentacija o uzorcima dizajna', '5a99909p6k'),
 (54, 'Mišljenje o aplikaciji', 'Molimo Vas da nam rješavanjem ove ankete izrazite mišljenje o aplikaciji.', 'rg8a62oq1s'),
 (55, 'nova anketa', 'anketa', 'j173hbvuos'),
-(56, 'ank', 'ank', 'y1u03ows85');
+(56, 'ank', 'ank', '4k2dh58k2d'),
+(57, 'qqq', 'rrr', '4k2dh58k2d'),
+(58, '000', '999', '4k2dh58k2d');
 
 -- --------------------------------------------------------
 
@@ -1012,7 +944,8 @@ INSERT INTO `Users` (`idUser`, `name`, `app_uid`, `Role_idRole`, `token`) VALUES
 (2, 'Marin Mihajlovic', '10210532062074946', 2, ''),
 (8, 'Marinela Levak', '1336022606431703', 3, ''),
 (10, 'Mario Šelek', '1256649427742897', 3, 'ed2L3DqVgfY:APA91bHfonVwB2Hnk7fe-MT4MaUHSiz5xXExFL3LaIDOaPt2fah91hIpD-EpuauXdQGWFrFCHR8ZSxY_xeBV1sYko1KGZ7Rh7tZ3nFi-P8igKlDatvL1I8REaBH3CKA1SUc_UEei4LQ7'),
-(12, 'Račun Za Testiranje', '166569610511915', 3, '');
+(12, 'Račun Za Testiranje', '166569610511915', 3, ''),
+(13, 'Marin Marin', '104852530032944', 3, '');
 
 -- --------------------------------------------------------
 
@@ -1139,22 +1072,22 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Answers`
 --
 ALTER TABLE `Answers`
-  MODIFY `idAnswer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=210;
+  MODIFY `idAnswer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=224;
 --
 -- AUTO_INCREMENT for table `Options`
 --
 ALTER TABLE `Options`
-  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `idOptions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
 --
 -- AUTO_INCREMENT for table `Presentation`
 --
 ALTER TABLE `Presentation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `Questions`
 --
 ALTER TABLE `Questions`
-  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `idQuestions` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 --
 -- AUTO_INCREMENT for table `Question_type`
 --
@@ -1169,12 +1102,12 @@ ALTER TABLE `Role`
 -- AUTO_INCREMENT for table `Survey`
 --
 ALTER TABLE `Survey`
-  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `idSurvey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 --
 -- AUTO_INCREMENT for table `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- Constraints for dumped tables
 --

@@ -15,8 +15,12 @@ public class Presentation {
     public String accessCode;
 
     @SerializedName("path")
-    public String presentationName;
+    public String path;
 
     @SerializedName("author_name")
     public String authorName;
+
+    public String getPresentationName() {
+        return path.substring(path.indexOf('-') + 1, path.lastIndexOf('.'));
+    }
 }

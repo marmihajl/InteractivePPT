@@ -121,7 +121,7 @@ public class CreateSurvey extends AppCompatActivity {
                                     Presentation IthPpt = myPpts.get(i);
                                     RadioButton rbOfIthPpt = new RadioButton(CreateSurvey.this);
                                     rbOfIthPpt.setId(i);
-                                    rbOfIthPpt.setText(IthPpt.presentationName);
+                                    rbOfIthPpt.setText(IthPpt.getPresentationName());
                                     rbOfIthPpt.setTag(IthPpt.accessCode);
                                     existingPptsRG.addView(rbOfIthPpt);
                                 }

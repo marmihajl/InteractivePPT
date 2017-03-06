@@ -1,9 +1,15 @@
 package hr.foi.air.interactiveppt;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.media.RingtoneManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -188,19 +194,21 @@ public class ViewPresentation extends AppCompatActivity {
             }
         });
 
-        new Thread(new ClientThread(this, presentation.id, userId)).start();
+        new Thread(new ClientThread(this, presentation.id, presentation.getPresentationName(), userId)).start();
     }
 
     class ClientThread implements Runnable {
 
         private Activity activity;
         private int pptId;
+        private String pptName;
         private String userId;
         private ActiveChatMessagesList chatMessagesList;
 
-        ClientThread(Activity activity, int pptId, String userId) {
+        ClientThread(Activity activity, int pptId, String pptName, String userId) {
             this.activity = activity;
             this.pptId = pptId;
+            this.pptName = pptName;
             this.userId = userId;
         }
 
@@ -213,11 +221,13 @@ public class ViewPresentation extends AppCompatActivity {
                 DataOutputStream out = new DataOutputStream(outToServer);
                 out.writeUTF(userId);
             }
-            catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
+            catch (Exception e) {
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(activity, "Nije moguće uspostaviti komunikaciju s prezentatorom. Chat i repliciranje u ovoj sesiji neće biti omogućeno", Toast.LENGTH_LONG).show();
+                    }
+                });
+                return;
             }
 
             try {
@@ -240,11 +250,30 @@ public class ViewPresentation extends AppCompatActivity {
                         initialState = false;
                     }
                     else {
-                        activity.runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(activity, String.format("%s: %s", messageParts[1], messageParts[2].replace('\f', '\n')), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        if (!messageParts[0].equals(userId)) {
+                            activity.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    NotificationCompat.Builder mBuilder =
+                                            new NotificationCompat.Builder(activity)
+                                                    .setSmallIcon(R.drawable.com_facebook_button_icon)
+                                                    .setContentTitle("InteractivePPT - " + pptName)
+                                                    .setContentText(messageParts[1] + ": " + messageParts[2].replace('\f', '\n'))
+                                                    .setAutoCancel(true).setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+                                    Intent resultIntent = new Intent(activity, Chat.class);
+
+                                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(activity);
+                                    stackBuilder.addParentStack(Chat.class);
+                                    stackBuilder.addNextIntent(resultIntent);
+                                    PendingIntent resultPendingIntent =
+                                            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                                    mBuilder.setContentIntent(resultPendingIntent);
+                                    NotificationManager mNotificationManager =
+                                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                    mNotificationManager.notify(new java.util.Random().nextInt(), mBuilder.build());
+                                }
+                            });
+                        }
                         ActiveChatMessagesList.getInstance().addChatMessageIntoList(new ChatMessage(messageParts[2].replace('\f', '\n'), messageParts[1]));
                     }
                 }

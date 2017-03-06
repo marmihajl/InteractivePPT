@@ -105,7 +105,7 @@ public class ExpandablePresentationListAdapter extends BaseExpandableListAdapter
             convertView = inflater.inflate(R.layout.ppt_row_title, null);
         }
         Presentation presentationItem = (Presentation) getGroup(presentationItemPosition);
-        ((TextView) convertView.findViewById(R.id.presentationName)).setText(presentationItem.presentationName.substring(4, presentationItem.presentationName.lastIndexOf('.')));
+        ((TextView) convertView.findViewById(R.id.presentationName)).setText(presentationItem.getPresentationName());
 
         if (consumer != null) {
             convertView.setId(presentationItemPosition);

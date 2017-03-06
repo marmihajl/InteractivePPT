@@ -75,7 +75,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_file).setContentTitle("NOVA VERZIJA!!VAŽNO!!")
-                .setContentText("Na serveru se nalazi nove prezentacija:"+pws.path)
+                .setContentText("Na serveru se nalazi nove prezentacija:"+pws.getPresentationName())
                 .setAutoCancel(true).setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
@@ -91,7 +91,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_file).setContentTitle("Nova prezentacija")
-                .setContentText("Na serveru se nalazi nove prezentacija:"+pws.path)
+                .setContentText("Na serveru se nalazi nove prezentacija:"+pws.getPresentationName())
                 .setAutoCancel(true).setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);

@@ -9,6 +9,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class ChatMessageListAdapter extends BaseAdapter {
         ChatMessage message = messages.get(position);
 
         user.setText(message.getMessageUser());
-        time.setText(new Date(message.getMessageTime() * 1000).toString());
+        time.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", message.getMessageTime()).toString());
         text.setText(message.getMessageText());
         return vi;
     }
