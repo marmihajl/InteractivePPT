@@ -172,12 +172,13 @@ function interact($csock) {
 }
 
 $main_process = true;
-if ($argc === 2) {
-    $pptId = $argv[1];
+if ($argc === 3) {
+    $myIpAddress = $argv[1];
+    $pptId = $argv[2];
     $parentProcess = getmypid();
     $port = 50000 + $pptId;
     $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-    if (is_resource($socket) && socket_bind($socket, '46.101.247.168', $port) && socket_listen($socket, 0)) {
+    if (is_resource($socket) && socket_bind($socket, $myIpAddress, $port) && socket_listen($socket, 0)) {
         echo $port;
         fclose(STDOUT);
 

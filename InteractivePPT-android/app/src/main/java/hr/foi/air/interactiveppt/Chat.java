@@ -38,7 +38,7 @@ public class Chat extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menu_sign_out) {
+        if(item.getItemId() == R.id.menu_mute_chat) {
             //send http rest data with your uid and action identifier to mute chat (server then puts that in message queue and following process in notifier.php saves state that message doesn't need to be sent to that user
         }
         return true;
@@ -109,14 +109,6 @@ public class Chat extends AppCompatActivity {
 
         adapter = new ChatMessageListAdapter(this, ActiveChatMessagesList.getInstance().getChatMessages());
         list.setAdapter(adapter);
-
-        // Click event for single list row
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
     }
 
 }

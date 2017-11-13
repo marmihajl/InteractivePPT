@@ -33,8 +33,7 @@ public class Question {
         this.requiredAnswer = question.getRequiredAnswer();
     }
 
-    public Question(int id, String questionText, int questionType, int requiredAnswer) {
-        this.questionId = id;
+    public Question(String questionText, int questionType, int requiredAnswer) {
         this.questionText = questionText;
         this.questionType = questionType;
         this.requiredAnswer = requiredAnswer;

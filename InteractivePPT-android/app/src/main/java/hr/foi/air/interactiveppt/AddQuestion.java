@@ -3,7 +3,9 @@ package hr.foi.air.interactiveppt;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,9 +36,8 @@ public class AddQuestion extends Dialog {
         questions = q;
     }
 
-    int optionId = 1;
+    int optionId = -1;
     LinearLayout optionList;
-    int id = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +63,21 @@ public class AddQuestion extends Dialog {
                 if (android.os.Build.VERSION.SDK_INT < 11) {    //because lower API versions do not support Alpha channels/transparency
                     et.setBackgroundColor(activity.getResources().getColor(R.color.colorAddQuestionBackground));
                 }
-                et.setId(optionId++);
+                optionId++;
                 et.setHint("Odgovor "+(optionId+1));
+                et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 optionList.addView(et);
             }
         });
+        addOption.performClick();
 
         removeOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText et = (EditText)optionList.getChildAt(optionId--);
-                optionList.removeView(et);
+                if (optionId != 0) {
+                    EditText et = (EditText) optionList.getChildAt(optionId--);
+                    optionList.removeView(et);
+                }
             }
         });
 
@@ -86,19 +91,15 @@ public class AddQuestion extends Dialog {
 
                 String questionName = ((EditText)findViewById(R.id.questionText)).getText().toString();
                 int answerRequired = ((CheckBox)findViewById(R.id.answerRequired)).isChecked() ? 1 : 0;
-                Question question = new Question(id, questionName, questionTypeCode, answerRequired);
-                id++;
+                Question question = new Question(questionName, questionTypeCode, answerRequired);
 
                 switch (ReflectionQtHelper.getInstance().getModeOfQuestionType(questionTypeCode, activity)) {
                     case 1:
                     case 3:
                         for (int i = 0; i < optionList.getChildCount(); i++) {
-                            View view = optionList.getChildAt(i);
-                            if (view instanceof EditText) {
-                                Option option = new Option();
-                                option.setOptionText(((EditText) view).getText().toString());
-                                question.setOptions(option);
-                            }
+                            Option option = new Option();
+                            option.setOptionText(((EditText) optionList.getChildAt(i)).getText().toString());
+                            question.setOptions(option);
                         }
                         break;
                     case 2:
@@ -106,7 +107,7 @@ public class AddQuestion extends Dialog {
                 }
 
                 String reasonsOfIncompletion;
-                if ((reasonsOfIncompletion = getReasonsWhyCurrentQuestionIsntComplete(question)) != "") {
+                if (!(reasonsOfIncompletion = getReasonsWhyCurrentQuestionIsntComplete(question)).isEmpty()) {
                     Toast.makeText(getContext(), "Neuspjeh kod kreiranja:" + reasonsOfIncompletion, Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -167,4 +168,43 @@ public class AddQuestion extends Dialog {
         return reasonsOfIncompletion;
     }
 
+    @NonNull
+    @Override
+    public Bundle onSaveInstanceState() {
+        Bundle bundle = super.onSaveInstanceState();
+
+        //bundle.putString("questionName", ((EditText)findViewById(R.id.questionText)).getText().toString());
+        //bundle.putBoolean("questionRequired", ((CheckBox)findViewById(R.id.answerRequired)).isChecked());
+        //bundle.putInt("questionTypeCode", ((Spinner)findViewById(R.id.spinner)).getSelectedItemPosition());
+        ArrayList<String> answers = new ArrayList<>();
+        for (int i = 0; i < optionList.getChildCount(); i++) {
+            answers.add(((EditText) optionList.getChildAt(i)).getText().toString());
+        }
+        bundle.putStringArrayList("answers", answers);
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        //((EditText)findViewById(R.id.questionText)).setText(savedInstanceState.getString("questionName"));
+        //((CheckBox)findViewById(R.id.answerRequired)).setChecked(savedInstanceState.getBoolean("questionRequired"));
+        //((Spinner)findViewById(R.id.spinner)).setSelection(savedInstanceState.getInt("questionTypeCode"));
+        optionId -= optionList.getChildCount();
+        optionList.removeAllViews();
+        for (String answer : savedInstanceState.getStringArrayList("answers")) {
+            EditText et = new EditText(this.getContext());
+            et.setText(answer);
+            et.setHint("Odgovor " + (++optionId + 1));
+            optionList.addView(et);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+        ((CreateSurvey)activity).cdd = null;
+    }
 }

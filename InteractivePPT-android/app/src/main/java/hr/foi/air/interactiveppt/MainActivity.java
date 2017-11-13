@@ -21,6 +21,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.Profile;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -53,24 +55,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
+
         callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-
-
         findViewById(R.id.loading_panel).setVisibility(View.GONE);
-        text = (TextView)findViewById(R.id.errorText);
+        text = (TextView) findViewById(R.id.errorText);
         defaultLoginButton = (LoginButton) findViewById(R.id.default_login_button);
         defaultLoginButton.addTextChangedListener(textWatcher);
         visibleLoginButton.setText(defaultLoginButton.getText());
 
+        if (getIntent().getBooleanExtra("logout", false)) {
+            LoginManager.getInstance().logOut();
+            defaultLoginButton.setLoginBehavior(LoginBehavior.SUPPRESS_SSO);
+        }
+        else {
+            Profile currProfile = Profile.getCurrentProfile();
+            if (currProfile != null) {
+                user = new User(currProfile.getName(), currProfile.getId());
+                openHome();
+            }
+        }
         defaultLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
-
                 GraphRequest request = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
@@ -83,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,link");
+                parameters.putString("fields", "id,name, link");
                 request.setParameters(parameters);
                 request.executeAsync();
 
@@ -91,15 +102,13 @@ public class MainActivity extends AppCompatActivity {
                     return; // already logged out
                 }
 
-
-
             }
 
             @Override
             public void onCancel() {
 
 
-                text.setText("Login attempt canceled.");
+                text.setText(R.string.login_attempt_canceled);
 
             }
 
@@ -107,16 +116,22 @@ public class MainActivity extends AppCompatActivity {
             public void onError(FacebookException error) {
 
 
-                text.setText("Login attempt failed.");
+                text.setText(R.string.login_attempt_failed);
 
             }
         });
-
+        visibleLoginButton.setText(R.string.login_button_content);
+        defaultLoginButton.performClick();
     }
 
     @OnClick(R.id.visible_login_button)
     protected void authenticateViaFacebook(View v) {
-        defaultLoginButton.performClick();
+        if (visibleLoginButton.getText().equals(getResources().getString(R.string.try_again_button_content))) {
+            registerUserIntoWebservice(user);
+        }
+        else {
+            defaultLoginButton.performClick();
+        }
     }
 
     @Override
@@ -128,18 +143,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void openHome(){
 
-
         Intent intent = new Intent(MainActivity.this,PresentationList.class);
         intent.putExtra("id",user.getId());
         intent.putExtra("fullName",user.getFullName());
         startActivity(intent);
-        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/", null, HttpMethod.DELETE, new GraphRequest
-                .Callback() {
-            @Override
-            public void onCompleted(GraphResponse graphResponse) {
-                LoginManager.getInstance().logOut();
-            }
-        }).executeAsync();
         finish();
     }
 
@@ -177,10 +184,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure() {
                         Toast.makeText(MainActivity.this,
-                                "Neuspjeh kod registracije u sustav! Provjerite vezu s Internetom",
+                                "Neuspjeh kod registracije u sustav! Poslužitelj aplikacije je trenutno nedostupan",
                                 Toast.LENGTH_LONG
                         ).show();
                         toggleVisibilityAtLoading(true);
+                        visibleLoginButton.setText(R.string.try_again_button_content);
                     }
                 }
         );
@@ -217,7 +225,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable s) {
-            visibleLoginButton.setText(defaultLoginButton.getText());
+            String localizedText;
+            switch (defaultLoginButton.getText().toString().toUpperCase()) {
+                case "LOG IN WITH FACEBOOK":
+                    localizedText = getResources().getString(R.string.login_button_content);
+                    break;
+                default:
+                    localizedText = "";
+            }
+            visibleLoginButton.setText(localizedText);
         }
     };
 }

@@ -92,7 +92,7 @@ switch ($_POST['request_type']) {
         break;
     case 'get_questions':
         $survey = $_POST['survey_id'];
-        $command = "SELECT q.idQuestions, q.name, q.Question_type_idQuestion_type FROM Questions q, Survey s WHERE s.idSurvey='$survey' AND s.idSurvey=q.Survey_idSurvey;";
+        $command = "SELECT q.idQuestions, q.name, q.Question_type_idQuestion_type FROM Questions q, Survey s WHERE s.idSurvey=$survey AND s.idSurvey=q.Survey_idSurvey;";
         $recordSet = $dbHandler->query($command);
         $outputArray = array();
         if ($recordSet) {
@@ -188,7 +188,7 @@ switch ($_POST['request_type']) {
             $command="INSERT INTO Answers VALUES";
             if(count($answers)){
                 foreach ($answers as $a){
-                    $command.= "(default, $userId, '$a[id_question]', createOptionAndGetId('$a[option_name]')),";
+                    $command.= "(default, $userId, $a[id_question], createOptionAndGetId('$a[option_name]'), default),";
                 }
                 $command = rtrim($command, ",");
                 $dbHandler->query($command);
@@ -358,8 +358,9 @@ switch ($_POST['request_type']) {
         );
 
         $pptId = $dbHandler->query("SELECT id FROM Presentation WHERE path='$path' LIMIT 1;")->fetch_row()[0];
+        $dbHandler->query("DELETE FROM Reply_request WHERE presentation=$pptId;");
 
-        $process = proc_open('nohup php -f notifier.php -- ' . $pptId . ' &', $descriptorspec, $pipes);
+        $process = proc_open("nohup php -f notifier.php -- $_SERVER[SERVER_ADDR] $pptId &", $descriptorspec, $pipes);
         if (is_resource($process)) {
             echo stream_get_contents($pipes[1]);
         }
@@ -433,9 +434,8 @@ switch ($_POST['request_type']) {
         
         break;
     case 'kill_connection':
-        $path = $_POST['path'];
-        $userUid = $_POST['id'];
-        $pptId = $dbHandler->query("SELECT id FROM Presentation WHERE path='$path' LIMIT 1;")->fetch_row()[0];
+        $pptId = $_POST['pptid'];
+        $userUid = $_POST['userid'];
 
         $queue = msg_get_queue($pptId);
         if ($queue === false) {
@@ -446,7 +446,6 @@ switch ($_POST['request_type']) {
             msg_send($queue, 1, "$userUid\texit\t\t", false);
             echo 'true';
         }
-        
         break;
 }
 $dbHandler->close();

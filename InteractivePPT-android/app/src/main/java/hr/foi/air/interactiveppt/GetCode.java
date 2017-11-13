@@ -208,8 +208,10 @@ public class GetCode extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.nav_logout:
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra("logout", true);
                 finish();
-                System.exit(0);
+                startActivity(intent);
                 break;
         }
 

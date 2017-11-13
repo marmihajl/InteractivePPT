@@ -40,6 +40,7 @@ public class PresentationList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presentation_list);
+        com.facebook.FacebookSdk.sdkInitialize(getApplicationContext());
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -210,8 +211,10 @@ public class PresentationList extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.nav_logout:
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra("logout", true);
                 finish();
-                System.exit(0);
+                startActivity(intent);
                 break;
         }
 

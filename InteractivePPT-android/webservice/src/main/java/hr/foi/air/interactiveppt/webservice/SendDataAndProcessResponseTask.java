@@ -15,19 +15,33 @@ public class SendDataAndProcessResponseTask extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] params) {
         Call<?> consumerSend = (Call<?>) params[0];
-        final PostActions postActions = (PostActions) params[1];
-        Callback<Object> callback = new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                postActions.onSuccess(response.body());
-            }
+        Callback<Object> callback;
+        if (params.length == 2) {
+            final PostActions postActions = (PostActions) params[1];
+            callback = new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, Response<Object> response) {
+                    postActions.onSuccess(response.body());
+                }
 
-            @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                postActions.onFailure();
-            }
-        };
-        ((Call)consumerSend).enqueue((Callback)callback);
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    postActions.onFailure();
+                }
+            };
+        }
+        else {
+            callback = new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, Response<Object> response) {
+                }
+
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                }
+            };
+        }
+        ((Call) consumerSend).enqueue((Callback) callback);
         return null;
     }
 
@@ -38,5 +52,9 @@ public class SendDataAndProcessResponseTask extends AsyncTask {
 
     public SendDataAndProcessResponseTask(Call<?> consumerSend, PostActions postActions) {
         this.execute(consumerSend, postActions);
+    }
+
+    public SendDataAndProcessResponseTask(Call<?> consumerSend) {
+        this.execute(consumerSend);
     }
 }

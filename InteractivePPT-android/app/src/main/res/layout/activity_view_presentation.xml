@@ -27,22 +27,25 @@
             <Button
                 android:text="@string/openSurvey"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/openSurvey"
+                android:layout_gravity="center"
                 android:layout_weight="0.35" />
 
             <Button
-            android:text="@string/requestReply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/requestReply"
-            android:layout_weight="0.35" />
+                android:text="@string/requestReply"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/requestReply"
+                android:layout_gravity="center"
+                android:layout_weight="0.35" />
 
             <Button
                 android:text="Chat"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/chat"
+                android:layout_gravity="center"
                 android:layout_weight="0.35" />
 
         </LinearLayout>

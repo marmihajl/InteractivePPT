@@ -29,7 +29,8 @@
             <RelativeLayout
                 android:id="@+id/my_presentations"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                app:layout_heightPercent="50%"
                 android:background="@drawable/com_facebook_button_background">
                 <TextView
                     android:id="@+id/my_ppts_title"
@@ -40,7 +41,7 @@
                     android:textSize="20sp" />
 
                 <TextView
-                    android:text="Niste kreirali niti jednu prezentaciju"
+                    android:text="@string/no_my_presentations"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
@@ -59,7 +60,8 @@
                 app:layout_marginTopPercent="5%"
                 android:id="@+id/subscribed_presentations"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                app:layout_heightPercent="50%"
                 android:layout_below="@id/my_presentations"
                 android:background="@drawable/com_facebook_button_background">
                 <TextView
@@ -71,7 +73,7 @@
                     android:textSize="20sp" />
 
                 <TextView
-                    android:text="Nemate pretplaćenih prezentacija"
+                    android:text="@string/no_subscribed_presentations"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"

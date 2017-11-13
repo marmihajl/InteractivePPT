@@ -47,6 +47,7 @@ import hr.foi.air.interactiveppt.webservice.WebService;
 public class ViewPresentation extends AppCompatActivity {
 
     String userId;
+    private int pptId;
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
@@ -54,6 +55,7 @@ public class ViewPresentation extends AppCompatActivity {
     private Socket socket;
 
     private ActionBarDrawerToggle drawerToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +102,7 @@ public class ViewPresentation extends AppCompatActivity {
         final PresentationWithSurveys presentation = new Gson().fromJson(intent.getStringExtra("serialized_presentation"), PresentationWithSurveys.class);
 
         userId = intent.getStringExtra("id");
+        pptId = presentation.id;
 
         WebView wv = (WebView)findViewById(R.id.webview);
 
@@ -189,7 +192,7 @@ public class ViewPresentation extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(ViewPresentation.this, Chat.class);
                 i.putExtra("userId", userId);
-                i.putExtra("pptId", presentation.id);
+                i.putExtra("pptId", pptId);
                 startActivity(i);
             }
         });
@@ -215,7 +218,7 @@ public class ViewPresentation extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                InetAddress serverAddr = InetAddress.getByName("46.101.247.168");
+                InetAddress serverAddr = InetAddress.getByName(ServiceGenerator.SERVER_HOSTNAME);
                 socket = new Socket(serverAddr, 50000 + pptId);
                 OutputStream outToServer = socket.getOutputStream();
                 DataOutputStream out = new DataOutputStream(outToServer);
@@ -224,7 +227,7 @@ public class ViewPresentation extends AppCompatActivity {
             catch (Exception e) {
                 activity.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(activity, "Nije moguće uspostaviti komunikaciju s prezentatorom. Chat i repliciranje u ovoj sesiji neće biti omogućeno", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, "Nije moguće uspostaviti komunikaciju s prezentatorom. Chat i repliciranje u ovoj sesiji neće biti omogućeni", Toast.LENGTH_LONG).show();
                     }
                 });
                 return;
@@ -255,7 +258,7 @@ public class ViewPresentation extends AppCompatActivity {
                                 public void run() {
                                     NotificationCompat.Builder mBuilder =
                                             new NotificationCompat.Builder(activity)
-                                                    .setSmallIcon(R.drawable.com_facebook_button_icon)
+                                                    .setSmallIcon(R.drawable.app_icon)
                                                     .setContentTitle("InteractivePPT - " + pptName)
                                                     .setContentText(messageParts[1] + ": " + messageParts[2].replace('\f', '\n'))
                                                     .setAutoCancel(true).setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
@@ -292,7 +295,7 @@ public class ViewPresentation extends AppCompatActivity {
     }
 
     private void openPresentation(final WebView wv, final String pptPath) {
-        String uriToPpt = "http://docs.google.com/viewer?url=http://46.101.68.86/" + pptPath + "&embedded=true";
+        String uriToPpt = "http://docs.google.com/viewer?url=" + ServiceGenerator.API_BASE_URL + pptPath + "&embedded=true";
 
         startWebView(uriToPpt, wv);
     }
@@ -318,31 +321,27 @@ public class ViewPresentation extends AppCompatActivity {
 
     public void selectDrawerItem(MenuItem menuItem) {
         Intent intent;
+        new SendDataAndProcessResponseTask(ServiceGenerator.createService(WebService.class).killConnection("kill_connection", pptId, userId));
         switch(menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 intent = new Intent(this, PresentationList.class);
                 intent.putExtra("id",userId);
-                finish();
-                startActivity(intent);
                 break;
             case R.id.nav_second_fragment:
                 intent = new Intent(this, CreateSurvey.class);
                 intent.putExtra("id",userId);
-                finish();
-                startActivity(intent);
                 break;
             case R.id.nav_third_fragment:
                 intent = new Intent(this, GetCode.class);
                 intent.putExtra("id",userId);
-                finish();
-                startActivity(intent);
                 break;
-            case R.id.nav_logout:
-                finish();
-                System.exit(0);
+            default:    //case R.id.nav_logout:
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra("logout", true);
                 break;
         }
-
+        finish();
+        startActivity(intent);
     }
     private ActionBarDrawerToggle setupDrawerToggle() {
         return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);

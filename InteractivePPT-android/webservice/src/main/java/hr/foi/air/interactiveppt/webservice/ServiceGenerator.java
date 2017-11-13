@@ -12,7 +12,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ServiceGenerator {
 
-    public static final String API_BASE_URL = "http://46.101.68.86/";
+    public static final String SERVER_HOSTNAME = "165.227.174.7";
+    public static final String API_BASE_URL = "http://" + SERVER_HOSTNAME + "/";
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
             .readTimeout(10, TimeUnit.SECONDS)

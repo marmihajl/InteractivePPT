@@ -160,7 +160,7 @@ CREATE TABLE `Answers` (
   `idUser` int(11) NOT NULL,
   `idQuestion` int(11) NOT NULL,
   `idOption` int(11) NOT NULL,
-  `datetime` datetime DEFAULT NULL
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -782,7 +782,7 @@ SET next_consecutive_num = (SELECT count(*) FROM Question_type) +1;
 IF NEW.idQuestion_type=0 THEN
 	SET NEW.idQuestion_type = next_consecutive_num;
 ELSEIF NEW.idQuestion_type<next_consecutive_num AND @from_procedure_call IS NULL THEN
-	SIGNAL sqlstate '45000' SET message_text = 'Perform insertion of question type with following command: CALL insert_question_type(nullOrIdNum, 'qt name', qtModeNum);';
+	SIGNAL sqlstate '45000' SET message_text = 'Perform insertion of question type with following command: CALL insert_question_type(nullOrIdNum, \'qt name\', qtModeNum);';
 ELSEIF NEW.idQuestion_type>next_consecutive_num THEN
     SIGNAL sqlstate '45000' SET message_text = 'Error: Ids of question types have to be in consecutive order!';
 END IF;
@@ -812,7 +812,7 @@ DELIMITER ;
 CREATE TABLE `Reply_request` (
   `user` int(11) NOT NULL,
   `presentation` int(11) NOT NULL,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

@@ -101,4 +101,12 @@ public interface WebService {
             @Field("userid") String uid,
             @Field("content") String messageContent
     );
+
+    @FormUrlEncoded
+    @POST("interactivePPT-server.php")
+    Call<Boolean> killConnection(
+            @Field("request_type") String requestType,
+            @Field("pptid") int pptId,
+            @Field("userid") String uid
+    );
 }

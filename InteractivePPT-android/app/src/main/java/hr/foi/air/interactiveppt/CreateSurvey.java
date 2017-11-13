@@ -59,11 +59,11 @@ public class CreateSurvey extends AppCompatActivity {
     private static final int REQUEST_CODE = 6384; // onActivityResult request code
 
     @Nullable
-    private static Uri uriOfSelectedFile = null;
+    private Uri uriOfSelectedFile = null;
 
     ArrayList<Question> questions = new ArrayList<Question>();
     private QuestionRecyclerAdapter adapter;
-    AddQuestion cdd;
+    AddQuestion cdd = null;
     RecyclerView mRecycler;
     boolean myPptsLoaded = false;
     String surveyAuthorId;
@@ -115,6 +115,7 @@ public class CreateSurvey extends AppCompatActivity {
                         public void onSuccess(Object genericResponse) {
                             ArrayList<Presentation> myPpts = ((ListOfPresentations) genericResponse).myPresentations;
                             RadioGroup existingPptsRG = (RadioGroup) ((LinearLayout) findViewById(R.id.existingPptsLV)).getChildAt(1);
+                            existingPptsRG.removeAllViews();
                             int numOfPpts = myPpts.size();
                             if (numOfPpts != 0) {
                                 for (int i=0; i<numOfPpts; i++) {
@@ -169,7 +170,7 @@ public class CreateSurvey extends AppCompatActivity {
         final String surveyDescription = ((EditText)findViewById(R.id.description_input)).getText().toString();
 
         String reasonsOfIncompletion;
-        if ((reasonsOfIncompletion = getReasonsWhyCurrentSurveyIsntComplete(surveyName, surveyDescription)) != "") {
+        if (!(reasonsOfIncompletion = getReasonsWhyCurrentSurveyIsntComplete(surveyName, surveyDescription)).isEmpty()) {
             Toast.makeText(CreateSurvey.this, "Neuspjeh kod kreiranja:" + reasonsOfIncompletion, Toast.LENGTH_LONG).show();
             return;
         }
@@ -178,13 +179,13 @@ public class CreateSurvey extends AppCompatActivity {
                 .setTitle("Upozorenje")
                 .setMessage("Jeste li sigurni da želite pohraniti anketu?")
                 .setIcon(android.R.drawable.ic_menu_save)
-                .setNegativeButton("da", new DialogInterface.OnClickListener() {
-
+                .setNegativeButton("ne", null)
+                .setPositiveButton("da", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         sendRequestForSaving(surveyName, surveyDescription);
                     }
                 })
-                .setPositiveButton("ne", null).show();
+                .show();
 
     }
 
@@ -193,6 +194,7 @@ public class CreateSurvey extends AppCompatActivity {
         ((EditText)findViewById(R.id.title_input)).setText("");
         ((EditText)findViewById(R.id.description_input)).setText("");
         ((TextView)findViewById(R.id.attached_file_name)).setText(R.string.no_any_file_attached_msg);
+        attachPresentation.setText(R.string.add_presentation_caption);
         uriOfSelectedFile = null;
         questions.clear();
         loadData();
@@ -316,9 +318,8 @@ public class CreateSurvey extends AppCompatActivity {
         addQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cdd=new AddQuestion(CreateSurvey.this,questions);
+                cdd = new AddQuestion(CreateSurvey.this,questions);
                 cdd.show();
-
             }
 
         });
@@ -407,8 +408,10 @@ public class CreateSurvey extends AppCompatActivity {
                                 "Anketa je uspješno kreirana!",
                                 Toast.LENGTH_LONG
                         ).show();
+                        myPptsLoaded = false;
                         findViewById(R.id.activity_create_survey).setClickable(true);
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
+                        discardChanges.performClick();
                     }
 
                     @Override
@@ -469,8 +472,10 @@ public class CreateSurvey extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.nav_logout:
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra("logout", true);
                 finish();
-                System.exit(0);
+                startActivity(intent);
                 break;
         }
 
@@ -490,4 +495,89 @@ public class CreateSurvey extends AppCompatActivity {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Gson gson = new Gson();
+        ArrayList<String> serializedQuestions = new ArrayList<>();
+        for (Question q : this.questions) {
+            serializedQuestions.add(gson.toJson(q));
+        }
+        outState.putStringArrayList("questions", serializedQuestions);
+        //outState.putBoolean("myPptsLoaded", this.myPptsLoaded);
+        if (this.myPptsLoaded) {
+            RadioGroup rg = ((RadioGroup) ((LinearLayout)(findViewById(R.id.existingPptsLV))).getChildAt(1));
+            int numOfMyPpts = rg.getChildCount();
+            ArrayList<String> myPptNames = new ArrayList<>();
+            ArrayList<String> myPptAccessCodes = new ArrayList<>();
+            for (int i=0; i<numOfMyPpts; i++) {
+                TextView tv = (TextView)rg.getChildAt(i);
+                myPptNames.add(tv.getText().toString());
+                myPptAccessCodes.add((String)tv.getTag());
+            }
+            outState.putStringArrayList("myPptNames", myPptNames);
+            outState.putStringArrayList("myPptAccessCodes", myPptAccessCodes);
+            outState.putInt("myPptId", rg.getCheckedRadioButtonId());
+        }
+        else {
+            if (this.uriOfSelectedFile != null) {
+                outState.putString("uri", this.uriOfSelectedFile.toString());
+            }
+        }
+        outState.putString("surveyAuthorId", this.surveyAuthorId);
+        //outState.putString("surveyName", ((EditText)findViewById(R.id.title_input)).getText().toString());
+        //outState.putString("surveyDescription", ((EditText)findViewById(R.id.description_input)).getText().toString());
+        if (this.cdd != null) {
+            outState.putBundle("incompleteQuestion", this.cdd.onSaveInstanceState());
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Gson gson = new Gson();
+        super.onRestoreInstanceState(savedInstanceState);
+
+        for (String q : savedInstanceState.getStringArrayList("questions")) {
+            this.questions.add(gson.fromJson(q, Question.class));
+        }
+        //this.myPptsLoaded = savedInstanceState.getBoolean("myPptsLoaded");
+        this.myPptsLoaded = this.existingPptOption.isChecked();
+        if (this.myPptsLoaded) {
+            RadioGroup rg = ((RadioGroup) ((LinearLayout)(findViewById(R.id.existingPptsLV))).getChildAt(1));
+            int i = 0;
+            for (String accessCode : savedInstanceState.getStringArrayList("myPptAccessCodes")) {
+                RadioButton rb = new RadioButton(this);
+                rb.setId(i);
+                rb.setTag(accessCode);
+                rb.setText(savedInstanceState.getStringArrayList("myPptNames").get(i));
+                rg.addView(rb);
+                i++;
+            }
+            int idOfSelectedPpt = savedInstanceState.getInt("myPptId");
+            if (idOfSelectedPpt != -1) {
+                rg.check(idOfSelectedPpt);
+            }
+        }
+        else {
+            String uriString = savedInstanceState.getString("uri");
+            if (uriString != null) {
+                this.uriOfSelectedFile = Uri.parse(uriString);
+                final String path = FileUtils.getPath(this, this.uriOfSelectedFile);
+                ((Button)findViewById(R.id.button_attach_presentation)).setText(R.string.change_presentation_caption);
+                ((TextView)findViewById(R.id.attached_file_name)).setText(path.substring(path.lastIndexOf('/') + 1));
+            }
+        }
+
+        this.surveyAuthorId = savedInstanceState.getString("surveyAuthorId");
+        //((EditText)findViewById(R.id.title_input)).setText(savedInstanceState.getString("surveyName"));
+        //((EditText)findViewById(R.id.description_input)).setText(savedInstanceState.getString("surveyDescription"));
+        this.loadData();
+        Bundle incompleteQuestionBundle = savedInstanceState.getBundle("incompleteQuestion");
+        if (incompleteQuestionBundle != null) {
+            cdd = new AddQuestion(this, this.questions);
+            cdd.onRestoreInstanceState(incompleteQuestionBundle);
+            cdd.show();
+        }
+    }
 }

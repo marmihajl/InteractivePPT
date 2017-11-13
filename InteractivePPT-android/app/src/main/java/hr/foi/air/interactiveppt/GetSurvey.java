@@ -45,7 +45,7 @@ public class GetSurvey extends AppCompatActivity{
         String serializedSurveyWithQuestions = getIntent().getStringExtra("full_survey");
         SurveyWithQuestions survey = new Gson().fromJson(serializedSurveyWithQuestions, SurveyWithQuestions.class);
         displaySurvey(survey);
-}//end onCreate
+    }//end onCreate
 
     public void displaySurvey(SurveyWithQuestions object){
 

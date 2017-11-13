@@ -4,8 +4,8 @@
     <string name="description">Welcome</string>
     <string name="app_id">370728603269382</string>
     <string name="logout">Odjava</string>
-    <string name="description_placeholder">Opis ankete i moguće upute...</string>
-    <string name="title_placeholder">naslov ankete...</string>
+    <string name="description_placeholder">Opis ankete i moguće upute…</string>
+    <string name="title_placeholder">naslov ankete…</string>
     <string name="survey_title_label">Naslov</string>
     <string name="survey_description_label">Opis</string>
     <string name="survey_questions_label">Pitanja</string>
@@ -29,7 +29,7 @@
     <string name="btnEdit">Uredi</string>
     <string name="btnDelete">Obriši</string>
     <string name="showData">Osvježi pitanja</string>
-    <string name="chooser_title">Odaberite prezentaciju koju želite priložiti (opcionalno)</string>
+    <string name="chooser_title">Odaberite prezentaciju kojoj će pripadati anketa</string>
     <string name="surveyAttachment">Prezentacija</string>
     <string name="no_any_file_attached_msg">Trenutno još ništa nije dodano</string>
     <string name="file_successfully_added_msg">Uspješno priložena sljedeća datoteka: </string>
@@ -37,7 +37,7 @@
     <string name="add_presentation_caption">Dodaj</string>
     <string name="change_presentation_caption">Promijeni</string>
     <string name="login_button_content">Prijava putem Facebooka</string>
-    <string name="logout_button_content">Odjavi se s trenutnog računa</string>
+    <string name="try_again_button_content">Pokušaj ponovno</string>
     <string name="reset_survey">Odbaci</string>
     <string name="create_survey">Kreiraj</string>
     <string name="openSurvey">Otvori anketu</string>
@@ -50,8 +50,6 @@
     <string name="requiredQuestionLabel">Obvezno pitanje:</string>
     <string name="addNewOptionSymbol">+</string>
     <string name="removeLastOptionSymbol">-</string>
-    <string name="firstOptionNamePlaceholder">Odgovor 1</string>
-    <string name="secondsOptionNamePlaceholder">Odgovor 2</string>
     <string name="numOfSurveysLabel">Broj anketa:</string>
     <string name="accessCodeLabel">Pristupni kod:</string>
     <string name="authorNameLabel">Autor:</string>
@@ -60,5 +58,9 @@
     <string name="myPptsCaption">Moje prezentacije:</string>
     <string name="drawer_open">Otvori navigaciju</string>
     <string name="drawer_close">Zatvori navigaciju</string>
+    <string name="no_my_presentations">Niste kreirali nijednu prezentaciju do sada</string>
+    <string name="no_subscribed_presentations">Nemate pretplaćenih prezentacija</string>
+    <string name="login_attempt_canceled">Pokušaj prijave je prekinut.</string>
+    <string name="login_attempt_failed">Neuspjeh kod pokušaja prijave.</string>
 
 </resources>
