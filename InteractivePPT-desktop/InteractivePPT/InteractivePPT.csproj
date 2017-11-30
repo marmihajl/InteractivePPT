@@ -57,6 +57,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
       <Private>True</Private>
@@ -103,7 +104,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Answer.cs" />
-    <Compile Include="AnswerList.cs" />
     <Compile Include="CommentFilter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +129,9 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PanelWithPerformScrollMethod.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Presentation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,8 +144,6 @@
     <Compile Include="QuestionList.cs" />
     <Compile Include="Survey.cs" />
     <Compile Include="SurveyList.cs" />
-    <Compile Include="TextItems.cs" />
-    <Compile Include="TextItemsList.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Users.cs" />
     <EmbeddedResource Include="CommentFilter.resx">
@@ -229,7 +230,12 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Users\zeko868\Documents\Visual Studio 2015\Projects\CollapsablePanelExample\CollapsiblePanel.csproj">
+      <Project>{E18BBCD6-DECD-457E-B9FE-9DF696964B78}</Project>
+      <Name>CollapsiblePanel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\bar_chart.png" />
     <Content Include="Resources\line_chart.png" />

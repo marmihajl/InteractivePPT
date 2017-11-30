@@ -8,6 +8,6 @@ namespace InteractivePPT
     public class Answer
     {
         public string choice_name { get; set; }
-        public int count { get; set; }
+        public int num { get; set; }
     }
 }

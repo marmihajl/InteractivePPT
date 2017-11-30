@@ -128,33 +128,42 @@ switch ($_POST['request_type']) {
         }
 		
 		break;
-    case 'get_results':
-        $question = $_POST['id'];
-        $command = "SELECT o.choice_name, count(o.idOptions) AS count FROM Answers a LEFT JOIN Options o ON a.idOption=o.idOptions WHERE a.idQuestion=$question GROUP BY o.idOptions;";
+    case 'get_aggregated_results':
+        $questions = $_POST['questions'];
+        $questions = implode(',', $questions);
+        $command = "SELECT a.idQuestion AS question, o.choice_name, count(o.idOptions) AS num FROM Answers a LEFT JOIN Options o ON a.idOption=o.idOptions WHERE a.idQuestion IN ($questions) GROUP BY question, o.idOptions ORDER BY num DESC;";
         $recordSet = $dbHandler->query($command);
         $outputArray = array();
         if ($recordSet) {
+            $answersPerQuestions = array();
             for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
-                array_push($outputArray, $recordSet->fetch_assoc());
+                $row = $recordSet->fetch_assoc();
+                $questionId = $row['question'];
+                unset($row['question']);
+                $outputArray[$questionId][] = $row;
             }
             $recordSet->free();
         }
-        echo '{"results":' . json_encode($outputArray, JSON_NUMERIC_CHECK) . '}';
+        echo json_encode($outputArray, JSON_NUMERIC_CHECK);
 
         break;
-		
-	case 'get_text_results':
-        $question = $_POST['id'];
-        $command = "SELECT o.choice_name FROM Answers a LEFT JOIN Options o ON a.idOption=o.idOptions WHERE a.idQuestion=$question;";
+    case 'get_individual_results':
+        $questions = $_POST['questions'];
+        $questions = implode(',', $questions);
+        $command = "SELECT a.idQuestion AS question, o.choice_name, UNIX_TIMESTAMP(a.datetime) AS num FROM Answers a LEFT JOIN Options o ON a.idOption=o.idOptions WHERE a.idQuestion IN ($questions) ORDER BY a.datetime ASC;";
         $recordSet = $dbHandler->query($command);
         $outputArray = array();
         if ($recordSet) {
+            $answersPerQuestions = array();
             for ($i=0 ; $i < $recordSet->num_rows ; $i++) {
-                array_push($outputArray, $recordSet->fetch_assoc());
+                $row = $recordSet->fetch_assoc();
+                $questionId = $row['question'];
+                unset($row['question']);
+                $outputArray[$questionId][] = $row;
             }
             $recordSet->free();
         }
-        echo '{"results":' . json_encode($outputArray, JSON_NUMERIC_CHECK) . '}';
+        echo json_encode($outputArray, JSON_NUMERIC_CHECK);
 
         break;
 		

@@ -28,19 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle64 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle65 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle66 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle67 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle69 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle70 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle68 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
-            this.questionList = new System.Windows.Forms.CheckedListBox();
-            this.radioLine = new System.Windows.Forms.RadioButton();
-            this.radioPie = new System.Windows.Forms.RadioButton();
-            this.radioBar = new System.Windows.Forms.RadioButton();
-            this.label2 = new System.Windows.Forms.Label();
             this.comboBox1 = new MetroFramework.Controls.MetroComboBox();
             this.btnAddGraph = new MetroFramework.Controls.MetroButton();
             this.label4 = new System.Windows.Forms.Label();
@@ -55,11 +50,27 @@
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.artifactInsertionTabControl = new MetroFramework.Controls.MetroTabControl();
+            this.tabChart = new System.Windows.Forms.TabPage();
+            this.groupRemainingOptsCB = new MetroFramework.Controls.MetroCheckBox();
+            this.numOfGroupsNUD = new System.Windows.Forms.NumericUpDown();
+            this.radioBar = new System.Windows.Forms.RadioButton();
+            this.radioLine = new System.Windows.Forms.RadioButton();
+            this.radioPie = new System.Windows.Forms.RadioButton();
+            this.questionList = new System.Windows.Forms.CheckedListBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tabComments = new System.Windows.Forms.TabPage();
+            this.questionListForComments = new System.Windows.Forms.CheckedListBox();
             this.audienceTabControl.SuspendLayout();
             this.tabReplies.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvReplies)).BeginInit();
             this.tabChat.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvChat)).BeginInit();
+            this.artifactInsertionTabControl.SuspendLayout();
+            this.tabChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numOfGroupsNUD)).BeginInit();
+            this.tabComments.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -73,69 +84,6 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "Anketa:";
             // 
-            // questionList
-            // 
-            this.questionList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.questionList.FormattingEnabled = true;
-            this.questionList.HorizontalScrollbar = true;
-            this.questionList.Location = new System.Drawing.Point(37, 124);
-            this.questionList.Margin = new System.Windows.Forms.Padding(4);
-            this.questionList.Name = "questionList";
-            this.questionList.Size = new System.Drawing.Size(411, 225);
-            this.questionList.TabIndex = 3;
-            this.questionList.UseCompatibleTextRendering = true;
-            // 
-            // radioLine
-            // 
-            this.radioLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.radioLine.AutoSize = true;
-            this.radioLine.Image = global::InteractivePPT.Properties.Resources.line_chart;
-            this.radioLine.Location = new System.Drawing.Point(347, 370);
-            this.radioLine.Margin = new System.Windows.Forms.Padding(4);
-            this.radioLine.Name = "radioLine";
-            this.radioLine.Size = new System.Drawing.Size(60, 36);
-            this.radioLine.TabIndex = 7;
-            this.radioLine.UseVisualStyleBackColor = true;
-            // 
-            // radioPie
-            // 
-            this.radioPie.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.radioPie.AutoSize = true;
-            this.radioPie.Image = global::InteractivePPT.Properties.Resources.pie_chart;
-            this.radioPie.Location = new System.Drawing.Point(241, 370);
-            this.radioPie.Margin = new System.Windows.Forms.Padding(4);
-            this.radioPie.Name = "radioPie";
-            this.radioPie.Size = new System.Drawing.Size(60, 36);
-            this.radioPie.TabIndex = 6;
-            this.radioPie.UseVisualStyleBackColor = true;
-            // 
-            // radioBar
-            // 
-            this.radioBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.radioBar.AutoSize = true;
-            this.radioBar.Checked = true;
-            this.radioBar.Image = global::InteractivePPT.Properties.Resources.bar_chart;
-            this.radioBar.Location = new System.Drawing.Point(143, 370);
-            this.radioBar.Margin = new System.Windows.Forms.Padding(4);
-            this.radioBar.Name = "radioBar";
-            this.radioBar.Size = new System.Drawing.Size(60, 36);
-            this.radioBar.TabIndex = 5;
-            this.radioBar.TabStop = true;
-            this.radioBar.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label2.Location = new System.Drawing.Point(44, 377);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(82, 17);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Vrsta grafa:";
-            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
@@ -143,7 +91,7 @@
             this.comboBox1.Location = new System.Drawing.Point(100, 78);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(267, 30);
+            this.comboBox1.Size = new System.Drawing.Size(358, 30);
             this.comboBox1.TabIndex = 11;
             this.comboBox1.UseSelectable = true;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
@@ -151,12 +99,12 @@
             // btnAddGraph
             // 
             this.btnAddGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAddGraph.Location = new System.Drawing.Point(185, 484);
+            this.btnAddGraph.Location = new System.Drawing.Point(142, 484);
             this.btnAddGraph.Margin = new System.Windows.Forms.Padding(4);
             this.btnAddGraph.Name = "btnAddGraph";
-            this.btnAddGraph.Size = new System.Drawing.Size(128, 28);
+            this.btnAddGraph.Size = new System.Drawing.Size(171, 28);
             this.btnAddGraph.TabIndex = 13;
-            this.btnAddGraph.Text = "Dodaj graf";
+            this.btnAddGraph.Text = "Dodaj artefakt";
             this.btnAddGraph.Theme = MetroFramework.MetroThemeStyle.Light;
             this.btnAddGraph.UseSelectable = true;
             this.btnAddGraph.Click += new System.EventHandler(this.btnAddGraph_Click);
@@ -169,16 +117,16 @@
             this.label4.Location = new System.Drawing.Point(41, 434);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(90, 17);
+            this.label4.Size = new System.Drawing.Size(113, 17);
             this.label4.TabIndex = 15;
-            this.label4.Text = "Mjesto grafa:";
+            this.label4.Text = "Mjesto artefakta:";
             // 
             // graphPosition
             // 
             this.graphPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.graphPosition.FormattingEnabled = true;
             this.graphPosition.ItemHeight = 24;
-            this.graphPosition.Location = new System.Drawing.Point(157, 428);
+            this.graphPosition.Location = new System.Drawing.Point(192, 428);
             this.graphPosition.Margin = new System.Windows.Forms.Padding(4);
             this.graphPosition.Name = "graphPosition";
             this.graphPosition.Size = new System.Drawing.Size(220, 30);
@@ -194,7 +142,7 @@
             this.audienceTabControl.Controls.Add(this.tabChat);
             this.audienceTabControl.Location = new System.Drawing.Point(485, 124);
             this.audienceTabControl.Name = "audienceTabControl";
-            this.audienceTabControl.SelectedIndex = 1;
+            this.audienceTabControl.SelectedIndex = 0;
             this.audienceTabControl.Size = new System.Drawing.Size(451, 346);
             this.audienceTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.audienceTabControl.TabIndex = 18;
@@ -219,26 +167,26 @@
             this.dgvReplies.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvReplies.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.dgvReplies.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle22.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle22.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle22.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle22.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvReplies.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle64.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle64.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle64.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle64.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle64.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle64.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle64.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvReplies.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle64;
             this.dgvReplies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvReplies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column2});
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle23.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle23.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
-            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvReplies.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle65.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle65.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle65.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle65.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
+            dataGridViewCellStyle65.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle65.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle65.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvReplies.DefaultCellStyle = dataGridViewCellStyle65;
             this.dgvReplies.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvReplies.EnableHeadersVisualStyles = false;
             this.dgvReplies.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
@@ -248,14 +196,14 @@
             this.dgvReplies.Name = "dgvReplies";
             this.dgvReplies.ReadOnly = true;
             this.dgvReplies.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle24.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle24.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvReplies.RowHeadersDefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle66.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle66.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle66.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle66.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle66.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle66.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle66.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvReplies.RowHeadersDefaultCellStyle = dataGridViewCellStyle66;
             this.dgvReplies.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvReplies.RowTemplate.Height = 24;
             this.dgvReplies.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
@@ -297,27 +245,27 @@
             this.dgvChat.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvChat.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.dgvChat.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle25.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle25.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvChat.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle67.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle67.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle67.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle67.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle67.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle67.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle67.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvChat.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle67;
             this.dgvChat.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvChat.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn3,
             this.dataGridViewTextBoxColumn4,
             this.dataGridViewTextBoxColumn5});
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle27.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle27.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
-            dataGridViewCellStyle27.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle27.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvChat.DefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle69.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle69.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle69.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle69.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
+            dataGridViewCellStyle69.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle69.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle69.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvChat.DefaultCellStyle = dataGridViewCellStyle69;
             this.dgvChat.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvChat.EnableHeadersVisualStyles = false;
             this.dgvChat.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
@@ -327,14 +275,14 @@
             this.dgvChat.Name = "dgvChat";
             this.dgvChat.ReadOnly = true;
             this.dgvChat.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle28.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            dataGridViewCellStyle28.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            dataGridViewCellStyle28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
-            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvChat.RowHeadersDefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle70.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle70.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
+            dataGridViewCellStyle70.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            dataGridViewCellStyle70.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle70.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(198)))), ((int)(((byte)(247)))));
+            dataGridViewCellStyle70.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle70.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvChat.RowHeadersDefaultCellStyle = dataGridViewCellStyle70;
             this.dgvChat.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvChat.RowTemplate.Height = 24;
             this.dgvChat.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
@@ -357,27 +305,172 @@
             // dataGridViewTextBoxColumn5
             // 
             this.dataGridViewTextBoxColumn5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle68.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle68;
             this.dataGridViewTextBoxColumn5.HeaderText = "Sadržaj";
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             this.dataGridViewTextBoxColumn5.ReadOnly = true;
+            // 
+            // artifactInsertionTabControl
+            // 
+            this.artifactInsertionTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.artifactInsertionTabControl.Controls.Add(this.tabChart);
+            this.artifactInsertionTabControl.Controls.Add(this.tabComments);
+            this.artifactInsertionTabControl.Location = new System.Drawing.Point(16, 124);
+            this.artifactInsertionTabControl.Name = "artifactInsertionTabControl";
+            this.artifactInsertionTabControl.SelectedIndex = 0;
+            this.artifactInsertionTabControl.Size = new System.Drawing.Size(446, 284);
+            this.artifactInsertionTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.artifactInsertionTabControl.TabIndex = 19;
+            this.artifactInsertionTabControl.UseSelectable = true;
+            // 
+            // tabChart
+            // 
+            this.tabChart.BackColor = System.Drawing.Color.White;
+            this.tabChart.Controls.Add(this.numOfGroupsNUD);
+            this.tabChart.Controls.Add(this.groupRemainingOptsCB);
+            this.tabChart.Controls.Add(this.radioBar);
+            this.tabChart.Controls.Add(this.radioLine);
+            this.tabChart.Controls.Add(this.radioPie);
+            this.tabChart.Controls.Add(this.questionList);
+            this.tabChart.Controls.Add(this.label2);
+            this.tabChart.Controls.Add(this.label3);
+            this.tabChart.Location = new System.Drawing.Point(4, 38);
+            this.tabChart.Name = "tabChart";
+            this.tabChart.Size = new System.Drawing.Size(438, 242);
+            this.tabChart.TabIndex = 0;
+            this.tabChart.Text = "Grafikoni";
+            // 
+            // groupRemainingOptsCB
+            // 
+            this.groupRemainingOptsCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupRemainingOptsCB.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.groupRemainingOptsCB.Location = new System.Drawing.Point(254, 166);
+            this.groupRemainingOptsCB.Name = "groupRemainingOptsCB";
+            this.groupRemainingOptsCB.Size = new System.Drawing.Size(180, 27);
+            this.groupRemainingOptsCB.TabIndex = 21;
+            this.groupRemainingOptsCB.Text = "Grupiraj ostale:";
+            this.groupRemainingOptsCB.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.groupRemainingOptsCB.UseSelectable = true;
+            // 
+            // numOfGroupsNUD
+            // 
+            this.numOfGroupsNUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.numOfGroupsNUD.Location = new System.Drawing.Point(227, 169);
+            this.numOfGroupsNUD.Name = "numOfGroupsNUD";
+            this.numOfGroupsNUD.Size = new System.Drawing.Size(42, 22);
+            this.numOfGroupsNUD.TabIndex = 15;
+            this.numOfGroupsNUD.ValueChanged += new System.EventHandler(this.numOfGroupsNUD_ValueChanged);
+            // 
+            // radioBar
+            // 
+            this.radioBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.radioBar.AutoSize = true;
+            this.radioBar.Checked = true;
+            this.radioBar.Image = global::InteractivePPT.Properties.Resources.bar_chart;
+            this.radioBar.Location = new System.Drawing.Point(122, 200);
+            this.radioBar.Margin = new System.Windows.Forms.Padding(4);
+            this.radioBar.Name = "radioBar";
+            this.radioBar.Size = new System.Drawing.Size(60, 36);
+            this.radioBar.TabIndex = 10;
+            this.radioBar.TabStop = true;
+            this.radioBar.UseVisualStyleBackColor = true;
+            // 
+            // radioLine
+            // 
+            this.radioLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.radioLine.AutoSize = true;
+            this.radioLine.Image = global::InteractivePPT.Properties.Resources.line_chart;
+            this.radioLine.Location = new System.Drawing.Point(326, 200);
+            this.radioLine.Margin = new System.Windows.Forms.Padding(4);
+            this.radioLine.Name = "radioLine";
+            this.radioLine.Size = new System.Drawing.Size(60, 36);
+            this.radioLine.TabIndex = 12;
+            this.radioLine.UseVisualStyleBackColor = true;
+            // 
+            // radioPie
+            // 
+            this.radioPie.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.radioPie.AutoSize = true;
+            this.radioPie.Image = global::InteractivePPT.Properties.Resources.pie_chart;
+            this.radioPie.Location = new System.Drawing.Point(220, 200);
+            this.radioPie.Margin = new System.Windows.Forms.Padding(4);
+            this.radioPie.Name = "radioPie";
+            this.radioPie.Size = new System.Drawing.Size(60, 36);
+            this.radioPie.TabIndex = 11;
+            this.radioPie.UseVisualStyleBackColor = true;
+            // 
+            // questionList
+            // 
+            this.questionList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.questionList.FormattingEnabled = true;
+            this.questionList.HorizontalScrollbar = true;
+            this.questionList.Location = new System.Drawing.Point(16, 11);
+            this.questionList.Margin = new System.Windows.Forms.Padding(4);
+            this.questionList.Name = "questionList";
+            this.questionList.Size = new System.Drawing.Size(411, 157);
+            this.questionList.TabIndex = 9;
+            this.questionList.UseCompatibleTextRendering = true;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.Black;
+            this.label2.Location = new System.Drawing.Point(23, 207);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(82, 17);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Vrsta grafa:";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label3.Location = new System.Drawing.Point(-2, 170);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(180, 16);
+            this.label3.TabIndex = 20;
+            this.label3.Text = "Broj opcija za prikaz (0...sve):";
+            // 
+            // tabComments
+            // 
+            this.tabComments.BackColor = System.Drawing.Color.White;
+            this.tabComments.Controls.Add(this.questionListForComments);
+            this.tabComments.Location = new System.Drawing.Point(4, 38);
+            this.tabComments.Name = "tabComments";
+            this.tabComments.Size = new System.Drawing.Size(438, 242);
+            this.tabComments.TabIndex = 1;
+            this.tabComments.Text = "Komentari";
+            // 
+            // questionListForComments
+            // 
+            this.questionListForComments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.questionListForComments.FormattingEnabled = true;
+            this.questionListForComments.HorizontalScrollbar = true;
+            this.questionListForComments.Location = new System.Drawing.Point(14, 17);
+            this.questionListForComments.Margin = new System.Windows.Forms.Padding(4);
+            this.questionListForComments.Name = "questionListForComments";
+            this.questionListForComments.Size = new System.Drawing.Size(411, 208);
+            this.questionListForComments.TabIndex = 10;
+            this.questionListForComments.UseCompatibleTextRendering = true;
             // 
             // Presentation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(966, 533);
+            this.Controls.Add(this.artifactInsertionTabControl);
             this.Controls.Add(this.audienceTabControl);
             this.Controls.Add(this.graphPosition);
-            this.Controls.Add(this.radioBar);
             this.Controls.Add(this.btnAddGraph);
             this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.radioLine);
-            this.Controls.Add(this.radioPie);
-            this.Controls.Add(this.questionList);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label4);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
@@ -389,7 +482,6 @@
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.None;
             this.Text = "Presentation";
             this.Theme = MetroFramework.MetroThemeStyle.Dark;
-            this.Activated += new System.EventHandler(this.Presentation_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Presentation_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Presentation_FormClosed);
             this.Load += new System.EventHandler(this.Presentation_Load);
@@ -398,6 +490,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvReplies)).EndInit();
             this.tabChat.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvChat)).EndInit();
+            this.artifactInsertionTabControl.ResumeLayout(false);
+            this.tabChart.ResumeLayout(false);
+            this.tabChart.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numOfGroupsNUD)).EndInit();
+            this.tabComments.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -405,11 +502,6 @@
 
         #endregion
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckedListBox questionList;
-        private System.Windows.Forms.RadioButton radioBar;
-        private System.Windows.Forms.RadioButton radioPie;
-        private System.Windows.Forms.RadioButton radioLine;
-        private System.Windows.Forms.Label label2;
         private MetroFramework.Controls.MetroComboBox comboBox1;
         private MetroFramework.Controls.MetroButton btnAddGraph;
         private System.Windows.Forms.Label label4;
@@ -424,5 +516,17 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private MetroFramework.Controls.MetroTabControl artifactInsertionTabControl;
+        private System.Windows.Forms.TabPage tabChart;
+        private System.Windows.Forms.RadioButton radioBar;
+        private System.Windows.Forms.RadioButton radioLine;
+        private System.Windows.Forms.RadioButton radioPie;
+        private System.Windows.Forms.CheckedListBox questionList;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TabPage tabComments;
+        private System.Windows.Forms.CheckedListBox questionListForComments;
+        private System.Windows.Forms.NumericUpDown numOfGroupsNUD;
+        private MetroFramework.Controls.MetroCheckBox groupRemainingOptsCB;
+        private System.Windows.Forms.Label label3;
     }
 }

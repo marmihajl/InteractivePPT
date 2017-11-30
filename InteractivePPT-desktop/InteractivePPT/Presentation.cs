@@ -12,8 +12,9 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Text;
-using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Linq;
+using System.Globalization;
 
 namespace InteractivePPT
 {
@@ -24,14 +25,8 @@ namespace InteractivePPT
         PowerPoint.Presentation p = null;
         List<Survey> surveyList = null;
         QuestionList myQuestionList = null;
-        string serializedUserSurveys = null;
-        AnswerList myAnswerList = null;
         int move = 1;
         string userUid;
-        TextItemsList textItem;
-        public static TextItemsList chooseItem = new TextItemsList();
-        string name;
-        public static bool make = false;
         TcpClient tcpClient;
         int slideIndex;
 
@@ -66,13 +61,14 @@ namespace InteractivePPT
             comboBox1.ValueMember = "id";
             comboBox1.SelectedIndex = -1;
 
-            Dictionary<string, string> test = new Dictionary<string, string>();
-            test.Add("1", "sljedeći slajd");
-            test.Add("2", "tag: naziv pitanja");
-            graphPosition.DataSource = new BindingSource(test, null);
+            SortedDictionary<int, string> chartInsertionPositions = new SortedDictionary<int, string>();
+            chartInsertionPositions.Add(1, "sljedeći slajd");
+            chartInsertionPositions.Add(2, "tag: naziv pitanja");
+            graphPosition.DataSource = new BindingSource(chartInsertionPositions, null);
             graphPosition.DisplayMember = "Value";
             graphPosition.ValueMember = "Key";
 
+            groupRemainingOptsCB.Visible = false; // as default value of numOfGroupsNUD element is 0
 
             try
             {
@@ -87,7 +83,7 @@ namespace InteractivePPT
                         { "path", "ppt/" + path.Substring(path.LastIndexOf('\\')+1) }
                     });
                 }
-                if (!ushort.TryParse(System.Text.Encoding.UTF8.GetString(response), out port))
+                if (!ushort.TryParse(Encoding.UTF8.GetString(response), out port))
                 {
                     MessageBox.Show("Pojavila se pogreška na strani poslužitelja kod pokušaja pokretanja daemon procesa za Vašu prezentaciju! Pokušajte ponovno za koji trenutak ili se javite administratoru poslužitelja");
                     this.Close();
@@ -120,7 +116,7 @@ namespace InteractivePPT
                 {
                     break;
                 }
-                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes).TrimEnd('\n').Replace("\f", "\n");
+                responseData = Encoding.UTF8.GetString(data, 0, bytes).TrimEnd('\n').Replace("\f", "\n");
                 if (responseData == string.Empty || responseData == "exit")
                 {
                     break;
@@ -176,34 +172,48 @@ namespace InteractivePPT
             return currSlide.SlideIndex;
         }
 
-        private void AddSlide(List<Answer> item, string question)
+        private void AddSlide(List<Answer> answers, string question)
         {
             PowerPoint.Slides slides;
             PowerPoint._Slide slide;
             slides = p.Slides;
 
-            if (graphPosition.SelectedIndex == 0)
+            if ((int)graphPosition.SelectedValue == 1)
             {
                 slideIndex = GetIndexOfCurrentSlide() + move++;
             }
-            else if (graphPosition.SelectedIndex == 1)
+            else
             {
-                for (int i = GetIndexOfCurrentSlide(); i < p.Slides.Count; i++)
+                int numOfSlides = p.Slides.Count;
+                XlChartType chartType;
+                if (radioPie.Checked)
+                {
+                    chartType = XlChartType.xlPie;
+                }
+                else if (radioLine.Checked)
+                {
+                    chartType = XlChartType.xlLine;
+                }
+                else
+                {
+                    chartType = XlChartType.xlBarClustered;
+                }
+                slideIndex = 0;
+                for (int i = 0; i < numOfSlides && slideIndex == 0; i++)
                 {
                     foreach (var it in p.Slides[i + 1].Shapes)
                     {
                         var shape = (PowerPoint.Shape)it;
-                        if (shape.HasTextFrame == MsoTriState.msoTrue)
+                        try
                         {
-                            if (shape.TextFrame.HasText == MsoTriState.msoTrue)
+                            if (question == shape.Chart.ChartTitle.Text && shape.Chart.ChartType == chartType)
                             {
-                                string textRange = shape.TextFrame.TextRange.Text;
-                                string hash = "[" + question + "]";
-                                if (textRange == hash)
-                                {
-                                    slideIndex = i + 1;
-                                }
+                                slideIndex = i + 1;
+                                break;
                             }
+                        }
+                        catch
+                        {
                         }
                     }
                 }
@@ -211,18 +221,23 @@ namespace InteractivePPT
             
             if (slideIndex == 0)
             {
+                DisplayWindowInForeground(this.Handle);
                 MessageBox.Show(String.Format("Za sada na prezentaciji ne postoji graf s pitanjem \"{0}\". Pozicionirajte se na slajd iza kojeg želite dodati slajd s grafikonom, odaberite u aplikaciji opciju \"sljedeći slajd\" za mjesto grafa te ponovno dodajte graf", question), "Ne postoji grafikon za odabrano pitanje u prezentaciji");
-                return;
+                throw new Exception();
             }
             slide = slides.AddSlide(slideIndex, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
             //var chart = slide.Shapes.AddChart(XlChartType.xlBarClustered, 10f, 10f, 900f, 400f).Chart;
             PowerPoint.Chart chart = null;
 
-            if (radioBar.Checked == true)
+            if (radioBar.Checked == true) {
                 chart = slide.Shapes.AddChart(XlChartType.xlBarClustered, 10f, 10f, 900f, 400f).Chart;
+                chart.HasLegend = false;
+            }
 
-            else if (radioLine.Checked == true)
+            else if (radioLine.Checked == true) {
                 chart = slide.Shapes.AddChart(XlChartType.xlLine, 10f, 10f, 900f, 400f).Chart;
+                chart.HasLegend = true;
+            }
 
             else if (radioPie.Checked == true)
             {
@@ -237,33 +252,273 @@ namespace InteractivePPT
             var dataSheet = (EXCEL.Worksheet)workbook.Worksheets[1];
             
             int index = 1;
+            string lastColumnName;
 
-            dataSheet.Cells.Range["A" + index].Value2 = "";
-            dataSheet.Cells.Range["B" + index].Value2 = "";
-            index++;
-            
-            foreach (var i in item)
+            int numOfGroupsToShow = decimal.ToInt32(numOfGroupsNUD.Value);
+            bool groupRemainingOpts;
+            if (groupRemainingOptsCB.Visible)
             {
-                string input = "'" + i.choice_name;
-                dataSheet.Cells.Range["A" + index].Value2 = input;
-                dataSheet.Cells.Range["B" + index].Value2 = i.count;
-                index++;
+                groupRemainingOpts = groupRemainingOptsCB.Checked;
             }
-
-            dataSheet.Cells.get_Range("A1:A10");
-
-            if (index < 6)
+            else
             {
-                for (int i = 6; i >= index; i--)
-                { 
-                    ((EXCEL.Range)dataSheet.Rows[i]).Delete(EXCEL.XlDeleteShiftDirection.xlShiftUp);
+                groupRemainingOpts = false;
+            }
+            if (radioLine.Checked)
+            {
+                if (answers.Any())
+                {
+                    bool timeComponentOnly;
+                    List<string> usedOptionNames = answers.Select(x => x.choice_name).Distinct().ToList();
+                    Dictionary<string, int> answersNumPerOption = new Dictionary<string, int>();
+                    List<string> columnNames = new List<string>();
+                    int optionNum = 1;
+                    if (numOfGroupsToShow == 0)
+                    {
+                        foreach (string optionName in usedOptionNames)
+                        {
+                            string columnName = GetExcelColumnName(optionNum + 1);
+                            dataSheet.Cells.Range[columnName + index].Value2 = "'" + optionName;
+                            columnNames.Add(columnName);
+                            answersNumPerOption[optionName] = 0;
+                            optionNum++;
+                        }
+                        index++;
+                        List<string>.Enumerator columnNamesEnumerator;
+                        DateTime previousDateTime = ConvertUnixTimeStampToDateTime(answers.First().num);
+                        DateTime previousDate = previousDateTime.Date;
+                        timeComponentOnly = answers.All(x => ConvertUnixTimeStampToDateTime(x.num).Date == previousDate);
+                        if (timeComponentOnly)
+                        {
+                            TimeSpan previousTime = previousDateTime.TimeOfDay;
+
+                            dataSheet.Cells.Range["A" + index].Value2 = new DateTime(previousTime.Ticks).AddMinutes(-1).ToOADate();
+                            foreach (string columnName in columnNames)
+                            {
+                                dataSheet.Cells.Range[columnName + index].Value2 = 0;
+                            }
+                            index++;
+                            foreach (Answer a in answers)
+                            {
+                                DateTime answerDateTime = ConvertUnixTimeStampToDateTime(a.num);
+                                if (previousTime != answerDateTime.TimeOfDay)
+                                {
+                                    dataSheet.Cells.Range["A" + index].Value2 = new DateTime(previousTime.Ticks).ToOADate();
+                                    columnNamesEnumerator = columnNames.GetEnumerator();
+                                    foreach (int answerNum in answersNumPerOption.Values)
+                                    {
+                                        columnNamesEnumerator.MoveNext();
+                                        dataSheet.Cells.Range[columnNamesEnumerator.Current + index].Value2 = answerNum;
+                                    }
+                                    index++;
+                                    previousTime = answerDateTime.TimeOfDay;
+                                }
+                                answersNumPerOption[a.choice_name] = answersNumPerOption[a.choice_name] + 1;
+                            }
+                            dataSheet.Cells.Range["A" + index].Value2 = new DateTime(previousTime.Ticks).ToOADate();
+                        }
+                        else
+                        {
+                            dataSheet.Cells.Range["A" + index].Value2 = previousDate.ToOADate();
+                            foreach (string columnName in columnNames)
+                            {
+                                dataSheet.Cells.Range[columnName + index].Value2 = 0;
+                            }
+                            index++;
+                            foreach (Answer a in answers)
+                            {
+                                DateTime answerDateTime = ConvertUnixTimeStampToDateTime(a.num);
+                                if (previousDate != answerDateTime.Date)
+                                {
+                                    dataSheet.Cells.Range["A" + index].Value2 = previousDate.ToOADate();
+                                    columnNamesEnumerator = columnNames.GetEnumerator();
+                                    foreach (int answerNum in answersNumPerOption.Values)
+                                    {
+                                        columnNamesEnumerator.MoveNext();
+                                        dataSheet.Cells.Range[columnNamesEnumerator.Current + index].Value2 = answerNum;
+                                    }
+                                    index++;
+                                    previousDate = answerDateTime.Date;
+                                }
+                                answersNumPerOption[a.choice_name] = answersNumPerOption[a.choice_name] + 1;
+                            }
+                            dataSheet.Cells.Range["A" + index].Value2 = previousDate.ToOADate();
+                        }
+                        columnNamesEnumerator = columnNames.GetEnumerator();
+                        foreach (int answerNum in answersNumPerOption.Values)
+                        {
+                            columnNamesEnumerator.MoveNext();
+                            dataSheet.Cells.Range[columnNamesEnumerator.Current + index].Value2 = answerNum;
+                        }
+                        index++;
+
+                        lastColumnName = columnNames.Last();
+                    }
+                    else
+                    {
+                        int realNumOfGroups = usedOptionNames.Count;
+                        if (realNumOfGroups < numOfGroupsToShow)
+                        {
+                            numOfGroupsToShow = realNumOfGroups;
+                        }
+                        foreach (string optionName in usedOptionNames)
+                        {
+                            answersNumPerOption[optionName] = 0;
+                        }
+                        answers.ForEach(x => answersNumPerOption[x.choice_name] = answersNumPerOption[x.choice_name] + 1);
+                        List<string> sortedOptionNamesByOccurrences = answersNumPerOption.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
+
+                        answersNumPerOption.Clear();
+                        usedOptionNames.Clear();
+
+                        foreach (string optionName in sortedOptionNamesByOccurrences.Take(numOfGroupsToShow))
+                        {
+                            string columnName = GetExcelColumnName(optionNum + 1);
+                            dataSheet.Cells.Range[columnName + index].Value2 = "'" + optionName;
+                            columnNames.Add(columnName);
+                            answersNumPerOption.Add(optionName, 0);
+                            usedOptionNames.Add(optionName);
+                            optionNum++;
+                        }
+                        if (groupRemainingOpts)
+                        {
+                            string columnName = GetExcelColumnName(optionNum + 1);
+                            dataSheet.Cells.Range[columnName + index].Value2 = "'" + "Ostalo";
+                            columnNames.Add(columnName);
+                            answersNumPerOption.Add("", 0); // sum of occurrences of other options will be in dictionary as entry with key "" (empty string) since regular option cannot be empty
+                            optionNum++;
+                        }
+                        index++;
+
+                        List<string>.Enumerator columnNamesEnumerator;
+                        DateTime previousDateTime = ConvertUnixTimeStampToDateTime(answers.First().num);
+                        DateTime previousDate = previousDateTime.Date;
+                        timeComponentOnly = answers.All(x => ConvertUnixTimeStampToDateTime(x.num).Date == previousDate);
+                        if (timeComponentOnly)
+                        {
+                            TimeSpan previousTime = previousDateTime.TimeOfDay;
+
+                            dataSheet.Cells.Range["A" + index].Value2 = new DateTime(previousTime.Ticks).AddMinutes(-1).ToOADate();
+                            foreach (string columnName in columnNames)
+                            {
+                                dataSheet.Cells.Range[columnName + index].Value2 = 0;
+                            }
+                            index++;
+                            foreach (Answer a in answers)
+                            {
+                                DateTime answerDateTime = ConvertUnixTimeStampToDateTime(a.num);
+                                if (previousTime != answerDateTime.TimeOfDay)
+                                {
+                                    dataSheet.Cells.Range["A" + index].Value2 = new DateTime(previousTime.Ticks).ToOADate();
+                                    columnNamesEnumerator = columnNames.GetEnumerator();
+                                    foreach (int answerNum in answersNumPerOption.Values)
+                                    {
+                                        columnNamesEnumerator.MoveNext();
+                                        dataSheet.Cells.Range[columnNamesEnumerator.Current + index].Value2 = answerNum;
+                                    }
+                                    index++;
+                                    previousTime = answerDateTime.TimeOfDay;
+                                }
+                                if (answersNumPerOption.ContainsKey(a.choice_name))
+                                {
+                                    answersNumPerOption[a.choice_name] = answersNumPerOption[a.choice_name] + 1;
+                                }
+                                else
+                                {
+                                    if (groupRemainingOpts)
+                                    {
+                                        answersNumPerOption[""] = answersNumPerOption[""] + 1;
+                                    }
+                                }
+                            }
+                            dataSheet.Cells.Range["A" + index].Value2 = new DateTime(previousTime.Ticks).ToOADate();
+                        }
+                        else
+                        {
+                            dataSheet.Cells.Range["A" + index].Value2 = previousDate.ToOADate();
+                            foreach (string columnName in columnNames)
+                            {
+                                dataSheet.Cells.Range[columnName + index].Value2 = 0;
+                            }
+                            index++;
+                            foreach (Answer a in answers)
+                            {
+                                DateTime answerDateTime = ConvertUnixTimeStampToDateTime(a.num);
+                                if (previousDate != answerDateTime.Date)
+                                {
+                                    dataSheet.Cells.Range["A" + index].Value2 = previousDate.ToOADate();
+                                    columnNamesEnumerator = columnNames.GetEnumerator();
+                                    foreach (int answerNum in answersNumPerOption.Values)
+                                    {
+                                        columnNamesEnumerator.MoveNext();
+                                        dataSheet.Cells.Range[columnNamesEnumerator.Current + index].Value2 = answerNum;
+                                    }
+                                    index++;
+                                    previousDate = answerDateTime.Date;
+                                }
+                                if (answersNumPerOption.ContainsKey(a.choice_name))
+                                {
+                                    answersNumPerOption[a.choice_name] = answersNumPerOption[a.choice_name] + 1;
+                                }
+                                else
+                                {
+                                    if (groupRemainingOpts)
+                                    {
+                                        answersNumPerOption[""] = answersNumPerOption[""] + 1;
+                                    }
+                                }
+                            }
+                            dataSheet.Cells.Range["A" + index].Value2 = previousDate.ToOADate();
+                        }
+
+                        columnNamesEnumerator = columnNames.GetEnumerator();
+                        foreach (int answerNum in answersNumPerOption.Values)
+                        {
+                            columnNamesEnumerator.MoveNext();
+                            dataSheet.Cells.Range[columnNamesEnumerator.Current + index].Value2 = answerNum;
+                        }
+                        index++;
+
+                        lastColumnName = columnNames.Last();
+                    }
+                    dataSheet.Cells.Range["A:A"].NumberFormat = (timeComponentOnly ? CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.TrimEnd('.'));
+                }
+                else
+                {
+                    lastColumnName = "A";
                 }
             }
-
-            for (int i = 4; i > 2; i--)
+            else
             {
-                ((EXCEL.Range)dataSheet.Columns[i]).Delete(EXCEL.XlDeleteShiftDirection.xlShiftToLeft);
+                dataSheet.Cells.Range["A" + index].Value2 = "";
+                dataSheet.Cells.Range["B" + index].Value2 = "";
+                index++;
+                int numOfGroups = answers.Count;
+                if (numOfGroupsToShow == 0 || numOfGroupsToShow > numOfGroups)
+                {
+                    numOfGroupsToShow = numOfGroups;
+                }
+                for (int i=0; i<numOfGroupsToShow; i++)
+                {
+                    Answer a = answers[i];
+                    dataSheet.Cells.Range["A" + index].Value2 = "'" + a.choice_name;
+                    dataSheet.Cells.Range["B" + index].Value2 = a.num;
+                    index++;
+                }
+                if (groupRemainingOpts) {
+                    int sumOfOtherOptionsOccurrences = 0;
+                    for (int i = numOfGroupsToShow; i<numOfGroups; i++)
+                    {
+                        sumOfOtherOptionsOccurrences += answers[i].num;
+                    }
+                    dataSheet.Cells.Range["A" + index].Value2 = "'" + "Ostalo";
+                    dataSheet.Cells.Range["B" + index].Value2 = sumOfOtherOptionsOccurrences;
+                    index++;
+                }
+                lastColumnName = "B";
             }
+
+            chart.SetSourceData(String.Format("'{0}'!A1:{1}", dataSheet.Name, lastColumnName + (index - 1)), EXCEL.XlRowCol.xlColumns);
 
             chart.HasTitle = true;
             chart.ChartTitle.Font.Italic = true;
@@ -274,7 +529,7 @@ namespace InteractivePPT
             chart.Refresh();
             workbook.Close();
 
-            if (graphPosition.SelectedIndex == 1)
+            if ((int)graphPosition.SelectedValue == 2)
             {
                 p.Slides[slideIndex + 1].Delete();
             }
@@ -284,7 +539,30 @@ namespace InteractivePPT
             foreach (Process clsProcess in Process.GetProcesses())
                 if (clsProcess.ProcessName.Equals("EXCEL"))  
                     clsProcess.Kill();
+        }
 
+        private DateTime ConvertUnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dtDateTime;
+        }
+
+        private string GetExcelColumnName(int columnNumber)
+        {
+            int dividend = columnNumber;
+            string columnName = String.Empty;
+            int modulo;
+
+            while (dividend > 0)
+            {
+                modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo).ToString() + columnName;
+                dividend = (int)((dividend - modulo) / 26);
+            }
+
+            return columnName;
         }
 
         private void UpdatePresentation()
@@ -297,13 +575,13 @@ namespace InteractivePPT
                     byte[] response =
                     client.UploadValues(Home.mainScriptUri, new NameValueCollection()
                     {
-                    { "request_type", "delete_file" },
-                    { "file", name }
+                        { "request_type", "delete_file" },
+                        { "file", name }
                     });
                 }
                 catch
                 {
-                    MessageBox.Show("Communication with server-side of this application could not be established");
+                    MessageBox.Show("An error has occurred while trying to override previous presentation on remote server");
                     return;
                 }
 
@@ -385,33 +663,52 @@ namespace InteractivePPT
 
         }
 
-        private void Presentation_Activated(object sender, EventArgs e)
+        public void AddTextSlide(string questionName, List<string> appropriateChoiceNames)
         {
-            if(chooseItem.results != null && make)
-            {
-                AddTextSlide(name);
-                make = false;
-            }
-        }
-
-        public void AddTextSlide(string name)
-        {
-            string answer = name+"\n";
             PowerPoint.Slides slides;
             PowerPoint._Slide slide;
             slides = p.Slides;
-            slide = slides.AddSlide(GetIndexOfCurrentSlide() + move++, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
 
-
-
-            foreach (TextItems item in chooseItem.results)
+            if ((int)graphPosition.SelectedValue == 1)
             {
-                answer += item.choice_name + "\n";
+                slideIndex = GetIndexOfCurrentSlide() + move++;
+            }
+            else
+            {
+                int numOfSlides = p.Slides.Count;
+                slideIndex = 0;
+                for (int i = 0; i < numOfSlides && slideIndex == 0; i++)
+                {
+                    slide = p.Slides[i];
+                    try
+                    {
+                        if (questionName == slide.Shapes[1].TextFrame.TextRange.Text)
+                        {
+                            slideIndex = i + 1;
+                            break;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
             }
 
-            slide.Shapes[1].TextFrame.TextRange.Text = answer;
-            slide.Shapes[1].TextFrame.TextRange.Font.Name = "Arial";
-            slide.Shapes[1].TextFrame.TextRange.Font.Size = 18;
+            if (slideIndex == 0)
+            {
+                DisplayWindowInForeground(this.Handle);
+                MessageBox.Show(String.Format("Za sada na prezentaciji ne postoji slajd s komentarima na pitanje \"{0}\". Pozicionirajte se na slajd iza kojeg želite dodati slajd s komentarima, odaberite u aplikaciji opciju \"sljedeći slajd\" za mjesto komentara te ponovno dodajte komentare", questionName), "Ne postoji odabrano pitanje s komentarima u prezentaciji");
+                throw new Exception();
+            }
+            slide = slides.AddSlide(GetIndexOfCurrentSlide() + move++, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
+
+            slide.Shapes[1].TextFrame.TextRange.Text = questionName;
+            slide.Shapes[2].TextFrame.TextRange.Text = string.Join("\n", appropriateChoiceNames);
+
+            if ((int)graphPosition.SelectedValue == 2)
+            {
+                p.Slides[slideIndex + 1].Delete();
+            }
 
             p.Save();
         }
@@ -421,6 +718,7 @@ namespace InteractivePPT
             if (comboBox1.SelectedIndex != -1)
             {
                 string chosenSurvey = comboBox1.SelectedValue.ToString();
+                string serializedQuestions = null;
                 using (WebClient client = new WebClient())
                 {
                     try
@@ -431,7 +729,7 @@ namespace InteractivePPT
                             { "request_type", "get_questions" },
                             { "survey_id", chosenSurvey }
                         });
-                        serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
+                        serializedQuestions = Encoding.UTF8.GetString(response);
                     }
                     catch
                     {
@@ -440,99 +738,165 @@ namespace InteractivePPT
                     }
                 }
 
-                if (serializedUserSurveys != null)
+                if (serializedQuestions != null)
                 {
-                    myQuestionList = JsonConvert.DeserializeObject<QuestionList>(serializedUserSurveys);
+                    myQuestionList = JsonConvert.DeserializeObject<QuestionList>(serializedQuestions);
                 }
 
                 ((ListBox)questionList).DataSource = myQuestionList.questions;
-                ((ListBox)questionList).DisplayMember = "name";
-                questionList.Visible = true;
+                ((ListBox)questionListForComments).DataSource = myQuestionList.questions.Where(x => x.Question_type_idQuestion_type == 3).ToList();
 
-                foreach (Question item in questionList.Items)
-                {
-                    if (item.Question_type_idQuestion_type == 3)
-                    {
-                        item.name += "*";
-                    }
-                }
+                ((ListBox)questionList).DisplayMember = ((ListBox)questionListForComments).DisplayMember = "name";
             }
+        }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
+        
+        [DllImport("user32.dll")]
+        private static extern int SetForegroundWindow(IntPtr hwnd);
+
+        private enum ShowWindowEnum
+        {
+            Hide = 0,
+            ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
+            Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
+            Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
+            Restore = 9, ShowDefault = 10, ForceMinimized = 11
+        };
+
+        private void DisplayWindowInForeground(IntPtr handle)
+        {
+            if (handle == IntPtr.Zero)
+            {
+                ShowWindow(handle, ShowWindowEnum.Restore);
+            }
+            SetForegroundWindow(handle);
         }
 
         private void btnAddGraph_Click(object sender, EventArgs e)
         {
-            int id = 0;
-            for (int i = 0; i < questionList.Items.Count; i++)
+            bool addChart = artifactInsertionTabControl.SelectedTab == tabChart;
+            CheckedListBox myQuestionList = addChart ? questionList : questionListForComments;
+            if (myQuestionList.CheckedItems.OfType<Question>().Any())
             {
-                if (questionList.GetItemCheckState(i) == CheckState.Checked)
+                Dictionary<int, string> questionNamesPerIds = new Dictionary<int, string>();
+                bool pptChanged = false;
+                if (addChart)
                 {
+                    DisplayWindowInForeground(new IntPtr(pptApp.HWND));
 
-                    Question q = (Question)questionList.Items[i];
-                    id = q.idQuestions;
-                    name = q.name;
-                    if (q.Question_type_idQuestion_type != 3)
+                    string serializedAnswers = null;
+                    NameValueCollection postParameters = new NameValueCollection()
                     {
-                        using (WebClient client = new WebClient())
+                        { "request_type", radioLine.Checked ? "get_individual_results" : "get_aggregated_results" }
+                    };
+                    foreach (Question q in myQuestionList.CheckedItems)
+                    {
+                        int qId = q.idQuestions;
+                        postParameters.Add("questions[]", qId.ToString());
+                        questionNamesPerIds[qId] = q.name;
+                    }
+                    using (WebClient client = new WebClient())
+                    {
+                        try
                         {
-                            try
+                            byte[] response = client.UploadValues(Home.mainScriptUri, postParameters);
+                            serializedAnswers = Encoding.UTF8.GetString(response);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Communication with server-side of this application could not be established");
+                            return;
+                        }
+                    }
+                    if (serializedAnswers != null)
+                    {
+                        try
+                        {
+                            foreach (var answerListPerQuestion in JsonConvert.DeserializeObject<Dictionary<int, List<Answer>>>(serializedAnswers))
                             {
-                                byte[] response =
-                                client.UploadValues(Home.mainScriptUri, new NameValueCollection()
+                                try
                                 {
-                                    { "request_type", "get_results" },
-                                    { "id", id.ToString() }
-                                });
-                                serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
+                                    AddSlide(answerListPerQuestion.Value, questionNamesPerIds[answerListPerQuestion.Key]);
+                                    pptChanged = true;
+                                }
+                                catch
+                                {
+                                }
                             }
-                            catch
-                            {
-                                MessageBox.Show("Communication with server-side of this application could not be established");
-                                return;
-                            }
-                            if (serializedUserSurveys != null)
-                            {
-                                myAnswerList = JsonConvert.DeserializeObject<AnswerList>(serializedUserSurveys);
-                                AddSlide(myAnswerList.results, q.name);
-                            }
-
+                        }
+                        catch
+                        {
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    string serializedTextResults = null;
+                    NameValueCollection postParameters = new NameValueCollection()
+                    {
+                        { "request_type", "get_aggregated_results" }
+                    };
+                    if (myQuestionList.CheckedItems.Count != 0)
+                    {
+                        foreach (Question q in myQuestionList.CheckedItems)
+                        {
+                            int qId = q.idQuestions;
+                            postParameters.Add("questions[]", qId.ToString());
+                            questionNamesPerIds[qId] = q.name;
                         }
                     }
                     else
                     {
-                        using (WebClient client = new WebClient())
+                        return;
+                    }
+                    using (WebClient client = new WebClient())
+                    {
+                        try
                         {
-                            try
-                            {
-                                byte[] response =
-                                client.UploadValues(Home.mainScriptUri, new NameValueCollection()
-                                {
-                                    { "request_type", "get_text_results" },
-                                    { "id", id.ToString() }
-                                });
-                                serializedUserSurveys = System.Text.Encoding.UTF8.GetString(response);
-                            }
-                            catch
-                            {
-                                MessageBox.Show("Communication with server-side of this application could not be established");
-                                return;
-                            }
-                            if (serializedUserSurveys != null)
-                            {
-                                chooseItem.results = new List<TextItems>();
-                                textItem = JsonConvert.DeserializeObject<TextItemsList>(serializedUserSurveys);
-                                CommentFilter cf = new CommentFilter(textItem, this);
-                                cf.Show();
-                                Hide();
-                            }
-
+                            byte[] response = client.UploadValues(Home.mainScriptUri, postParameters);
+                            serializedTextResults = Encoding.UTF8.GetString(response);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Communication with server-side of this application could not be established");
+                            return;
                         }
                     }
-
+                    if (serializedTextResults != null)
+                    {
+                        CommentFilter cf = new CommentFilter(JsonConvert.DeserializeObject<SortedDictionary<int, List<Answer>>>(serializedTextResults), questionNamesPerIds);
+                        cf.ShowDialog();
+                        if (cf.DialogResult == DialogResult.OK)
+                        {
+                            foreach (var selectedAnswers in cf.selectedAnswersPerSelectedQuestions)
+                            {
+                                try
+                                {
+                                    AddTextSlide(questionNamesPerIds[selectedAnswers.Key], selectedAnswers.Value);
+                                    pptChanged = true;
+                                }
+                                catch
+                                {
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
                 }
-
+                DisplayWindowInForeground(this.Handle);
+                move = 1;
+                if (pptChanged)
+                {
+                    UpdatePresentation();
+                }
             }
-            move = 1;
-            UpdatePresentation();
         }
 
         private void Presentation_FormClosed(object sender, FormClosedEventArgs e)
@@ -566,6 +930,18 @@ namespace InteractivePPT
             if (e.RowIndex != -1)
             {
                 RemoveAudience(e.RowIndex);
+            }
+        }
+
+        private void numOfGroupsNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (((NumericUpDown)sender).Value == 0)
+            {
+                groupRemainingOptsCB.Visible = false;
+            }
+            else
+            {
+                groupRemainingOptsCB.Visible = true;
             }
         }
 
