@@ -74,8 +74,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_file).setContentTitle("NOVA VERZIJA!!VAŽNO!!")
-                .setContentText("Na serveru se nalazi nove prezentacija:"+pws.getPresentationName())
+                .setSmallIcon(R.drawable.app_icon).setContentTitle(getString(R.string.push_notification_title) + pws.getPresentationName())
+                .setContentText(getString(R.string.push_notification_new_ppt_version_available)+pws.getPresentationName())
                 .setAutoCancel(true).setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
@@ -90,8 +90,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_file).setContentTitle("Nova prezentacija")
-                .setContentText("Na serveru se nalazi nove prezentacija:"+pws.getPresentationName())
+                .setSmallIcon(R.drawable.app_icon).setContentTitle(getString(R.string.push_notification_title) + pws.getPresentationName())
+                .setContentText(getString(R.string.push_notification_new_ppt_version_available)+pws.getPresentationName())
                 .setAutoCancel(true).setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);

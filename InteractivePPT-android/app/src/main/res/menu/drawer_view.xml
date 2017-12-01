@@ -3,22 +3,21 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_first_fragment"
-            android:title="Moje prezentacije" />
+            android:title="@string/my_surveys_button_caption" />
         <item
             android:id="@+id/nav_second_fragment"
-            android:title="Kreiranje ankete" />
+            android:title="@string/create_survey_button_caption" />
         <item
             android:id="@+id/nav_third_fragment"
-            android:title="Otvaranje prezentacije" />
+            android:title="@string/load_survey_button_caption" />
+        <item>
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_logout"
+                        android:title="@string/logout" />
+                </group>
+            </menu>
+        </item>
     </group>
-    <item>
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_logout"
-                    android:title="Odjava" />
-            </group>
-        </menu>
-    </item>
-
 </menu>

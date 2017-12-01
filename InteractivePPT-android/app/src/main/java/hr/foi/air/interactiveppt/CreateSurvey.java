@@ -134,7 +134,7 @@ public class CreateSurvey extends AppCompatActivity {
                                 myPptsLoaded = true;
                             }
                             else {
-                                Toast.makeText(CreateSurvey.this,"Ne posjedujete nijednu anketu", Toast.LENGTH_LONG).show();
+                                Toast.makeText(CreateSurvey.this, R.string.no_my_ppts_error, Toast.LENGTH_LONG).show();
                                 newPptOption.setChecked(true);
                             }
                             findViewById(R.id.loading_panel).setVisibility(View.GONE);
@@ -143,7 +143,7 @@ public class CreateSurvey extends AppCompatActivity {
 
                         @Override
                         public void onFailure() {
-                            Toast.makeText(CreateSurvey.this,"Greška kod dobavljanja liste Vaših prezentacija", Toast.LENGTH_LONG).show();
+                            Toast.makeText(CreateSurvey.this, R.string.presentations_fetch_error, Toast.LENGTH_LONG).show();
                             findViewById(R.id.loading_panel).setVisibility(View.GONE);
                             findViewById(R.id.activity_create_survey).setClickable(true);
                             newPptOption.setChecked(true);
@@ -171,13 +171,13 @@ public class CreateSurvey extends AppCompatActivity {
 
         String reasonsOfIncompletion;
         if (!(reasonsOfIncompletion = getReasonsWhyCurrentSurveyIsntComplete(surveyName, surveyDescription)).isEmpty()) {
-            Toast.makeText(CreateSurvey.this, "Neuspjeh kod kreiranja:" + reasonsOfIncompletion, Toast.LENGTH_LONG).show();
+            Toast.makeText(CreateSurvey.this, getString(R.string.survey_creation_failure_reason) + reasonsOfIncompletion, Toast.LENGTH_LONG).show();
             return;
         }
 
         new AlertDialog.Builder(this)
-                .setTitle("Upozorenje")
-                .setMessage("Jeste li sigurni da želite pohraniti anketu?")
+                .setTitle(R.string.alert_create_survey_title)
+                .setMessage(R.string.alert_create_survey_message)
                 .setIcon(android.R.drawable.ic_menu_save)
                 .setNegativeButton("ne", null)
                 .setPositiveButton("da", new DialogInterface.OnClickListener() {
@@ -343,26 +343,26 @@ public class CreateSurvey extends AppCompatActivity {
     private String getReasonsWhyCurrentSurveyIsntComplete(String title, String description) {
         String reasonsOfIncompetion = "";
         if (title.isEmpty()) {
-            reasonsOfIncompetion += "\nNaslov ankete nije postavljen!";
+            reasonsOfIncompetion += "\n" + getString(R.string.no_survey_title_error);
         }
         if (description.isEmpty()) {
-            reasonsOfIncompetion += "\nOpis ankete nije postavljen!";
+            reasonsOfIncompetion += "\n" + getString(R.string.no_survey_description_error);
         }
         if (newPptOption.isChecked()) {
             if (uriOfSelectedFile == null) {
-                reasonsOfIncompetion += "\nNije odabrano kojoj će prezentaciji pripadati anketa!";
+                reasonsOfIncompetion += getString(R.string.no_corresponding_ppt_error);
             }
         }
         else if (existingPptOption.isChecked()) {
             if (getSelectedSurveyFromExisting() == null) {
-                reasonsOfIncompetion += "\nNije odabrano kojoj će prezentaciji pripadati anketa!";
+                reasonsOfIncompetion += "\n" + getString(R.string.no_corresponding_ppt_error);
             }
         }
         else {
-            reasonsOfIncompetion += "\nNije odabrano kojoj će prezentaciji pripadati anketa!";
+            reasonsOfIncompetion += "\n" + getString(R.string.no_corresponding_ppt_error);
         }
         if (questions.isEmpty()) {
-            reasonsOfIncompetion += "\nAnketa je trenutno bez pitanja!";
+            reasonsOfIncompetion += "\n" + getString(R.string.no_questions_error);
         }
         return reasonsOfIncompetion;
     }
@@ -417,7 +417,7 @@ public class CreateSurvey extends AppCompatActivity {
                     @Override
                     public void onFailure() {
                         Toast.makeText(CreateSurvey.this,
-                                "Neuspjeh kod slanja ankete! Provjerite vezu s Internetom",
+                                R.string.survey_creation_error,
                                 Toast.LENGTH_LONG
                         ).show();
                         findViewById(R.id.activity_create_survey).setClickable(true);

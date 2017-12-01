@@ -132,7 +132,7 @@ public class GetCode extends AppCompatActivity {
                                         } else {
                                             findViewById(R.id.activity_input_code).setClickable(true);
                                             findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                            Toast.makeText(GetCode.this, "Prezentacija s navedenim pristupnim kodom ne postoji!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(GetCode.this, R.string.no_ppt_with_corresponding_code_error, Toast.LENGTH_LONG).show();
                                         }
                                     }
 
@@ -140,7 +140,7 @@ public class GetCode extends AppCompatActivity {
                                     public void onFailure() {
                                         findViewById(R.id.activity_get_code).setClickable(true);
                                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                        Toast.makeText(GetCode.this, "Greška kod dobavljanja prezentacije", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(GetCode.this, R.string.presentation_fetch_error, Toast.LENGTH_LONG).show();
                                     }
                                 }
                         );

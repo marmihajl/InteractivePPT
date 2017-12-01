@@ -44,7 +44,7 @@ public class SurveyList extends AppCompatActivity {
 
                     @Override
                     public void onFailure() {
-                        Toast.makeText(SurveyList.this,"Greška kod dobavljanja liste anketa", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SurveyList.this, R.string.survey_fetch_error, Toast.LENGTH_LONG).show();
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
                         findViewById(R.id.activity_survey_list).setClickable(true);
                     }
@@ -78,7 +78,7 @@ public class SurveyList extends AppCompatActivity {
 
                             @Override
                             public void onFailure() {
-                                Toast.makeText(SurveyList.this,"Greška kod dobavljanja ankete!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SurveyList.this, R.string.survey_fetch_error, Toast.LENGTH_LONG).show();
                                 findViewById(R.id.activity_survey_list).setClickable(true);
                                 findViewById(R.id.loading_panel).setVisibility(View.GONE);
                             }

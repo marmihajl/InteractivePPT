@@ -53,7 +53,7 @@ namespace InteractivePPT
         {
             if (e.Cancelled || e.Error != null)
             {
-                MessageBox.Show("Communication with server-side of this application could not be established");
+                MessageBox.Show(Resources.strings.communication_with_server_not_established);
             }
             else
             {
@@ -104,7 +104,7 @@ namespace InteractivePPT
 
         private void AskUserHowToHandleCollisions(string localUriOfFile, string remoteUriOfFile)
         {
-            switch (MessageBox.Show("U odabranom direktoriju već postoji istoimena prezentacija. Odgovorite potvrdno ako želite prebrisati lokalnu s onom udaljenom, negativno ako želite udaljenu prebrisati lokalnom ili odustanite ako ne znate što učiniti", "Moguća postojanost novije verzije prezentacije", MessageBoxButtons.YesNoCancel))
+            switch (MessageBox.Show(Resources.strings.collision_between_presentations_message, Resources.strings.collision_between_presentations_title, MessageBoxButtons.YesNoCancel))
             {
                 case DialogResult.Yes:
                     using (WebClient webClient = new WebClient())
@@ -122,7 +122,7 @@ namespace InteractivePPT
 
         private int GetFileSizeOfRemoteFile(string remoteUriOfFile)
         {
-            WebRequest req = HttpWebRequest.Create(remoteUriOfFile);
+            WebRequest req = WebRequest.Create(remoteUriOfFile);
             req.Method = "HEAD";
             using (WebResponse resp = req.GetResponse())
             {
@@ -176,7 +176,7 @@ namespace InteractivePPT
                     string localUriOfFile = fbd.SelectedPath + '\\' + remoteUriOfFile.Substring(remoteUriOfFile.LastIndexOf("/") + 1);
                     if (localUriOfFile.Length > 255)
                     {
-                        MessageBox.Show("Odaberite kraću putanju jer broj znakova odabrane putanje (uključujući i sâm naziv datoteke koja bi trebala biti pohranjena u odabrani direktorij) prelazi 255 znakova!");
+                        MessageBox.Show(Resources.strings.path_too_long);
                         return;
                     }
                     if (File.Exists(localUriOfFile))

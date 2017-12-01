@@ -33,6 +33,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.loadingPicture = new System.Windows.Forms.PictureBox();
+            this.languageSelectBox = new MetroFramework.Controls.MetroComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.loadingPicture)).BeginInit();
             this.SuspendLayout();
             // 
@@ -75,11 +76,24 @@
             this.loadingPicture.TabStop = false;
             this.loadingPicture.Visible = false;
             // 
+            // languageSelectBox
+            // 
+            this.languageSelectBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.languageSelectBox.FontSize = MetroFramework.MetroComboBoxSize.Small;
+            this.languageSelectBox.FormattingEnabled = true;
+            this.languageSelectBox.ItemHeight = 21;
+            this.languageSelectBox.Location = new System.Drawing.Point(711, 28);
+            this.languageSelectBox.Name = "languageSelectBox";
+            this.languageSelectBox.Size = new System.Drawing.Size(188, 27);
+            this.languageSelectBox.TabIndex = 2;
+            this.languageSelectBox.UseSelectable = true;
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(920, 589);
+            this.Controls.Add(this.languageSelectBox);
             this.Controls.Add(this.loadingPicture);
             this.Controls.Add(this.webBrowser1);
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -97,5 +111,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.PictureBox loadingPicture;
+        private MetroFramework.Controls.MetroComboBox languageSelectBox;
     }
 }

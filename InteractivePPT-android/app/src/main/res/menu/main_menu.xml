@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-<item android:title="Mute chat" app:showAsAction="never"
+<item android:title="@string/mute_chat" app:showAsAction="never"
     android:id="@+id/menu_mute_chat"/>
 </menu>

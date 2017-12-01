@@ -124,13 +124,13 @@ public class ViewPresentation extends AppCompatActivity {
                                 boolean response = (boolean) genericResponse;
                                 if (response) {
                                     Toast.makeText(ViewPresentation.this,
-                                            "Uspješno ste poslali zahtjev za repliciranjem!",
+                                            R.string.reply_request_sent_successfully,
                                             Toast.LENGTH_LONG
                                     ).show();
                                 }
                                 else {
                                     Toast.makeText(ViewPresentation.this,
-                                            "Molimo Vas za strpljenje! Vaš prethodno poslani zahtjev za repliciranjem još uvijek čeka da bude pogledan od prezentatora",
+                                            R.string.prev_reply_request_still_not_processed,
                                             Toast.LENGTH_LONG
                                     ).show();
                                 }
@@ -139,7 +139,7 @@ public class ViewPresentation extends AppCompatActivity {
                             @Override
                             public void onFailure() {
                                 Toast.makeText(ViewPresentation.this,
-                                        "Neuspjeh kod slanja zahtjeva za repliciranjem! Pokušajte kasnije..",
+                                        R.string.reply_request_failed,
                                         Toast.LENGTH_LONG
                                 ).show();
                             }
@@ -178,7 +178,7 @@ public class ViewPresentation extends AppCompatActivity {
                         @Override
                         public void onFailure() {
                             Toast.makeText(ViewPresentation.this,
-                                    "Neuspjeh kod pokušaja pohrane šifre za notificiranje!",
+                                    R.string.presentation_subscription_error,
                                     Toast.LENGTH_LONG
                             ).show();
                         }
@@ -227,7 +227,7 @@ public class ViewPresentation extends AppCompatActivity {
             catch (Exception e) {
                 activity.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(activity, "Nije moguće uspostaviti komunikaciju s prezentatorom. Chat i repliciranje u ovoj sesiji neće biti omogućeni", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, R.string.no_ppt_session, Toast.LENGTH_LONG).show();
                     }
                 });
                 return;
@@ -259,7 +259,7 @@ public class ViewPresentation extends AppCompatActivity {
                                     NotificationCompat.Builder mBuilder =
                                             new NotificationCompat.Builder(activity)
                                                     .setSmallIcon(R.drawable.app_icon)
-                                                    .setContentTitle("InteractivePPT - " + pptName)
+                                                    .setContentTitle(getString(R.string.push_notification_title) + pptName)
                                                     .setContentText(messageParts[1] + ": " + messageParts[2].replace('\f', '\n'))
                                                     .setAutoCancel(true).setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 

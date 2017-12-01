@@ -81,13 +81,13 @@ public class Chat extends AppCompatActivity {
 
                                     }
                                     else {
-                                        Toast.makeText(Chat.this, "Poslužitelj nije uspio obraditi i proslijediti navedenu poruku!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Chat.this, R.string.message_broadcast_error, Toast.LENGTH_LONG).show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure() {
-                                    Toast.makeText(Chat.this, "Neuspjeh kod slanja poruke poslužitelju! Provjerite vezu s Internetom", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Chat.this, R.string.message_send_error, Toast.LENGTH_LONG).show();
                                 }
                             }
                     );

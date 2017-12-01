@@ -97,7 +97,7 @@ public class PresentationList extends AppCompatActivity {
 
                     @Override
                     public void onFailure() {
-                        Toast.makeText(PresentationList.this,"Greška kod dobavljanja liste prezentacija", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PresentationList.this, R.string.presentations_fetch_error, Toast.LENGTH_LONG).show();
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
                         findViewById(R.id.activity_presentation_list).setClickable(true);
                     }
@@ -134,7 +134,7 @@ public class PresentationList extends AppCompatActivity {
                                 else {
                                     findViewById(R.id.activity_input_code).setClickable(true);
                                     findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                    Toast.makeText(PresentationList.this,"Prezentacija s navedenim pristupnim kodom više ne postoji!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PresentationList.this, R.string.presentation_doesnt_exist_anymore, Toast.LENGTH_LONG).show();
                                 }
                             }
 
@@ -142,7 +142,7 @@ public class PresentationList extends AppCompatActivity {
                             public void onFailure() {
                                 findViewById(R.id.activity_presentation_list).setClickable(true);
                                 findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                                Toast.makeText(PresentationList.this,"Greška kod dobavljanja prezentacije", Toast.LENGTH_LONG).show();
+                                Toast.makeText(PresentationList.this, R.string.presentation_fetch_error, Toast.LENGTH_LONG).show();
                             }
                         }
                 );

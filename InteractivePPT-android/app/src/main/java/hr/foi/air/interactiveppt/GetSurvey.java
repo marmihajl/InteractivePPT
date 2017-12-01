@@ -146,7 +146,7 @@ public class GetSurvey extends AppCompatActivity{
                     sendAnswersToServer(listOfAnswers);
                 }
                 else {
-                    Toast.makeText(GetSurvey.this, "Nije moguće predati odgovore dok nije odgovoreno na sva obvezna pitanja!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(GetSurvey.this, R.string.survey_not_filled_error, Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -190,12 +190,12 @@ public class GetSurvey extends AppCompatActivity{
                         boolean response = (boolean) genericResponse;
                         if (response) {
                             Toast.makeText(GetSurvey.this,
-                                    "Odgovori uspješno poslani!",
+                                    R.string.answers_sent_successfully,
                                     Toast.LENGTH_LONG
                             ).show();
                         } else {
                             Toast.makeText(GetSurvey.this,
-                                    "Već ste prethodno predali odgovore na ovu anketu!",
+                                    R.string.answers_already_submitted_error,
                                     Toast.LENGTH_LONG
                             ).show();
                         }
@@ -204,7 +204,7 @@ public class GetSurvey extends AppCompatActivity{
                     @Override
                     public void onFailure() {
                         Toast.makeText(GetSurvey.this,
-                                "Greška prilikom slanja odgovora",
+                                R.string.send_answers_error,
                                 Toast.LENGTH_LONG
                         ).show();
                     }

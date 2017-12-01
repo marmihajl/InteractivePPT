@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure() {
                         Toast.makeText(MainActivity.this,
-                                "Neuspjeh kod registracije u sustav! Poslužitelj aplikacije je trenutno nedostupan",
+                                R.string.registration_failure_error,
                                 Toast.LENGTH_LONG
                         ).show();
                         toggleVisibilityAtLoading(true);

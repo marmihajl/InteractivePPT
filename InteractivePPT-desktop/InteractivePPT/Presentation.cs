@@ -62,8 +62,8 @@ namespace InteractivePPT
             comboBox1.SelectedIndex = -1;
 
             SortedDictionary<int, string> chartInsertionPositions = new SortedDictionary<int, string>();
-            chartInsertionPositions.Add(1, "sljedeći slajd");
-            chartInsertionPositions.Add(2, "tag: naziv pitanja");
+            chartInsertionPositions.Add(1, Resources.strings.add_to_next_slide);
+            chartInsertionPositions.Add(2, Resources.strings.replace_existing_artifact);
             graphPosition.DataSource = new BindingSource(chartInsertionPositions, null);
             graphPosition.DisplayMember = "Value";
             graphPosition.ValueMember = "Key";
@@ -85,7 +85,7 @@ namespace InteractivePPT
                 }
                 if (!ushort.TryParse(Encoding.UTF8.GetString(response), out port))
                 {
-                    MessageBox.Show("Pojavila se pogreška na strani poslužitelja kod pokušaja pokretanja daemon procesa za Vašu prezentaciju! Pokušajte ponovno za koji trenutak ili se javite administratoru poslužitelja");
+                    MessageBox.Show(Resources.strings.server_listener_not_instantiated);
                     this.Close();
                 }
                 tcpClient = new TcpClient(AddressFamily.InterNetwork);
@@ -222,7 +222,7 @@ namespace InteractivePPT
             if (slideIndex == 0)
             {
                 DisplayWindowInForeground(this.Handle);
-                MessageBox.Show(String.Format("Za sada na prezentaciji ne postoji graf s pitanjem \"{0}\". Pozicionirajte se na slajd iza kojeg želite dodati slajd s grafikonom, odaberite u aplikaciji opciju \"sljedeći slajd\" za mjesto grafa te ponovno dodajte graf", question), "Ne postoji grafikon za odabrano pitanje u prezentaciji");
+                MessageBox.Show(String.Format(Resources.strings.chart_for_selected_question_doesnt_exist_message, question), Resources.strings.chart_for_selected_question_doesnt_exist_title);
                 throw new Exception();
             }
             slide = slides.AddSlide(slideIndex, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
@@ -383,7 +383,7 @@ namespace InteractivePPT
                         if (groupRemainingOpts)
                         {
                             string columnName = GetExcelColumnName(optionNum + 1);
-                            dataSheet.Cells.Range[columnName + index].Value2 = "'" + "Ostalo";
+                            dataSheet.Cells.Range[columnName + index].Value2 = "'" + Resources.strings.other_options;
                             columnNames.Add(columnName);
                             answersNumPerOption.Add("", 0); // sum of occurrences of other options will be in dictionary as entry with key "" (empty string) since regular option cannot be empty
                             optionNum++;
@@ -581,7 +581,7 @@ namespace InteractivePPT
                 }
                 catch
                 {
-                    MessageBox.Show("An error has occurred while trying to override previous presentation on remote server");
+                    MessageBox.Show(Resources.strings.problem_with_overriding_remote_presentation);
                     return;
                 }
 
@@ -608,7 +608,7 @@ namespace InteractivePPT
                     }
                     catch
                     {
-                        MessageBox.Show("Communication with server-side of this application could not be established");
+                        MessageBox.Show(Resources.strings.communication_with_server_not_established);
                         return;
                     }
 
@@ -622,7 +622,7 @@ namespace InteractivePPT
                     }
                     catch
                     {
-                        MessageBox.Show("Communication with server-side of this application could not be established");
+                        MessageBox.Show(Resources.strings.communication_with_server_not_established);
                         return;
                     }
                 }
@@ -649,8 +649,7 @@ namespace InteractivePPT
                 }
                 catch
                 {
-                    MessageBox.Show("Communication with server-side of this application could not be established! Application will now shut down..");
-                    Application.Exit();
+                    MessageBox.Show(Resources.strings.communication_with_server_not_established);
                     return;
                 }
             }
@@ -697,7 +696,7 @@ namespace InteractivePPT
             if (slideIndex == 0)
             {
                 DisplayWindowInForeground(this.Handle);
-                MessageBox.Show(String.Format("Za sada na prezentaciji ne postoji slajd s komentarima na pitanje \"{0}\". Pozicionirajte se na slajd iza kojeg želite dodati slajd s komentarima, odaberite u aplikaciji opciju \"sljedeći slajd\" za mjesto komentara te ponovno dodajte komentare", questionName), "Ne postoji odabrano pitanje s komentarima u prezentaciji");
+                MessageBox.Show(String.Format(Resources.strings.comments_for_selected_question_doesnt_exist_message, questionName), Resources.strings.comments_for_selected_question_doesnt_exist_title);
                 throw new Exception();
             }
             slide = slides.AddSlide(GetIndexOfCurrentSlide() + move++, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
@@ -733,7 +732,7 @@ namespace InteractivePPT
                     }
                     catch
                     {
-                        MessageBox.Show("Communication with server-side of this application could not be established");
+                        MessageBox.Show(Resources.strings.communication_with_server_not_established);
                         return;
                     }
                 }
@@ -807,7 +806,7 @@ namespace InteractivePPT
                         }
                         catch
                         {
-                            MessageBox.Show("Communication with server-side of this application could not be established");
+                            MessageBox.Show(Resources.strings.communication_with_server_not_established);
                             return;
                         }
                     }
@@ -862,7 +861,7 @@ namespace InteractivePPT
                         }
                         catch
                         {
-                            MessageBox.Show("Communication with server-side of this application could not be established");
+                            MessageBox.Show(Resources.strings.communication_with_server_not_established);
                             return;
                         }
                     }

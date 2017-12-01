@@ -76,7 +76,7 @@
             this.openPptButton.Name = "openPptButton";
             this.openPptButton.Size = new System.Drawing.Size(200, 50);
             this.openPptButton.TabIndex = 6;
-            this.openPptButton.Text = "Otvori prezentaciju";
+            this.openPptButton.Text = Resources.strings.open_presentation;
             this.openPptButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.openPptButton.UseSelectable = true;
             this.openPptButton.Click += new System.EventHandler(this.openPptButton_Click);
@@ -144,20 +144,20 @@
             // name
             // 
             this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.name.HeaderText = "Naziv prezentacije";
+            this.name.HeaderText = Resources.strings.presentation_name;
             this.name.Name = "name";
             this.name.ReadOnly = true;
             // 
             // access_code
             // 
-            this.access_code.HeaderText = "Pristupni kod";
+            this.access_code.HeaderText = Resources.strings.access_code;
             this.access_code.Name = "access_code";
             this.access_code.ReadOnly = true;
             this.access_code.Width = 188;
             // 
             // link_to_presentation
             // 
-            this.link_to_presentation.HeaderText = "Link na prezentaciju";
+            this.link_to_presentation.HeaderText = Resources.strings.link_to_presentation;
             this.link_to_presentation.Name = "link_to_presentation";
             this.link_to_presentation.ReadOnly = true;
             this.link_to_presentation.Visible = false;
@@ -166,7 +166,7 @@
             // 
             this.qr_code.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.qr_code.FillWeight = 10F;
-            this.qr_code.HeaderText = "Qr kod";
+            this.qr_code.HeaderText = Resources.strings.qr_code;
             this.qr_code.Name = "qr_code";
             this.qr_code.ReadOnly = true;
             this.qr_code.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -181,7 +181,7 @@
             this.refreshListButton.Name = "refreshListButton";
             this.refreshListButton.Size = new System.Drawing.Size(200, 50);
             this.refreshListButton.TabIndex = 7;
-            this.refreshListButton.Text = "Osvježi popis";
+            this.refreshListButton.Text = Resources.strings.refresh_presentation_list;
             this.refreshListButton.Theme = MetroFramework.MetroThemeStyle.Light;
             this.refreshListButton.UseSelectable = true;
             this.refreshListButton.Click += new System.EventHandler(this.refreshListButton_Click);
@@ -202,7 +202,7 @@
             this.Padding = new System.Windows.Forms.Padding(20, 74, 20, 20);
             this.Resizable = false;
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.None;
-            this.Text = "Home";
+            this.Text = Resources.strings.my_presentations;
             this.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.Load += new System.EventHandler(this.Home_Load);
             ((System.ComponentModel.ISupportInitialize)(this.mySurveysDgv)).EndInit();

@@ -64,7 +64,7 @@ public class AddQuestion extends Dialog {
                     et.setBackgroundColor(activity.getResources().getColor(R.color.colorAddQuestionBackground));
                 }
                 optionId++;
-                et.setHint("Odgovor "+(optionId+1));
+                et.setHint(activity.getString(R.string.option) + (optionId+1));
                 et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 optionList.addView(et);
             }
@@ -108,7 +108,7 @@ public class AddQuestion extends Dialog {
 
                 String reasonsOfIncompletion;
                 if (!(reasonsOfIncompletion = getReasonsWhyCurrentQuestionIsntComplete(question)).isEmpty()) {
-                    Toast.makeText(getContext(), "Neuspjeh kod kreiranja:" + reasonsOfIncompletion, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), activity.getString(R.string.question_creation_failure) + reasonsOfIncompletion, Toast.LENGTH_LONG).show();
                     return;
                 }
                 questions.add(question);
@@ -150,16 +150,16 @@ public class AddQuestion extends Dialog {
     private String getReasonsWhyCurrentQuestionIsntComplete(Question question) {
         String reasonsOfIncompletion = "";
         if (question.getQuestionText().isEmpty()) {
-            reasonsOfIncompletion += "\nTekst pitanja ne može biti prazan!";
+            reasonsOfIncompletion += "\n" + activity.getString(R.string.question_name_empty_error);
         }
         if (question.getQuestionType() != 3) {
             if (question.options.size() == 0) {
-                reasonsOfIncompletion += "\nZa odabrani tip pitanja trebaju biti definirane opcije!";
+                reasonsOfIncompletion += "\n" + activity.getString(R.string.no_options_error);
             }
             else {
                 for (Option option : question.options) {
                     if (option.getOptionText().isEmpty()) {
-                        reasonsOfIncompletion += "\nPostoje definirane opcije bez teksta!";
+                        reasonsOfIncompletion += "\n" + activity.getString(R.string.empty_options_error);
                         break;
                     }
                 }
@@ -196,7 +196,7 @@ public class AddQuestion extends Dialog {
         for (String answer : savedInstanceState.getStringArrayList("answers")) {
             EditText et = new EditText(this.getContext());
             et.setText(answer);
-            et.setHint("Odgovor " + (++optionId + 1));
+            et.setHint(activity.getString(R.string.option) + (++optionId + 1));
             optionList.addView(et);
         }
     }

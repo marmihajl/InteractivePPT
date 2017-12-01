@@ -61,9 +61,9 @@ public class ExpandableSurveyListAdapter extends BaseExpandableListAdapter {
         tvDescription.setText(child.description);
         tvNumOfQuestions = (TextView) convertView.findViewById(R.id.authorName);
         tvNumOfQuestions.setText(String.valueOf(child.numOfQuestions));
-        ((TextView)convertView.findViewById(R.id.accessCodeLabel)).setText("Id ankete: ");
-        ((TextView)convertView.findViewById(R.id.numOfSurveysLabel)).setText("Opis ankete: ");
-        ((TextView)convertView.findViewById(R.id.authorNameLabel)).setText("Broj pitanja ankete: ");
+        ((TextView)convertView.findViewById(R.id.accessCodeLabel)).setText(R.string.survey_info_id);
+        ((TextView)convertView.findViewById(R.id.numOfSurveysLabel)).setText(R.string.survey_info_description);
+        ((TextView)convertView.findViewById(R.id.authorNameLabel)).setText(R.string.survey_info_total_questions);
         return convertView;
     }
 

@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Collections.Specialized;
+using System.Globalization;
+using System.Threading;
 
 namespace InteractivePPT
 {
@@ -17,6 +19,20 @@ namespace InteractivePPT
         public Login()
         {
             InitializeComponent();
+
+            Dictionary<string, string> languages =  new Dictionary<string, string>()
+            {
+                { "en-US", "english" },
+                { "hr-HR", "hrvatski (croatian)" }
+            };
+            languageSelectBox.ValueMember = "Key";
+            languageSelectBox.DisplayMember = "Value";
+            languageSelectBox.DataSource = new BindingSource(languages, null);
+
+            if (languages.ContainsKey(CultureInfo.CurrentUICulture.Name))
+            {
+                languageSelectBox.SelectedValue = CultureInfo.CurrentUICulture.Name;
+            }
 
             webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
         }
@@ -39,6 +55,7 @@ namespace InteractivePPT
             {
                 webBrowser1.Visible = true;
                 loadingPicture.Visible = false;
+                languageSelectBox.Visible = true;
             }
         }
 
@@ -57,7 +74,7 @@ namespace InteractivePPT
                 {
                     timer1.Stop();
                     DeleteCookiesOfIntegratedWebBrowser();
-                    MessageBox.Show("It seems like you've never used mobile version of this application before! Application will now shut down..");
+                    MessageBox.Show(Resources.strings.mobile_app_not_used_before + " " + Resources.strings.application_will_shut_down);
                     Application.Exit();
                     return;
                 }
@@ -104,7 +121,7 @@ namespace InteractivePPT
                         catch
                         {
                             DeleteCookiesOfIntegratedWebBrowser();
-                            MessageBox.Show("Communication with server-side of this application could not be established! Application will now shut down..");
+                            MessageBox.Show(Resources.strings.communication_with_server_not_established + " " + Resources.strings.application_will_shut_down);
                             Application.Exit();
                             return;
                         }
@@ -148,6 +165,8 @@ namespace InteractivePPT
         {
             webBrowser1.Visible = false;
             loadingPicture.Visible = true;
+            languageSelectBox.Visible = false;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo((string)languageSelectBox.SelectedValue);
         }
     }
 }

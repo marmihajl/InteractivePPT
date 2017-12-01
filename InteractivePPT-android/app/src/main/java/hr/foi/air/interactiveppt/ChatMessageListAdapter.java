@@ -56,7 +56,7 @@ public class ChatMessageListAdapter extends BaseAdapter {
         ChatMessage message = messages.get(position);
 
         user.setText(message.getMessageUser());
-        time.setText(DateFormat.format("dd.MM.yyyy (HH:mm:ss)", message.getMessageTime()).toString());
+        time.setText(DateFormat.format(activity.getString(R.string.message_time_format), message.getMessageTime()).toString());
         text.setText(message.getMessageText());
         return vi;
     }
