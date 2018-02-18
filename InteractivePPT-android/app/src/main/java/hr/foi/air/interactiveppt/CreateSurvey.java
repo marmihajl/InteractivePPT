@@ -179,8 +179,8 @@ public class CreateSurvey extends AppCompatActivity {
                 .setTitle(R.string.alert_create_survey_title)
                 .setMessage(R.string.alert_create_survey_message)
                 .setIcon(android.R.drawable.ic_menu_save)
-                .setNegativeButton("ne", null)
-                .setPositiveButton("da", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no_option, null)
+                .setPositiveButton(R.string.yes_option, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         sendRequestForSaving(surveyName, surveyDescription);
                     }

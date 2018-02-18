@@ -82,7 +82,7 @@
     <string name="no_my_ppts_error">There are no presentations create by you.</string>
     <string name="survey_info_id">Survey id: </string>
     <string name="survey_info_description">Survey description: </string>
-    <string name="survey_info_total_questions">Survey's total number of questions: </string>
+    <string name="survey_info_total_questions">Survey\'s total number of questions: </string>
     <string name="no_ppt_with_corresponding_code_error">Presentation with specified access code does not exist!</string>
     <string name="presentation_fetch_error">An error occurred while fetching requested presentation</string>
     <string name="answers_already_submitted_error">You have already sent answers for this survey!</string>
@@ -97,4 +97,6 @@
     <string name="reply_request_failed">An error has occurred while trying to send reply-request! Try again later…</string>
     <string name="prev_reply_request_still_not_processed">Please, be patient! Your previously sent reply-request is still waiting to be processed by presenter</string>
     <string name="reply_request_sent_successfully">You have successfully sent reply-request!</string>
+    <string name="no_option">no</string>
+    <string name="yes_option">yes</string>
 </resources>

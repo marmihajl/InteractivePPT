@@ -91,5 +91,7 @@
     <string name="reply_request_failed">Neuspjeh kod slanja zahtjeva za repliciranjem! Pokušajte kasnije…</string>
     <string name="prev_reply_request_still_not_processed">Molimo Vas za strpljenje! Vaš prethodno poslani zahtjev za repliciranjem još uvijek čeka da bude pogledan od prezentatora</string>
     <string name="reply_request_sent_successfully">Uspješno ste poslali zahtjev za repliciranjem!</string>
+    <string name="no_option">ne</string>
+    <string name="yes_option">da</string>
 
 </resources>
