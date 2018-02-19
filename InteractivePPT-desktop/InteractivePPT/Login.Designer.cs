@@ -48,7 +48,8 @@
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.Size = new System.Drawing.Size(880, 509);
             this.webBrowser1.TabIndex = 0;
-            this.webBrowser1.Url = new System.Uri("https://mobile.facebook.com/login/", System.UriKind.Absolute);
+            this.webBrowser1.Url = new System.Uri("https://m.facebook.com", System.UriKind.Absolute);
+            this.webBrowser1.Visible = false;
             this.webBrowser1.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.webBrowser1_Navigating);
             // 
             // timer1
@@ -74,7 +75,6 @@
             this.loadingPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.loadingPicture.TabIndex = 1;
             this.loadingPicture.TabStop = false;
-            this.loadingPicture.Visible = false;
             // 
             // languageSelectBox
             // 
@@ -87,6 +87,8 @@
             this.languageSelectBox.Size = new System.Drawing.Size(188, 27);
             this.languageSelectBox.TabIndex = 2;
             this.languageSelectBox.UseSelectable = true;
+            this.languageSelectBox.Visible = false;
+            this.languageSelectBox.SelectedIndexChanged += new System.EventHandler(this.languageSelectBox_SelectedIndexChanged);
             // 
             // Login
             // 

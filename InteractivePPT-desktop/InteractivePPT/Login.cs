@@ -20,11 +20,14 @@ namespace InteractivePPT
         {
             InitializeComponent();
 
+            webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
+
             Dictionary<string, string> languages =  new Dictionary<string, string>()
             {
                 { "en-US", "english" },
                 { "hr-HR", "hrvatski (croatian)" }
             };
+
             languageSelectBox.ValueMember = "Key";
             languageSelectBox.DisplayMember = "Value";
             languageSelectBox.DataSource = new BindingSource(languages, null);
@@ -33,8 +36,6 @@ namespace InteractivePPT
             {
                 languageSelectBox.SelectedValue = CultureInfo.CurrentUICulture.Name;
             }
-
-            webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
         }
 
         private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -47,15 +48,28 @@ namespace InteractivePPT
             {
                 timer1.Start();
             }
-            else if (new Regex(@"^https://(mobile|m).facebook.com/login/save-device/").IsMatch(webBrowser1.Url.ToString()))
+            else if (new Regex(@"^https://(mobile|m)\.facebook\.com/login/save-device/").IsMatch(webBrowser1.Url.ToString()))
             {
                 webBrowser1.Document.GetElementsByTagName("a")[0].InvokeMember("click");
             }
-            else
+            else if (new Regex(@"^https://(mobile|m)\.facebook\.com/login/").IsMatch(webBrowser1.Url.ToString()))
             {
                 webBrowser1.Visible = true;
                 loadingPicture.Visible = false;
                 languageSelectBox.Visible = true;
+            }
+            else
+            {
+                // perform log-out
+                foreach (HtmlElement a in webBrowser1.Document.GetElementsByTagName("a"))
+                {
+                    if (a.GetAttribute("href").StartsWith("https://m.facebook.com/logout.php"))
+                    {
+                        webBrowser1.Navigate(a.GetAttribute("href"));
+                        return;
+                    }
+                }
+                webBrowser1.Navigate(Resources.strings.fb_login_url);
             }
         }
 
@@ -76,7 +90,6 @@ namespace InteractivePPT
                     DeleteCookiesOfIntegratedWebBrowser();
                     MessageBox.Show(Resources.strings.mobile_app_not_used_before + " " + Resources.strings.application_will_shut_down);
                     Application.Exit();
-                    return;
                 }
             }
             else
@@ -123,7 +136,6 @@ namespace InteractivePPT
                             DeleteCookiesOfIntegratedWebBrowser();
                             MessageBox.Show(Resources.strings.communication_with_server_not_established + " " + Resources.strings.application_will_shut_down);
                             Application.Exit();
-                            return;
                         }
 
                     }
@@ -166,7 +178,15 @@ namespace InteractivePPT
             webBrowser1.Visible = false;
             loadingPicture.Visible = true;
             languageSelectBox.Visible = false;
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo((string)languageSelectBox.SelectedValue);
+        }
+
+        private void languageSelectBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (webBrowser1.Url != null)
+            {
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo((string)languageSelectBox.SelectedValue);
+                webBrowser1.Navigate(Resources.strings.fb_login_url);
+            }
         }
     }
 }
