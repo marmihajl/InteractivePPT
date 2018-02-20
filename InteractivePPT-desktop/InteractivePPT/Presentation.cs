@@ -699,7 +699,7 @@ namespace InteractivePPT
                 MessageBox.Show(String.Format(Resources.strings.comments_for_selected_question_doesnt_exist_message, questionName), Resources.strings.comments_for_selected_question_doesnt_exist_title);
                 throw new Exception();
             }
-            slide = slides.AddSlide(GetIndexOfCurrentSlide() + move++, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
+            slide = slides.AddSlide(slideIndex, p.SlideMaster.CustomLayouts[PowerPoint.PpSlideLayout.ppLayoutText]);
 
             slide.Shapes[1].TextFrame.TextRange.Text = questionName;
             slide.Shapes[2].TextFrame.TextRange.Text = string.Join("\n", appropriateChoiceNames);
@@ -865,7 +865,7 @@ namespace InteractivePPT
                             return;
                         }
                     }
-                    if (serializedTextResults != null)
+                    if (serializedTextResults != null || serializedTextResults != "[]")
                     {
                         CommentFilter cf = new CommentFilter(JsonConvert.DeserializeObject<SortedDictionary<int, List<Answer>>>(serializedTextResults), questionNamesPerIds);
                         cf.ShowDialog();
