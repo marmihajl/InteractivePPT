@@ -511,7 +511,7 @@ namespace InteractivePPT
                     {
                         sumOfOtherOptionsOccurrences += answers[i].num;
                     }
-                    dataSheet.Cells.Range["A" + index].Value2 = "'" + "Ostalo";
+                    dataSheet.Cells.Range["A" + index].Value2 = "'" + Resources.strings.other_options;
                     dataSheet.Cells.Range["B" + index].Value2 = sumOfOtherOptionsOccurrences;
                     index++;
                 }

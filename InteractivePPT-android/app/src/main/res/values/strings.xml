@@ -79,7 +79,7 @@
     <string name="alert_create_survey_title">Warning</string>
     <string name="survey_creation_failure_reason">Failed to create survey:</string>
     <string name="presentations_fetch_error">An error occurred while fetching list of your presentations.</string>
-    <string name="no_my_ppts_error">There are no presentations create by you.</string>
+    <string name="no_my_ppts_error">There are no presentations created by you.</string>
     <string name="survey_info_id">Survey id: </string>
     <string name="survey_info_description">Survey description: </string>
     <string name="survey_info_total_questions">Survey\'s total number of questions: </string>
@@ -99,4 +99,9 @@
     <string name="reply_request_sent_successfully">You have successfully sent reply-request!</string>
     <string name="no_option">no</string>
     <string name="yes_option">yes</string>
+    <string name="submit_answers">Submit answers</string>
+    <string name="clear_answers">Clear all</string>
+    <string name="scan_qr_code">Scan Qr code</string>
+    <string name="survey_created_successfully">Survey has been created successfully!</string>
+    <string name="presentation_store_error">An error occurred while storing attached presentation. Server environment isn\'t properly configured.</string>
 </resources>

@@ -93,5 +93,9 @@
     <string name="reply_request_sent_successfully">Uspješno ste poslali zahtjev za repliciranjem!</string>
     <string name="no_option">ne</string>
     <string name="yes_option">da</string>
-
+    <string name="submit_answers">Pošalji odgovore</string>
+    <string name="clear_answers">Obriši sve</string>
+    <string name="scan_qr_code">Učitaj Qr kod</string>
+    <string name="survey_created_successfully">Anketa je uspješno kreirana!</string>
+    <string name="presentation_store_error">Neuspjeh kod pohrane priložene prezentacije. Poslužiteljska okolina vjerojatno nije dobro podešena.</string>
 </resources>

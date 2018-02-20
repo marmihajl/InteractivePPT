@@ -404,14 +404,20 @@ public class CreateSurvey extends AppCompatActivity {
                 new SendDataAndProcessResponseTask.PostActions() {
                     @Override
                     public void onSuccess(Object genericResponse) {
-                        Toast.makeText(CreateSurvey.this,
-                                "Anketa je uspješno kreirana!",
-                                Toast.LENGTH_LONG
-                        ).show();
-                        myPptsLoaded = false;
+                        boolean response = (boolean) genericResponse;
+                        if (response) {
+                            Toast.makeText(CreateSurvey.this,
+                                    R.string.survey_created_successfully,
+                                    Toast.LENGTH_LONG
+                            ).show();
+                            myPptsLoaded = false;
+                            discardChanges.performClick();
+                        }
+                        else {
+                            Toast.makeText(CreateSurvey.this, R.string.presentation_store_error, Toast.LENGTH_SHORT).show();
+                        }
                         findViewById(R.id.activity_create_survey).setClickable(true);
                         findViewById(R.id.loading_panel).setVisibility(View.GONE);
-                        discardChanges.performClick();
                     }
 
                     @Override

@@ -102,7 +102,7 @@ public class GetSurvey extends AppCompatActivity{
         }
 
         Button button= new Button(this);
-        button.setText("Pošalji odgovore");
+        button.setText(R.string.submit_answers);
         button.setOnClickListener(onClick(button));
         LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -113,7 +113,7 @@ public class GetSurvey extends AppCompatActivity{
         lL.addView(button);
 
         Button button2= new Button(this);
-        button2.setText("Obriši sve");
+        button2.setText(R.string.clear_answers);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
