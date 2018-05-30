@@ -12,9 +12,9 @@ namespace InteractivePPT
     public partial class Login : MetroFramework.Forms.MetroForm
     {
         User user = new User();
+        bool logoutOnHome = false;
         List<string> userInfo = new List<string>();
-        private const string mobileAppId = "app-id-370728603269382";
-        private int numOfTicksTimer1 = 0;
+        private const string mobileAppId = "370728603269382";
 
         public Login()
         {
@@ -40,19 +40,90 @@ namespace InteractivePPT
 
         private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (new Regex(@"^https://(mobile|m)\.facebook\.com/home\.php").IsMatch(webBrowser1.Url.ToString()))
+            if (new Regex(@"^https://(mobile|mbasic|m)\.facebook\.com/home\.php").IsMatch(webBrowser1.Url.ToString()))
             {
-                webBrowser1.Navigate("https://web.facebook.com/settings?tab=applications");
+                if (logoutOnHome)
+                {
+                    logoutOnHome = false;
+                    // perform log-out
+                    foreach (HtmlElement a in webBrowser1.Document.GetElementsByTagName("a"))
+                    {
+                        if (a.GetAttribute("href").StartsWith("https://m.facebook.com/logout.php"))
+                        {
+                            webBrowser1.Navigate(a.GetAttribute("href"));
+                            return;
+                        }
+                    }
+                    webBrowser1.Navigate(Resources.strings.fb_login_url);
+                }
+                else
+                {
+                    webBrowser1.Navigate(string.Format("https://m.facebook.com/settings/applications/details/?app_id={0}&_rdr", mobileAppId));
+                }
             }
-            else if (new Regex(@"^https://(www|web)\.facebook\.com/settings\?tab=applications$").IsMatch(webBrowser1.Url.ToString()))
-            {
-                timer1.Start();
-            }
-            else if (new Regex(@"^https://(mobile|m)\.facebook\.com/login/save-device/").IsMatch(webBrowser1.Url.ToString()))
+            else if (new Regex(@"^https://(mobile|mbasic|m)\.facebook\.com/login/save-device/").IsMatch(webBrowser1.Url.ToString()))
             {
                 webBrowser1.Document.GetElementsByTagName("a")[0].InvokeMember("click");
             }
-            else if (new Regex(@"^https://(mobile|m)\.facebook\.com/login/").IsMatch(webBrowser1.Url.ToString()))
+            else if (new Regex(@"^https://(mobile|mbasic|m)\.facebook\.com/settings/applications/").IsMatch(webBrowser1.Url.ToString()))
+            {
+                if (webBrowser1.Document.Title == "Error Facebook")
+                {
+                    MessageBox.Show(Resources.strings.mobile_app_not_used_before + " " + Resources.strings.application_will_shut_down);
+                    Application.Exit();
+                }
+                else
+                {
+                    Regex regex = new Regex(@"\d{10,}");
+                    foreach (HtmlElement curElement in webBrowser1.Document.All)
+                    {
+                        if (curElement.GetAttribute("className") == "bi")
+                        {
+                            //gets third child, then its last one and then last one of that one
+                            Match regexMatch = regex.Match(curElement.Children[3].Children[0].Children[2].Children[1].InnerHtml);
+                            string appUid = regexMatch.Groups[regexMatch.Groups.Count - 1].Value.ToString();
+
+                            using (WebClient client = new WebClient())
+                            {
+                                try
+                                {
+                                    byte[] response =
+                                    client.UploadValues(Home.mainScriptUri, new NameValueCollection()
+                                    {
+                                        { "request_type", "get_user_info" },
+                                        { "app_uid", appUid }
+                                    });
+
+                                    user.uid = appUid;
+                                    user.name = System.Text.Encoding.UTF8.GetString(response);
+                                }
+                                catch
+                                {
+                                    DeleteCookiesOfIntegratedWebBrowser();
+                                    MessageBox.Show(Resources.strings.communication_with_server_not_established + " " + Resources.strings.application_will_shut_down);
+                                    Application.Exit();
+                                }
+
+                            }
+
+                            DeleteCookiesOfIntegratedWebBrowser();
+
+                            MainForm h = new MainForm(user);
+                            h.WindowState = FormWindowState.Maximized;
+                            h.Show();
+                            this.Hide();
+
+                            /*Home h = new Home(user);
+                            h.WindowState = FormWindowState.Maximized;
+                            h.MdiParent = f;
+                            h.Show();
+                            this.Close();*/
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (new Regex(@"^https://(mobile|mbasic|m)\.facebook\.com/login/").IsMatch(webBrowser1.Url.ToString()))
             {
                 webBrowser1.Visible = true;
                 loadingPicture.Visible = false;
@@ -60,99 +131,17 @@ namespace InteractivePPT
             }
             else
             {
-                // perform log-out
-                foreach (HtmlElement a in webBrowser1.Document.GetElementsByTagName("a"))
+                if (webBrowser1.Document.Title == "Content Not Found")
                 {
-                    if (a.GetAttribute("href").StartsWith("https://m.facebook.com/logout.php"))
-                    {
-                        webBrowser1.Navigate(a.GetAttribute("href"));
-                        return;
-                    }
+                    webBrowser1.Navigate("https://m.facebook.com/home.php");
+                    logoutOnHome = true;
+                    return;
                 }
-                webBrowser1.Navigate(Resources.strings.fb_login_url);
-            }
-        }
-
-        /// <summary>
-        /// Selects mobile version of this application (if it has been used) after App Settings page on Facebook is fullfilled with user's used apps which come additionally via AJAX response after basic skeleton of page is being loaded
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            HtmlElement mobileAppThumbnail = webBrowser1.Document.GetElementById(mobileAppId);
-            if (mobileAppThumbnail == null)
-            {
-                numOfTicksTimer1++;
-                if (numOfTicksTimer1 == 3)
+                else
                 {
-                    timer1.Stop();
-                    DeleteCookiesOfIntegratedWebBrowser();
-                    MessageBox.Show(Resources.strings.mobile_app_not_used_before + " " + Resources.strings.application_will_shut_down);
-                    Application.Exit();
-                }
-            }
-            else
-            {
-                timer1.Stop();
-                mobileAppThumbnail.GetElementsByTagName("a")[0].InvokeMember("click");
-                timer2.Start();
-            }
-        }
-
-        /// <summary>
-        /// Extracts UserID of mobile version of this application on its dialog in App Settings on Facebook after dialog is successfully loaded (it loads after AJAX response with its data is received)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            timer2.Stop();
-            Regex regex = new Regex(@"\d{10,}");
-            foreach (HtmlElement curElement in webBrowser1.Document.All)
-            {
-                if (curElement.GetAttribute("className") == "_s")
-                {
-                    //gets third child, then its last one and then last one of that one
-                    Match regexMatch = regex.Match(curElement.Children[2].Children[curElement.Children[2].Children.Count - 1].Children[curElement.Children[2].Children[curElement.Children[2].Children.Count - 1].Children.Count - 1].InnerHtml);
-                    string appUid = regexMatch.Groups[regexMatch.Groups.Count-1].Value.ToString();
-
-                    using (WebClient client = new WebClient())
-                    {
-                        try
-                        {
-                            byte[] response =
-                            client.UploadValues(Home.mainScriptUri, new NameValueCollection()
-                            {
-                               { "request_type", "get_user_info" },
-                               { "app_uid", appUid }
-                            });
-
-                            user.uid = appUid;
-                            user.name = System.Text.Encoding.UTF8.GetString(response);
-                        }
-                        catch
-                        {
-                            DeleteCookiesOfIntegratedWebBrowser();
-                            MessageBox.Show(Resources.strings.communication_with_server_not_established + " " + Resources.strings.application_will_shut_down);
-                            Application.Exit();
-                        }
-
-                    }
-
-                    DeleteCookiesOfIntegratedWebBrowser();
-
-                    MainForm h = new MainForm(user);
-                    h.WindowState = FormWindowState.Maximized;
-                    h.Show();
-                    this.Hide();
-
-                    /*Home h = new Home(user);
-                    h.WindowState = FormWindowState.Maximized;
-                    h.MdiParent = f;
-                    h.Show();
-                    this.Close();*/
-                    break;
+                    webBrowser1.Visible = true;
+                    loadingPicture.Visible = false;
+                    languageSelectBox.Visible = true;
                 }
             }
         }

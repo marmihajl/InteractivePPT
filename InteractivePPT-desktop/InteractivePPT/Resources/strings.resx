@@ -235,6 +235,7 @@
     <value>User ID</value>
   </data>
   <data name="fb_login_url" xml:space="preserve">
-    <value>https://m.facebook.com/a/language.php?l=en_US&amp;lref=https%3A%2F%2Fm.facebook.com%2Flogin%2F%3Fref%3Ddbl%26fl%26refid%3D8%26refsrc%3Dhttps%253A%252F%252Fm.facebook.com%252Flogin%252F%253Fref%253Ddbl&amp;gfid=AQDyMwI6AfNsokSb&amp;ref=dbl</value>
+    <value>https://m.facebook.com/a/language.php?l=en_US&amp;gfid=AQBdX8KsbKn1XTZy</value>
+    <comment>List of languages can be found here: https://m.facebook.com/language.php</comment>
   </data>
 </root>

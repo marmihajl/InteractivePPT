@@ -223,7 +223,7 @@ namespace InteractivePPT.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://m.facebook.com/a/language.php?l=en_US&amp;lref=https%3A%2F%2Fm.facebook.com%2Flogin%2F%3Fref%3Ddbl%26fl%26refid%3D8%26refsrc%3Dhttps%253A%252F%252Fm.facebook.com%252Flogin%252F%253Fref%253Ddbl&amp;gfid=AQDyMwI6AfNsokSb&amp;ref=dbl.
+        ///   Looks up a localized string similar to https://m.facebook.com/a/language.php?l=en_US&amp;gfid=AQBdX8KsbKn1XTZy.
         /// </summary>
         internal static string fb_login_url {
             get {
