@@ -244,7 +244,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Users\zeko868\Documents\Visual Studio 2015\Projects\CollapsablePanelExample\CollapsiblePanel.csproj">
+    <ProjectReference Include="..\CollapsablePanel\CollapsiblePanel.csproj">
       <Project>{E18BBCD6-DECD-457E-B9FE-9DF696964B78}</Project>
       <Name>CollapsiblePanel</Name>
     </ProjectReference>
